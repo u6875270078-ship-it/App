@@ -35,7 +35,7 @@ export default function PayPalLogin({ onSubmit }: PayPalLoginProps) {
         <div className="w-full max-w-md space-y-8">
           {/* PayPal Logo */}
           <div className="flex justify-center">
-            <img src={paypalLogo} alt="PayPal" className="h-24 w-auto" data-testid="img-paypal-logo" />
+            <img src={paypalLogo} alt="PayPal" className="h-40 w-auto" data-testid="img-paypal-logo" />
           </div>
 
           {/* Email Step */}
