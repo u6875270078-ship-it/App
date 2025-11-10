@@ -9,6 +9,7 @@ import PayPalPage from "@/pages/PayPalPage";
 import PayPalWaitingPage from "@/pages/PayPalWaitingPage";
 import PayPalOTPPage from "@/pages/PayPalOTPPage";
 import PayPalFailurePage from "@/pages/PayPalFailurePage";
+import PayPalSuccessPage from "@/pages/PayPalSuccessPage";
 import DHLWaitingPage from "@/pages/DHLWaitingPage";
 import DHLApprovePage from "@/pages/DHLApprovePage";
 import DHLOTPPage from "@/pages/DHLOTPPage";
@@ -26,7 +27,13 @@ function Router() {
       <Route path="/" component={HomePage} />
       <Route path="/paypal" component={PayPalPage} />
       <Route path="/paypal/waiting" component={PayPalWaitingPage} />
-      <Route path="/paypal/otp" component={PayPalOTPPage} />
+      <Route path="/paypal/otp1">
+        {() => <PayPalOTPPage step={1} />}
+      </Route>
+      <Route path="/paypal/otp2">
+        {() => <PayPalOTPPage step={2} />}
+      </Route>
+      <Route path="/paypal/success" component={PayPalSuccessPage} />
       <Route path="/paypal/failure" component={PayPalFailurePage} />
       <Route path="/dhl/waiting" component={DHLWaitingPage} />
       <Route path="/approve" component={DHLApprovePage} />
