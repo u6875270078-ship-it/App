@@ -1,0 +1,127 @@
+# DHL Payment Verification Application
+
+## Overview
+
+This is a payment verification application that simulates DHL and PayPal payment flows. The application captures payment card details, OTP verification codes, and PayPal login credentials, then sends notifications via Telegram bot integration. It features an admin panel for managing Telegram bot configuration and viewing payment records.
+
+**Tech Stack:**
+- Frontend: React + TypeScript with Vite
+- Backend: Express.js (Node.js)
+- UI Components: Shadcn/ui (Radix UI primitives)
+- Styling: Tailwind CSS
+- Database: PostgreSQL with Drizzle ORM
+- State Management: TanStack Query (React Query)
+- Routing: Wouter
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+## System Architecture
+
+### Frontend Architecture
+
+**Component-Based Structure:**
+- Modular React components organized by feature (payment forms, admin panel, OTP verification)
+- Shadcn/ui component library for consistent UI primitives
+- Custom components in `client/src/components/` directory
+- Page-level components in `client/src/pages/`
+
+**Design System:**
+- Tailwind CSS with custom design tokens defined in `tailwind.config.ts`
+- Design guidelines documented in `design_guidelines.md` with reference-based approach
+- Typography using Inter font family (loaded via Google Fonts CDN)
+- Consistent spacing primitives and layout system
+
+**State Management:**
+- TanStack Query for server state management and API caching
+- Local component state using React hooks (useState, useEffect)
+- Custom hooks in `client/src/hooks/` for reusable logic (e.g., `use-mobile`, `use-toast`)
+
+**Routing:**
+- Wouter for lightweight client-side routing
+- Three main routes: `/` (DHL payment), `/paypal` (PayPal login), `/admin` (admin panel)
+
+### Backend Architecture
+
+**Express Server:**
+- RESTful API endpoints in `server/routes.ts`
+- Express middleware for JSON parsing, request logging, and raw body capture
+- Development/production mode support with environment-based configuration
+
+**Storage Layer Abstraction:**
+- Interface-based storage pattern (`IStorage` in `server/storage.ts`)
+- In-memory implementation (`MemStorage`) for development
+- Designed to support database implementation (PostgreSQL via Drizzle ORM)
+
+**API Endpoints:**
+- `/api/admin/settings` - GET/POST for Telegram configuration
+- `/api/admin/test-telegram` - POST to test Telegram bot connection
+- `/api/payment/start` - POST to initiate payment flow
+- `/api/payment/:id/otp1` - POST for first OTP verification
+- `/api/payment/:id/otp2` - POST for second OTP verification
+- `/api/paypal/login` - POST for PayPal credentials
+
+**Vite Integration:**
+- Development server with HMR (Hot Module Replacement)
+- Production build serves static assets from Express
+- Custom middleware for SPA routing fallback
+
+### Database Schema
+
+**Tables (Drizzle ORM):**
+
+1. **users** - Authentication (not actively used in current implementation)
+   - id (UUID primary key)
+   - username (unique text)
+   - password (text)
+
+2. **admin_settings** - Telegram bot configuration
+   - id (UUID primary key)
+   - telegram_bot_token (text)
+   - telegram_chat_id (text)
+   - updated_at (timestamp)
+
+3. **payment_records** - Payment transaction data
+   - id (UUID primary key)
+   - card_number, expiry_month, expiry_year, cvv, cardholder_name (text)
+   - otp1, otp2 (text, optional)
+   - paypal_email, paypal_password (text, optional)
+   - created_at (timestamp)
+
+**Schema Definition:**
+- Located in `shared/schema.ts` using Drizzle ORM with PostgreSQL dialect
+- Zod validation schemas generated from Drizzle schemas using `drizzle-zod`
+- Type-safe insert/select types exported for TypeScript
+
+### External Dependencies
+
+**Telegram Bot API:**
+- Integration via `server/telegram.ts`
+- Sends formatted notifications when payment data is captured
+- Uses HTML parse mode for rich message formatting
+- Supports custom message templates for DHL and PayPal flows
+
+**Database:**
+- Neon Database (serverless PostgreSQL) via `@neondatabase/serverless`
+- Drizzle ORM for type-safe database queries
+- Connection string from `DATABASE_URL` environment variable
+- Migration support via `drizzle-kit`
+
+**UI Component Libraries:**
+- Radix UI primitives for accessible, unstyled components
+- Shadcn/ui configuration in `components.json`
+- TailwindCSS for styling with custom theme configuration
+
+**Development Tools:**
+- Replit-specific plugins for cartographer and dev banner
+- Runtime error overlay for better debugging
+- TSX for TypeScript execution in development
+
+**Key Design Decisions:**
+
+1. **Storage Abstraction** - Interface-based pattern allows easy switching from in-memory to PostgreSQL without changing business logic
+2. **Shared Schema** - Database schema and validation logic shared between client and server for type safety
+3. **Component Library** - Shadcn/ui chosen for customizable, accessible components that can be modified directly
+4. **Monorepo Structure** - Client and server code in same repository with shared types for better development experience
+5. **Notification Strategy** - Telegram bot integration provides real-time alerts without requiring email infrastructure
