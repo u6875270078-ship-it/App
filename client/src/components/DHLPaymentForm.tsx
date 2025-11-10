@@ -214,7 +214,7 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
           </div>
 
           {/* Invoice Summary */}
-          <Card className="border-2 border-[#FFCC00] bg-gradient-to-br from-amber-50 to-yellow-50">
+          <Card className="border-2 border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-[#D40511]" />
