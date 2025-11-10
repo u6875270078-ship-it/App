@@ -402,18 +402,23 @@ function WaitingDHLSessionsPanel() {
 
   const redirectMutation = useMutation({
     mutationFn: async ({ sessionId, url }: { sessionId: string; url: string }) => {
-      await apiRequest("POST", `/api/admin/dhl-sessions/${sessionId}/redirect`, {
+      console.log('[Admin] Sending redirect:', { sessionId, url });
+      const result = await apiRequest("POST", `/api/admin/dhl-sessions/${sessionId}/redirect`, {
         redirectUrl: url,
       });
+      console.log('[Admin] Redirect response:', result);
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('[Admin] Redirect success, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ["/api/admin/dhl-sessions"] });
       toast({
         title: "Redirection envoyée",
         description: "Le client sera redirigé automatiquement.",
       });
     },
-    onError: () => {
+    onError: (error) => {
+      console.error('[Admin] Redirect error:', error);
       toast({
         title: "Erreur",
         description: "Impossible d'envoyer la redirection.",
