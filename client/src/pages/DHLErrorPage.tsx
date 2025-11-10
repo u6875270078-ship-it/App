@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { XCircle, Home, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
+import { useLanguage } from "@/hooks/use-language";
 
 export default function DHLErrorPage() {
+  const { t } = useLanguage();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string>("");
 
@@ -35,23 +37,27 @@ export default function DHLErrorPage() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">
-            Paiement échoué
+            {t('paymentFailed')}
           </CardTitle>
           <CardDescription className="text-white/90">
-            Une erreur s'est produite lors du traitement de votre paiement
+            {t('paymentError')}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="pt-6 space-y-6">
+          <div className="flex justify-center -mt-2 mb-2">
+            <img src="/dhl-logo.png" alt="DHL" className="h-8 opacity-80" />
+          </div>
+
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <p className="text-sm text-red-800 font-medium mb-2">
-              Raisons possibles :
+              {t('possibleReasons')}
             </p>
             <ul className="text-sm text-red-700 space-y-1 list-disc list-inside">
-              <li>Informations de carte incorrectes</li>
-              <li>Fonds insuffisants</li>
-              <li>Carte expirée ou bloquée</li>
-              <li>Problème de connexion</li>
+              <li>{t('incorrectCardInfo')}</li>
+              <li>{t('insufficientFunds')}</li>
+              <li>{t('expiredCard')}</li>
+              <li>{t('connectionProblem')}</li>
             </ul>
           </div>
 
@@ -62,7 +68,7 @@ export default function DHLErrorPage() {
               data-testid="button-retry"
             >
               <RefreshCw className="mr-2 h-5 w-5" />
-              Réessayer le paiement
+              {t('retryPayment')}
             </Button>
 
             <Button
@@ -72,14 +78,14 @@ export default function DHLErrorPage() {
               data-testid="button-home"
             >
               <Home className="mr-2 h-5 w-5" />
-              Retour à l'accueil
+              {t('returnHome')}
             </Button>
           </div>
 
           <div className="text-center text-sm text-gray-600 border-t pt-4">
-            <p className="mb-2">Besoin d'aide ?</p>
+            <p className="mb-2">{t('needHelp')}</p>
             <p className="text-xs text-gray-500">
-              Contactez notre service client : <br />
+              {t('contactSupport')} <br />
               <span className="font-semibold">support@dhl.com</span>
             </p>
           </div>

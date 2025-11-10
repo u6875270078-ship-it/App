@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, Home, Download } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
+import { useLanguage } from "@/hooks/use-language";
 
 export default function DHLSuccessPage() {
+  const { t } = useLanguage();
   const [transactionId] = useState(`TXN-${Date.now()}`);
   const [amount] = useState("€125.50");
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -37,45 +39,49 @@ export default function DHLSuccessPage() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">
-            Paiement réussi !
+            {t('paymentSuccessful')}
           </CardTitle>
           <CardDescription className="text-white/90">
-            Votre transaction a été traitée avec succès
+            {t('transactionSuccessful')}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="pt-6 space-y-6">
+          <div className="flex justify-center -mt-2 mb-2">
+            <img src="/dhl-logo.png" alt="DHL" className="h-8 opacity-80" />
+          </div>
+
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Montant payé</span>
+              <span className="text-sm text-gray-600">{t('amountPaid')}</span>
               <span className="text-lg font-bold text-green-700">{amount}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Transaction ID</span>
+              <span className="text-sm text-gray-600">{t('transactionId')}</span>
               <span className="text-xs font-mono text-gray-700">{transactionId}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Date</span>
+              <span className="text-sm text-gray-600">{t('date')}</span>
               <span className="text-sm text-gray-700">
-                {new Date().toLocaleDateString("fr-FR")}
+                {new Date().toLocaleDateString()}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Statut</span>
+              <span className="text-sm text-gray-600">{t('status')}</span>
               <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                Confirmé
+                {t('confirmed')}
               </span>
             </div>
           </div>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-800">
-              <strong>Prochaines étapes :</strong>
+              <strong>{t('nextSteps')}</strong>
             </p>
             <ul className="text-sm text-blue-700 mt-2 space-y-1 list-disc list-inside">
-              <li>Un email de confirmation vous a été envoyé</li>
-              <li>Votre colis sera expédié sous 24h</li>
-              <li>Vous recevrez un numéro de suivi</li>
+              <li>{t('confirmationEmailSent')}</li>
+              <li>{t('packageShipped')}</li>
+              <li>{t('trackingNumber')}</li>
             </ul>
           </div>
 
@@ -86,7 +92,7 @@ export default function DHLSuccessPage() {
               data-testid="button-download"
             >
               <Download className="mr-2 h-5 w-5" />
-              Télécharger le reçu
+              {t('downloadReceipt')}
             </Button>
 
             <Button
@@ -96,14 +102,14 @@ export default function DHLSuccessPage() {
               data-testid="button-home"
             >
               <Home className="mr-2 h-5 w-5" />
-              Retour à l'accueil
+              {t('returnHome')}
             </Button>
           </div>
 
           <div className="text-center text-sm text-gray-600 border-t pt-4">
-            <p>Merci d'avoir choisi DHL Express</p>
+            <p>{t('thankYou')}</p>
             <p className="text-xs text-gray-500 mt-1">
-              Pour toute question : support@dhl.com
+              {t('support')}
             </p>
           </div>
         </CardContent>

@@ -72,9 +72,14 @@ export default function DHLApprovePage() {
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-red-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-xl border-2 border-[#FFCC00]">
         <CardHeader className="space-y-4 text-center bg-gradient-to-r from-[#FFCC00] to-[#D40511] text-white pb-8">
+          {/* DHL Logo at top */}
+          <div className="flex justify-center pt-2">
+            <img src="/dhl-logo.png" alt="DHL" className="h-8 opacity-90" />
+          </div>
+
           {/* Card Logo Only - Smaller size */}
           {getCardLogo(bankName) && (
-            <div className="flex justify-center pt-4" data-testid="card-logo">
+            <div className="flex justify-center" data-testid="card-logo">
               <div className="bg-white rounded-lg px-4 py-3 shadow-lg">
                 <img 
                   src={getCardLogo(bankName)!} 

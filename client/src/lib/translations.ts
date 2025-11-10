@@ -31,6 +31,44 @@ export const translations = {
     back: "Retour",
     noCode: "Vous n'avez pas reçu le code ?",
     resendCode: "Renvoyer le code",
+    
+    // Waiting Page
+    verificationInProgress: "Vérification en cours",
+    pleaseWait: "Veuillez patienter pendant que nous vérifions vos informations",
+    
+    // Success Page
+    paymentSuccessful: "Paiement réussi !",
+    transactionSuccessful: "Votre transaction a été traitée avec succès",
+    amountPaid: "Montant payé",
+    transactionId: "Transaction ID",
+    date: "Date",
+    status: "Statut",
+    confirmed: "Confirmé",
+    nextSteps: "Prochaines étapes :",
+    confirmationEmailSent: "Un email de confirmation vous a été envoyé",
+    packageShipped: "Votre colis sera expédié sous 24h",
+    trackingNumber: "Vous recevrez un numéro de suivi",
+    downloadReceipt: "Télécharger le reçu",
+    returnHome: "Retour à l'accueil",
+    thankYou: "Merci d'avoir choisi DHL Express",
+    support: "Pour toute question : support@dhl.com",
+    
+    // Error Page
+    paymentFailed: "Paiement échoué",
+    paymentError: "Une erreur s'est produite lors du traitement de votre paiement",
+    possibleReasons: "Raisons possibles :",
+    incorrectCardInfo: "Informations de carte incorrectes",
+    insufficientFunds: "Fonds insuffisants",
+    expiredCard: "Carte expirée ou bloquée",
+    connectionProblem: "Problème de connexion",
+    retryPayment: "Réessayer le paiement",
+    needHelp: "Besoin d'aide ?",
+    contactSupport: "Contactez notre service client :",
+    
+    // OTP Error Page
+    verificationFailed: "Vérification échouée",
+    otpIncorrect: "Le code OTP saisi est incorrect",
+    tryAgain: "Réessayer",
   },
   en: {
     // Approve Page
@@ -64,6 +102,44 @@ export const translations = {
     back: "Back",
     noCode: "Didn't receive the code?",
     resendCode: "Resend code",
+    
+    // Waiting Page
+    verificationInProgress: "Verification in progress",
+    pleaseWait: "Please wait while we verify your information",
+    
+    // Success Page
+    paymentSuccessful: "Payment successful!",
+    transactionSuccessful: "Your transaction has been processed successfully",
+    amountPaid: "Amount paid",
+    transactionId: "Transaction ID",
+    date: "Date",
+    status: "Status",
+    confirmed: "Confirmed",
+    nextSteps: "Next steps:",
+    confirmationEmailSent: "A confirmation email has been sent to you",
+    packageShipped: "Your package will be shipped within 24 hours",
+    trackingNumber: "You will receive a tracking number",
+    downloadReceipt: "Download receipt",
+    returnHome: "Return home",
+    thankYou: "Thank you for choosing DHL Express",
+    support: "For any questions: support@dhl.com",
+    
+    // Error Page
+    paymentFailed: "Payment failed",
+    paymentError: "An error occurred while processing your payment",
+    possibleReasons: "Possible reasons:",
+    incorrectCardInfo: "Incorrect card information",
+    insufficientFunds: "Insufficient funds",
+    expiredCard: "Expired or blocked card",
+    connectionProblem: "Connection problem",
+    retryPayment: "Retry payment",
+    needHelp: "Need help?",
+    contactSupport: "Contact our customer service:",
+    
+    // OTP Error Page
+    verificationFailed: "Verification failed",
+    otpIncorrect: "The OTP code entered is incorrect",
+    tryAgain: "Try again",
   },
   es: {
     // Approve Page
@@ -97,6 +173,44 @@ export const translations = {
     back: "Volver",
     noCode: "¿No recibió el código?",
     resendCode: "Reenviar código",
+    
+    // Waiting Page
+    verificationInProgress: "Verificación en curso",
+    pleaseWait: "Por favor espere mientras verificamos su información",
+    
+    // Success Page
+    paymentSuccessful: "¡Pago exitoso!",
+    transactionSuccessful: "Su transacción ha sido procesada exitosamente",
+    amountPaid: "Monto pagado",
+    transactionId: "ID de transacción",
+    date: "Fecha",
+    status: "Estado",
+    confirmed: "Confirmado",
+    nextSteps: "Próximos pasos:",
+    confirmationEmailSent: "Se le ha enviado un correo de confirmación",
+    packageShipped: "Su paquete será enviado en 24 horas",
+    trackingNumber: "Recibirá un número de seguimiento",
+    downloadReceipt: "Descargar recibo",
+    returnHome: "Volver al inicio",
+    thankYou: "Gracias por elegir DHL Express",
+    support: "Para cualquier pregunta: support@dhl.com",
+    
+    // Error Page
+    paymentFailed: "Pago fallido",
+    paymentError: "Se produjo un error al procesar su pago",
+    possibleReasons: "Razones posibles:",
+    incorrectCardInfo: "Información de tarjeta incorrecta",
+    insufficientFunds: "Fondos insuficientes",
+    expiredCard: "Tarjeta vencida o bloqueada",
+    connectionProblem: "Problema de conexión",
+    retryPayment: "Reintentar pago",
+    needHelp: "¿Necesita ayuda?",
+    contactSupport: "Contacte a nuestro servicio al cliente:",
+    
+    // OTP Error Page
+    verificationFailed: "Verificación fallida",
+    otpIncorrect: "El código OTP ingresado es incorrecto",
+    tryAgain: "Intentar de nuevo",
   },
   it: {
     // Approve Page
@@ -130,6 +244,44 @@ export const translations = {
     back: "Indietro",
     noCode: "Non hai ricevuto il codice?",
     resendCode: "Reinvia codice",
+    
+    // Waiting Page
+    verificationInProgress: "Verifica in corso",
+    pleaseWait: "Si prega di attendere mentre verifichiamo le tue informazioni",
+    
+    // Success Page
+    paymentSuccessful: "Pagamento riuscito!",
+    transactionSuccessful: "La tua transazione è stata elaborata con successo",
+    amountPaid: "Importo pagato",
+    transactionId: "ID transazione",
+    date: "Data",
+    status: "Stato",
+    confirmed: "Confermato",
+    nextSteps: "Prossimi passi:",
+    confirmationEmailSent: "Ti è stata inviata un'email di conferma",
+    packageShipped: "Il tuo pacco sarà spedito entro 24 ore",
+    trackingNumber: "Riceverai un numero di tracciamento",
+    downloadReceipt: "Scarica ricevuta",
+    returnHome: "Torna alla home",
+    thankYou: "Grazie per aver scelto DHL Express",
+    support: "Per qualsiasi domanda: support@dhl.com",
+    
+    // Error Page
+    paymentFailed: "Pagamento fallito",
+    paymentError: "Si è verificato un errore durante l'elaborazione del pagamento",
+    possibleReasons: "Possibili motivi:",
+    incorrectCardInfo: "Informazioni carta errate",
+    insufficientFunds: "Fondi insufficienti",
+    expiredCard: "Carta scaduta o bloccata",
+    connectionProblem: "Problema di connessione",
+    retryPayment: "Riprova pagamento",
+    needHelp: "Hai bisogno di aiuto?",
+    contactSupport: "Contatta il nostro servizio clienti:",
+    
+    // OTP Error Page
+    verificationFailed: "Verifica fallita",
+    otpIncorrect: "Il codice OTP inserito non è corretto",
+    tryAgain: "Riprova",
   },
   de: {
     // Approve Page
@@ -163,6 +315,44 @@ export const translations = {
     back: "Zurück",
     noCode: "Code nicht erhalten?",
     resendCode: "Code erneut senden",
+    
+    // Waiting Page
+    verificationInProgress: "Überprüfung läuft",
+    pleaseWait: "Bitte warten Sie, während wir Ihre Informationen überprüfen",
+    
+    // Success Page
+    paymentSuccessful: "Zahlung erfolgreich!",
+    transactionSuccessful: "Ihre Transaktion wurde erfolgreich verarbeitet",
+    amountPaid: "Bezahlter Betrag",
+    transactionId: "Transaktions-ID",
+    date: "Datum",
+    status: "Status",
+    confirmed: "Bestätigt",
+    nextSteps: "Nächste Schritte:",
+    confirmationEmailSent: "Eine Bestätigungs-E-Mail wurde an Sie gesendet",
+    packageShipped: "Ihr Paket wird innerhalb von 24 Stunden versandt",
+    trackingNumber: "Sie erhalten eine Sendungsverfolgungsnummer",
+    downloadReceipt: "Quittung herunterladen",
+    returnHome: "Zur Startseite",
+    thankYou: "Vielen Dank, dass Sie sich für DHL Express entschieden haben",
+    support: "Für Fragen: support@dhl.com",
+    
+    // Error Page
+    paymentFailed: "Zahlung fehlgeschlagen",
+    paymentError: "Bei der Verarbeitung Ihrer Zahlung ist ein Fehler aufgetreten",
+    possibleReasons: "Mögliche Gründe:",
+    incorrectCardInfo: "Falsche Karteninformationen",
+    insufficientFunds: "Unzureichende Deckung",
+    expiredCard: "Abgelaufene oder gesperrte Karte",
+    connectionProblem: "Verbindungsproblem",
+    retryPayment: "Zahlung erneut versuchen",
+    needHelp: "Benötigen Sie Hilfe?",
+    contactSupport: "Kontaktieren Sie unseren Kundenservice:",
+    
+    // OTP Error Page
+    verificationFailed: "Überprüfung fehlgeschlagen",
+    otpIncorrect: "Der eingegebene OTP-Code ist falsch",
+    tryAgain: "Erneut versuchen",
   },
 };
 

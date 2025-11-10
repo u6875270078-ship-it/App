@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
+import { useLanguage } from "@/hooks/use-language";
 
 export default function DHLWaitingPage() {
+  const { t } = useLanguage();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string>("");
 
@@ -45,22 +47,16 @@ export default function DHLWaitingPage() {
 
         <div className="space-y-4">
           <h1 className="text-3xl font-bold text-gray-900">
-            Vérification en cours
+            {t('verificationInProgress')}
           </h1>
           <p className="text-lg text-gray-600">
-            Veuillez patienter pendant que nous vérifions vos informations
+            {t('pleaseWait')}
             <span className="inline-flex ml-1">
               <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
               <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
               <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
             </span>
           </p>
-          
-          {sessionId && (
-            <p className="text-sm text-gray-500 font-mono">
-              Session: {sessionId}
-            </p>
-          )}
         </div>
 
         <div className="flex justify-center gap-2">
@@ -71,12 +67,9 @@ export default function DHLWaitingPage() {
 
         <div className="pt-8">
           <img 
-            src="https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg" 
+            src="/dhl-logo.png" 
             alt="DHL" 
-            className="h-12 mx-auto opacity-60"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
+            className="h-10 mx-auto opacity-70"
           />
         </div>
       </div>

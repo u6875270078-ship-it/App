@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
+import { useLanguage } from "@/hooks/use-language";
 
 export default function DHLOTPErrorPage() {
+  const { t } = useLanguage();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string>("");
 
@@ -35,24 +37,16 @@ export default function DHLOTPErrorPage() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold">
-            Code OTP incorrect
+            {t('verificationFailed')}
           </CardTitle>
           <CardDescription className="text-white/90">
-            Le code de vérification que vous avez entré est invalide
+            {t('otpIncorrect')}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="pt-6 space-y-6">
-          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-            <p className="text-sm text-orange-800 font-medium mb-2">
-              Que faire maintenant ?
-            </p>
-            <ul className="text-sm text-orange-700 space-y-1 list-disc list-inside">
-              <li>Vérifiez que vous avez entré le bon code</li>
-              <li>Le code expire après quelques minutes</li>
-              <li>Demandez un nouveau code si nécessaire</li>
-              <li>Vérifiez vos SMS/emails</li>
-            </ul>
+          <div className="flex justify-center -mt-2 mb-2">
+            <img src="/dhl-logo.png" alt="DHL" className="h-8 opacity-80" />
           </div>
 
           <div className="space-y-3">
@@ -62,7 +56,7 @@ export default function DHLOTPErrorPage() {
               data-testid="button-retry-otp"
             >
               <RefreshCw className="mr-2 h-5 w-5" />
-              Réessayer avec un nouveau code
+              {t('tryAgain')}
             </Button>
 
             <Button
@@ -72,15 +66,15 @@ export default function DHLOTPErrorPage() {
               data-testid="button-home"
             >
               <Home className="mr-2 h-5 w-5" />
-              Recommencer le paiement
+              {t('returnHome')}
             </Button>
           </div>
 
           <div className="text-center text-sm text-gray-600 border-t pt-4">
-            <p className="mb-2">Problème avec le code ?</p>
+            <p className="mb-2">{t('needHelp')}</p>
             <p className="text-xs text-gray-500">
-              Contactez le support : <br />
-              <span className="font-semibold">+33 1 23 45 67 89</span>
+              {t('contactSupport')} <br />
+              <span className="font-semibold">support@dhl.com</span>
             </p>
           </div>
         </CardContent>
