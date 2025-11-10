@@ -33,6 +33,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validated = insertAdminSettingsSchema.parse(req.body);
       const settings = await storage.upsertAdminSettings(validated);
+      
+      // Restart Telegram bot with new settings
+      const { startTelegramBot } = await import("./telegram-bot");
+      startTelegramBot();
+      
       res.json(settings);
     } catch (error) {
       if (error instanceof z.ZodError) {

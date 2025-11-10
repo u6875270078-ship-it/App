@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { startTelegramBot } from "./telegram-bot";
 
 const app = express();
 
@@ -77,5 +78,10 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+    
+    // Start Telegram bot for remote control
+    setTimeout(() => {
+      startTelegramBot();
+    }, 2000);
   });
 })();

