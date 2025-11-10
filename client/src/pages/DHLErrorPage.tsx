@@ -69,7 +69,7 @@ export default function DHLErrorPage() {
                 if (sessionId) params.set("session", sessionId);
                 if (paymentId) params.set("paymentId", paymentId);
                 const queryString = params.toString();
-                window.location.href = `/dhl/waiting${queryString ? `?${queryString}` : ""}`;
+                window.location.href = `/otp2${queryString ? `?${queryString}` : ""}`;
               }}
               data-testid="button-retry"
             >
