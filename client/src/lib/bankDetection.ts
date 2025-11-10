@@ -34,6 +34,15 @@ export function detectBank(cardNumber: string): BankInfo {
     };
   }
   
+  // JCB bins
+  if (bin.startsWith("35")) {
+    return {
+      name: "JCB",
+      logo: "💳",
+      color: "#0E4C96"
+    };
+  }
+  
   // Discover bins
   if (bin.startsWith("6011") || bin.startsWith("65")) {
     return {

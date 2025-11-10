@@ -95,10 +95,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const bin = req.body.cardNumber.replace(/\s/g, "").substring(0, 6);
       let bankName = "Bank";
       
-      // Bank detection logic
+      // Bank detection logic (Card brands first)
       if (bin.startsWith("4")) bankName = "Visa";
       else if (bin >= "510000" && bin <= "559999") bankName = "Mastercard";
       else if (bin.startsWith("34") || bin.startsWith("37")) bankName = "American Express";
+      else if (bin.startsWith("35")) bankName = "JCB";
       else if (["497511", "497591", "497592"].includes(bin)) bankName = "BNP Paribas";
       else if (["450903", "450904", "486236"].includes(bin)) bankName = "Crédit Agricole";
       else if (["512871", "513457", "522371"].includes(bin)) bankName = "Société Générale";
