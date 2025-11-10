@@ -21,7 +21,7 @@ export default function DHLErrorPage() {
   // Use redirect polling hook
   useRedirectPolling({
     sessionId,
-    currentPath: "/otp-error",
+    currentPath: "/error",
     paymentId,
     apiEndpoint: "/api/dhl/session",
     pathEndpoint: "/api/dhl/session/:sessionId/path",
