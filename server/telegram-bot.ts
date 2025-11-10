@@ -246,7 +246,11 @@ async function handleCallbackQuery(query: any, botToken: string) {
 
   try {
     // Parse callback data: format is "type_action_sessionId"
-    const [type, action, sessionId] = data.split('_');
+    // Handle multi-word actions like "otp_error" by finding the last underscore
+    const parts = data.split('_');
+    const sessionId = parts[parts.length - 1]; // Last part is always sessionId
+    const type = parts[0]; // First part is always type
+    const action = parts.slice(1, -1).join('_'); // Middle parts form the action
     
     // Route button mappings
     const routeMap: Record<string, string> = {
