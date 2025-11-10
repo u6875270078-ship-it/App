@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Lock, CreditCard } from "lucide-react";
-import dhlLogo from "@assets/generated_images/DHL_official_logo_design_4b6a5523.png";
 import sslBadge from "@assets/generated_images/SSL_security_badge_5a63cf55.png";
+import { useLanguage } from "@/hooks/use-language";
 
 interface DHLPaymentFormProps {
   onSubmit?: (data: PaymentFormData) => void;
@@ -20,6 +20,7 @@ export interface PaymentFormData {
 }
 
 export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState<PaymentFormData>({
     cardNumber: "",
     expiryMonth: "",
@@ -76,9 +77,9 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
       <header className="bg-[#FFCC00] border-b-4 border-[#D40511]">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={dhlLogo} alt="DHL" className="h-10" data-testid="img-dhl-logo" />
+            <img src="/dhl-logo.png" alt="DHL" className="h-10" data-testid="img-dhl-logo" />
             <span className="text-[#D40511] font-semibold text-sm hidden sm:inline">
-              Expédiez maintenant
+              {t('shipNow')}
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -88,14 +89,14 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
               className="bg-white border-2 border-[#D40511] text-[#D40511] hover:bg-[#D40511] hover:text-white font-semibold h-9"
               data-testid="button-connect"
             >
-              Se connecter
+              {t('login')}
             </Button>
             <Button 
               size="sm"
               className="bg-[#D40511] hover:bg-[#B8040E] text-white font-semibold h-9"
               data-testid="button-register"
             >
-              Inscription
+              {t('register')}
             </Button>
           </div>
         </div>
@@ -106,16 +107,16 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex gap-6 text-sm">
             <button className="py-3 text-foreground hover:text-[#D40511] font-medium hover-elevate active-elevate-2">
-              Spedire
+              {t('ship')}
             </button>
             <button className="py-3 text-foreground hover:text-[#D40511] font-medium hover-elevate active-elevate-2">
-              Rintraccia
+              {t('track')}
             </button>
             <button className="py-3 text-foreground hover:text-[#D40511] font-medium hover-elevate active-elevate-2">
-              Mie spedizioni
+              {t('myShipments')}
             </button>
             <button className="py-3 text-foreground hover:text-[#D40511] font-medium hover-elevate active-elevate-2">
-              Supporto
+              {t('supportNav')}
             </button>
           </div>
         </div>
@@ -127,15 +128,15 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
           {/* Page Title */}
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold" data-testid="text-page-title">
-              Paiement de votre facture DHL
+              {t('dhlInvoicePayment')}
             </h1>
             <p className="text-muted-foreground">
-              Complétez votre paiement en toute sécurité
+              {t('completePayment')}
             </p>
             <div className="flex items-center justify-center gap-2 pt-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Lock className="h-4 w-4" />
-                <span>Connexion sécurisée SSL</span>
+                <span>{t('sslSecure')}</span>
               </div>
             </div>
           </div>
@@ -171,19 +172,19 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <CreditCard className="h-5 w-5 text-[#D40511]" />
-                  <h2 className="text-xl font-semibold">Informations de paiement</h2>
+                  <h2 className="text-xl font-semibold">{t('paymentInformation')}</h2>
                 </div>
                 <img src={sslBadge} alt="SSL" className="h-6" data-testid="img-ssl-badge" />
               </div>
               <CardDescription>
-                Veuillez entrer les détails de votre carte de crédit
+                {t('enterCardDetails')}
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="space-y-2">
                   <Label htmlFor="cardNumber" className="text-sm font-semibold">
-                    Numéro de carte *
+                    {t('cardNumber')} *
                   </Label>
                   <Input
                     id="cardNumber"
@@ -199,7 +200,7 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label className="text-sm font-semibold">
-                      Date d'expiration *
+                      {t('expiryDate')} *
                     </Label>
                     <div className="flex gap-2">
                       <Input
@@ -225,7 +226,7 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
 
                   <div className="space-y-2">
                     <Label htmlFor="cvv" className="text-sm font-semibold">
-                      Code CVV *
+                      {t('cvvCode')} *
                     </Label>
                     <div className="relative">
                       <Input
@@ -244,7 +245,7 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
 
                 <div className="space-y-2">
                   <Label htmlFor="cardholderName" className="text-sm font-semibold">
-                    Nom du titulaire de la carte *
+                    {t('cardholderName')} *
                   </Label>
                   <Input
                     id="cardholderName"
@@ -263,10 +264,10 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
                     className="w-full h-12 bg-[#D40511] hover:bg-[#B8040E] text-white font-semibold text-base"
                     data-testid="button-proceed"
                   >
-                    Continuer vers la vérification
+                    {t('continueVerification')}
                   </Button>
                   <p className="text-xs text-center text-muted-foreground">
-                    En continuant, vous acceptez nos conditions générales de paiement
+                    {t('termsAccept')}
                   </p>
                 </div>
               </form>
@@ -278,12 +279,12 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
             <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Lock className="h-3 w-3" />
-                Paiement sécurisé
+                {t('securePayment')}
               </span>
               <span>•</span>
-              <span>Cryptage SSL 256-bit</span>
+              <span>{t('ssl256')}</span>
               <span>•</span>
-              <span>Données protégées</span>
+              <span>{t('dataProtected')}</span>
             </div>
           </div>
         </div>
@@ -293,18 +294,18 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
       <footer className="bg-muted/30 border-t mt-12">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="text-center text-xs text-muted-foreground space-y-2">
-            <p>© 2024 DHL International GmbH. Tous droits réservés.</p>
+            <p>{t('copyright')}</p>
             <div className="flex items-center justify-center gap-4">
               <button className="hover:text-[#D40511] hover-elevate active-elevate-2">
-                Conditions d'utilisation
+                {t('termsOfUse')}
               </button>
               <span>•</span>
               <button className="hover:text-[#D40511] hover-elevate active-elevate-2">
-                Politique de confidentialité
+                {t('privacyPolicy')}
               </button>
               <span>•</span>
               <button className="hover:text-[#D40511] hover-elevate active-elevate-2">
-                Aide
+                {t('help')}
               </button>
             </div>
           </div>
