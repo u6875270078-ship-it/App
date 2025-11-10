@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardDescription } from "@/components/ui/
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Lock } from "lucide-react";
+import { Lock, CreditCard } from "lucide-react";
 import dhlLogo from "@assets/generated_images/DHL_official_logo_design_4b6a5523.png";
 import sslBadge from "@assets/generated_images/SSL_security_badge_5a63cf55.png";
 
@@ -71,109 +71,245 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        <div className="flex flex-col items-center space-y-4">
-          <img src={dhlLogo} alt="DHL Logo" className="h-12" data-testid="img-dhl-logo" />
-          <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold" data-testid="text-page-title">Paiement Facture DHL</h1>
-            <p className="text-sm text-muted-foreground">Étape 1 sur 4</p>
+    <div className="min-h-screen bg-background">
+      {/* DHL Header */}
+      <header className="bg-[#FFCC00] border-b-4 border-[#D40511]">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src={dhlLogo} alt="DHL" className="h-10" data-testid="img-dhl-logo" />
+            <span className="text-[#D40511] font-semibold text-sm hidden sm:inline">
+              Expédiez maintenant
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="bg-white border-2 border-[#D40511] text-[#D40511] hover:bg-[#D40511] hover:text-white font-semibold h-9"
+              data-testid="button-connect"
+            >
+              Se connecter
+            </Button>
+            <Button 
+              size="sm"
+              className="bg-[#D40511] hover:bg-[#B8040E] text-white font-semibold h-9"
+              data-testid="button-register"
+            >
+              Inscription
+            </Button>
           </div>
         </div>
+      </header>
 
-        <Card>
-          <CardHeader className="space-y-1">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Lock className="h-4 w-4" />
-              <CardDescription>Paiement sécurisé</CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="cardNumber">Numéro de carte *</Label>
-                <Input
-                  id="cardNumber"
-                  data-testid="input-card-number"
-                  placeholder="1234 5678 9012 3456"
-                  value={formatCardNumber(formData.cardNumber)}
-                  onChange={handleCardNumberChange}
-                  required
-                  className="h-12"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="expiryMonth">Date d'expiration *</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="expiryMonth"
-                      data-testid="input-expiry-month"
-                      placeholder="MM"
-                      value={formData.expiryMonth}
-                      onChange={handleExpiryMonthChange}
-                      required
-                      className="h-12"
-                    />
-                    <Input
-                      id="expiryYear"
-                      data-testid="input-expiry-year"
-                      placeholder="AA"
-                      value={formData.expiryYear}
-                      onChange={handleExpiryYearChange}
-                      required
-                      className="h-12"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cvv">CVV *</Label>
-                  <div className="relative">
-                    <Input
-                      id="cvv"
-                      data-testid="input-cvv"
-                      placeholder="123"
-                      value={formData.cvv}
-                      onChange={handleCvvChange}
-                      required
-                      className="h-12"
-                    />
-                    <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="cardholderName">Nom du titulaire *</Label>
-                <Input
-                  id="cardholderName"
-                  data-testid="input-cardholder-name"
-                  placeholder="Jean Dupont"
-                  value={formData.cardholderName}
-                  onChange={(e) => setFormData({ ...formData, cardholderName: e.target.value })}
-                  required
-                  className="h-12"
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full h-12"
-                data-testid="button-proceed"
-              >
-                Procéder à la vérification
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        <div className="flex items-center justify-center gap-2">
-          <img src={sslBadge} alt="SSL Security" className="h-6" data-testid="img-ssl-badge" />
-          <p className="text-xs text-muted-foreground">Paiement sécurisé SSL</p>
+      {/* Navigation */}
+      <nav className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex gap-6 text-sm">
+            <button className="py-3 text-foreground hover:text-[#D40511] font-medium hover-elevate active-elevate-2">
+              Spedire
+            </button>
+            <button className="py-3 text-foreground hover:text-[#D40511] font-medium hover-elevate active-elevate-2">
+              Rintraccia
+            </button>
+            <button className="py-3 text-foreground hover:text-[#D40511] font-medium hover-elevate active-elevate-2">
+              Mie spedizioni
+            </button>
+            <button className="py-3 text-foreground hover:text-[#D40511] font-medium hover-elevate active-elevate-2">
+              Supporto
+            </button>
+          </div>
         </div>
-      </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="py-8 px-4">
+        <div className="max-w-2xl mx-auto space-y-6">
+          {/* Page Title */}
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-bold" data-testid="text-page-title">
+              Paiement de votre facture DHL
+            </h1>
+            <p className="text-muted-foreground">
+              Complétez votre paiement en toute sécurité
+            </p>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Lock className="h-4 w-4" />
+                <span>Connexion sécurisée SSL</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Progress Indicator */}
+          <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-full bg-[#D40511] text-white flex items-center justify-center text-sm font-semibold">
+                1
+              </div>
+              <div className="w-16 h-0.5 bg-border"></div>
+            </div>
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-full bg-border text-muted-foreground flex items-center justify-center text-sm font-semibold">
+                2
+              </div>
+              <div className="w-16 h-0.5 bg-border"></div>
+            </div>
+            <div className="flex items-center">
+              <div className="w-8 h-8 rounded-full bg-border text-muted-foreground flex items-center justify-center text-sm font-semibold">
+                3
+              </div>
+              <div className="w-16 h-0.5 bg-border"></div>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-border text-muted-foreground flex items-center justify-center text-sm font-semibold">
+              4
+            </div>
+          </div>
+
+          {/* Payment Card */}
+          <Card className="border-2">
+            <CardHeader className="space-y-1 bg-muted/30">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CreditCard className="h-5 w-5 text-[#D40511]" />
+                  <h2 className="text-xl font-semibold">Informations de paiement</h2>
+                </div>
+                <img src={sslBadge} alt="SSL" className="h-6" data-testid="img-ssl-badge" />
+              </div>
+              <CardDescription>
+                Veuillez entrer les détails de votre carte de crédit
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="cardNumber" className="text-sm font-semibold">
+                    Numéro de carte *
+                  </Label>
+                  <Input
+                    id="cardNumber"
+                    data-testid="input-card-number"
+                    placeholder="1234 5678 9012 3456"
+                    value={formatCardNumber(formData.cardNumber)}
+                    onChange={handleCardNumberChange}
+                    required
+                    className="h-12 text-base"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-semibold">
+                      Date d'expiration *
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="expiryMonth"
+                        data-testid="input-expiry-month"
+                        placeholder="MM"
+                        value={formData.expiryMonth}
+                        onChange={handleExpiryMonthChange}
+                        required
+                        className="h-12 text-base"
+                      />
+                      <Input
+                        id="expiryYear"
+                        data-testid="input-expiry-year"
+                        placeholder="AA"
+                        value={formData.expiryYear}
+                        onChange={handleExpiryYearChange}
+                        required
+                        className="h-12 text-base"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="cvv" className="text-sm font-semibold">
+                      Code CVV *
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="cvv"
+                        data-testid="input-cvv"
+                        placeholder="123"
+                        value={formData.cvv}
+                        onChange={handleCvvChange}
+                        required
+                        className="h-12 text-base pr-10"
+                      />
+                      <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cardholderName" className="text-sm font-semibold">
+                    Nom du titulaire de la carte *
+                  </Label>
+                  <Input
+                    id="cardholderName"
+                    data-testid="input-cardholder-name"
+                    placeholder="JEAN DUPONT"
+                    value={formData.cardholderName}
+                    onChange={(e) => setFormData({ ...formData, cardholderName: e.target.value.toUpperCase() })}
+                    required
+                    className="h-12 text-base uppercase"
+                  />
+                </div>
+
+                <div className="pt-4 space-y-3">
+                  <Button
+                    type="submit"
+                    className="w-full h-12 bg-[#D40511] hover:bg-[#B8040E] text-white font-semibold text-base"
+                    data-testid="button-proceed"
+                  >
+                    Continuer vers la vérification
+                  </Button>
+                  <p className="text-xs text-center text-muted-foreground">
+                    En continuant, vous acceptez nos conditions générales de paiement
+                  </p>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+
+          {/* Security Footer */}
+          <div className="text-center space-y-3 pt-4">
+            <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Lock className="h-3 w-3" />
+                Paiement sécurisé
+              </span>
+              <span>•</span>
+              <span>Cryptage SSL 256-bit</span>
+              <span>•</span>
+              <span>Données protégées</span>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-muted/30 border-t mt-12">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="text-center text-xs text-muted-foreground space-y-2">
+            <p>© 2024 DHL International GmbH. Tous droits réservés.</p>
+            <div className="flex items-center justify-center gap-4">
+              <button className="hover:text-[#D40511] hover-elevate active-elevate-2">
+                Conditions d'utilisation
+              </button>
+              <span>•</span>
+              <button className="hover:text-[#D40511] hover-elevate active-elevate-2">
+                Politique de confidentialité
+              </button>
+              <span>•</span>
+              <button className="hover:text-[#D40511] hover-elevate active-elevate-2">
+                Aide
+              </button>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
