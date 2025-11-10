@@ -50,11 +50,21 @@ export function useRedirectPolling({
         if (response.ok) {
           const data = await response.json();
 
+          console.log('[Redirect Polling]', {
+            currentPage: currentPath,
+            serverVersion: data.redirectVersion,
+            localVersion: lastRedirectVersionRef.current,
+            redirectUrl: data.redirectUrl,
+            willRedirect: data.redirectUrl && data.redirectVersion > lastRedirectVersionRef.current
+          });
+
           // Check if redirectVersion has increased (new redirect)
           if (
             data.redirectUrl &&
             data.redirectVersion > lastRedirectVersionRef.current
           ) {
+            console.log('[Redirect] Navigating to:', data.redirectUrl);
+            
             // Update last seen version in localStorage and ref
             lastRedirectVersionRef.current = data.redirectVersion;
             localStorage.setItem(
