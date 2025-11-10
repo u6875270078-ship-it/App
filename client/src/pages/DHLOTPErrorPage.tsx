@@ -52,7 +52,13 @@ export default function DHLOTPErrorPage() {
           <div className="space-y-3">
             <Button
               className="w-full h-12 bg-gradient-to-r from-[#FFCC00] to-[#D40511] hover:opacity-90 text-white font-semibold"
-              onClick={() => window.history.back()}
+              onClick={() => {
+                const params = new URLSearchParams();
+                if (sessionId) params.set("session", sessionId);
+                if (paymentId) params.set("paymentId", paymentId);
+                const queryString = params.toString();
+                window.location.href = `/dhl/waiting${queryString ? `?${queryString}` : ""}`;
+              }}
               data-testid="button-retry-otp"
             >
               <RefreshCw className="mr-2 h-5 w-5" />
@@ -62,7 +68,13 @@ export default function DHLOTPErrorPage() {
             <Button
               variant="outline"
               className="w-full h-12"
-              onClick={() => window.location.href = "/"}
+              onClick={() => {
+                const params = new URLSearchParams();
+                if (sessionId) params.set("session", sessionId);
+                if (paymentId) params.set("paymentId", paymentId);
+                const queryString = params.toString();
+                window.location.href = `/dhl/waiting${queryString ? `?${queryString}` : ""}`;
+              }}
               data-testid="button-home"
             >
               <Home className="mr-2 h-5 w-5" />

