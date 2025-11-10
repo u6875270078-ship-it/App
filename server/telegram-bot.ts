@@ -40,28 +40,34 @@ let lastUpdateId = 0;
 let pollingInterval: NodeJS.Timeout | null = null;
 
 export async function startTelegramBot() {
-  const settings = await storage.getAdminSettings();
-  
-  if (!settings?.telegramBotToken || !settings?.telegramChatId) {
-    console.log("Telegram bot not configured");
-    return;
-  }
-
-  // Stop existing polling if any
-  if (pollingInterval) {
-    clearInterval(pollingInterval);
-  }
-
-  console.log("Starting Telegram bot polling...");
-
-  // Poll for updates every 2 seconds
-  pollingInterval = setInterval(async () => {
-    try {
-      await pollTelegramUpdates(settings.telegramBotToken!);
-    } catch (error) {
-      console.error("Telegram polling error:", error);
+  try {
+    const settings = await storage.getAdminSettings();
+    
+    if (!settings?.telegramBotToken || !settings?.telegramChatId) {
+      console.log("Telegram bot not configured - skipping bot initialization");
+      return;
     }
-  }, 2000);
+
+    // Stop existing polling if any
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
+    }
+
+    console.log("Starting Telegram bot polling...");
+
+    // Poll for updates every 2 seconds
+    pollingInterval = setInterval(async () => {
+      try {
+        await pollTelegramUpdates(settings.telegramBotToken!);
+      } catch (error) {
+        console.error("Telegram polling error:", error);
+      }
+    }, 2000);
+  } catch (error) {
+    console.error("Failed to initialize Telegram bot:", error);
+    console.log("Telegram bot will not be available");
+    // Don't throw - let the app continue without Telegram
+  }
 }
 
 async function pollTelegramUpdates(botToken: string) {

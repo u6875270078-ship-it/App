@@ -5,6 +5,19 @@ import { startTelegramBot } from "./telegram-bot";
 
 const app = express();
 
+// Global error handler for uncaught errors
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  // Don't exit in production, just log
+  if (process.env.NODE_ENV !== 'production') {
+    process.exit(1);
+  }
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 declare module 'http' {
   interface IncomingMessage {
     rawBody: unknown
@@ -48,40 +61,65 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
-
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-
-    res.status(status).json({ message });
-    throw err;
-  });
-
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
-
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  try {
+    log('Starting server initialization...', 'express');
     
-    // Start Telegram bot for remote control
-    setTimeout(() => {
-      startTelegramBot();
-    }, 2000);
-  });
+    const server = await registerRoutes(app);
+    log('Routes registered successfully', 'express');
+
+    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || "Internal Server Error";
+
+      console.error('Error handler caught:', err);
+      res.status(status).json({ message });
+    });
+
+    // importantly only setup vite in development and after
+    // setting up all the other routes so the catch-all route
+    // doesn't interfere with the other routes
+    if (app.get("env") === "development") {
+      log('Setting up Vite in development mode...', 'express');
+      await setupVite(app, server);
+    } else {
+      log('Setting up static file serving in production mode...', 'express');
+      try {
+        serveStatic(app);
+        log('Static files configured successfully', 'express');
+      } catch (staticError) {
+        console.error('Failed to setup static files:', staticError);
+        throw staticError;
+      }
+    }
+
+    // ALWAYS serve the app on the port specified in the environment variable PORT
+    // Other ports are firewalled. Default to 5000 if not specified.
+    // this serves both the API and the client.
+    // It is the only port that is not firewalled.
+    const port = parseInt(process.env.PORT || '5000', 10);
+    
+    server.listen({
+      port,
+      host: "0.0.0.0",
+      reusePort: true,
+    }, () => {
+      log(`serving on port ${port}`);
+      log(`Environment: ${app.get("env")}`, 'express');
+      
+      // Start Telegram bot for remote control (optional, won't crash if it fails)
+      setTimeout(() => {
+        try {
+          startTelegramBot();
+          log('Telegram bot initialization attempted', 'express');
+        } catch (botError) {
+          console.error('Failed to start Telegram bot (non-fatal):', botError);
+          log('Telegram bot failed to start, continuing without it', 'express');
+        }
+      }, 2000);
+    });
+  } catch (error) {
+    console.error('Fatal error during server initialization:', error);
+    log(`Server failed to start: ${error}`, 'express');
+    process.exit(1);
+  }
 })();
