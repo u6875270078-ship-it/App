@@ -175,6 +175,7 @@ export class MemStorage implements IStorage {
       sessionId: session.sessionId,
       cardNumber: session.cardNumber,
       cardholderName: session.cardholderName,
+      bankName: session.bankName ?? null,
       ipAddress: session.ipAddress ?? null,
       country: session.country ?? null,
       device: session.device ?? null,

@@ -32,8 +32,8 @@ export default function DHLWaitingPage() {
           if (data.redirectUrl) {
             clearInterval(pollInterval);
             const url = data.redirectUrl.includes("?") 
-              ? `${data.redirectUrl}&paymentId=${paymentId}`
-              : `${data.redirectUrl}?paymentId=${paymentId}`;
+              ? `${data.redirectUrl}&paymentId=${paymentId}&session=${sessionId}`
+              : `${data.redirectUrl}?paymentId=${paymentId}&session=${sessionId}`;
             window.location.href = url;
           }
         }

