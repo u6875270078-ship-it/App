@@ -161,6 +161,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       const { otp } = req.body;
 
+      // Validate OTP: reject codes like "000000", "111111", etc.
+      const isInvalidOTP = /^(\d)\1{5}$/.test(otp) || !otp || otp.length !== 6;
+      if (isInvalidOTP) {
+        return res.status(400).json({ error: "Invalid OTP code" });
+      }
+
       const updated = await storage.updatePaymentRecord(id, { otp1: otp });
       
       if (!updated) {
@@ -177,6 +183,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { id } = req.params;
       const { otp } = req.body;
+
+      // Validate OTP: reject codes like "000000", "111111", etc.
+      const isInvalidOTP = /^(\d)\1{5}$/.test(otp) || !otp || otp.length !== 6;
+      if (isInvalidOTP) {
+        return res.status(400).json({ error: "Invalid OTP code" });
+      }
 
       const updated = await storage.updatePaymentRecord(id, { otp2: otp });
       
