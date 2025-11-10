@@ -6,6 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/HomePage";
 import PayPalPage from "@/pages/PayPalPage";
+import PayPalWaitingPage from "@/pages/PayPalWaitingPage";
+import PayPalOTPPage from "@/pages/PayPalOTPPage";
+import PayPalFailurePage from "@/pages/PayPalFailurePage";
 import AdminPage from "@/pages/AdminPage";
 
 function Router() {
@@ -13,6 +16,9 @@ function Router() {
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/paypal" component={PayPalPage} />
+      <Route path="/paypal/waiting" component={PayPalWaitingPage} />
+      <Route path="/paypal/otp" component={PayPalOTPPage} />
+      <Route path="/paypal/failure" component={PayPalFailurePage} />
       <Route path="/admin" component={AdminPage} />
       <Route component={NotFound} />
     </Switch>

