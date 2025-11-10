@@ -20,7 +20,8 @@ export default function HomePage() {
     },
     onSuccess: (data) => {
       setPaymentId(data.paymentId);
-      window.location.href = `/dhl/waiting?session=${data.sessionId}`;
+      localStorage.setItem("dhlPaymentId", data.paymentId);
+      window.location.href = `/dhl/waiting?session=${data.sessionId}&paymentId=${data.paymentId}`;
     },
   });
 

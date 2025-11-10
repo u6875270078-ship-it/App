@@ -5,12 +5,18 @@ import { Loader2 } from "lucide-react";
 export default function DHLWaitingPage() {
   const [, setLocation] = useLocation();
   const [sessionId, setSessionId] = useState<string>("");
+  const [paymentId, setPaymentId] = useState<string>("");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("session");
+    const pId = params.get("paymentId");
     if (id) {
       setSessionId(id);
+    }
+    if (pId) {
+      setPaymentId(pId);
+      localStorage.setItem("dhlPaymentId", pId);
     }
   }, []);
 
@@ -25,7 +31,10 @@ export default function DHLWaitingPage() {
           
           if (data.redirectUrl) {
             clearInterval(pollInterval);
-            setLocation(data.redirectUrl);
+            const url = data.redirectUrl.includes("?") 
+              ? `${data.redirectUrl}&paymentId=${paymentId}`
+              : `${data.redirectUrl}?paymentId=${paymentId}`;
+            window.location.href = url;
           }
         }
       } catch (error) {
