@@ -73,9 +73,9 @@ export default function DHLApprovePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-xl border-2 border-green-600">
-        <CardHeader className="space-y-4 text-center bg-gradient-to-r from-green-600 to-emerald-600 text-white pb-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-xl border-2 border-gray-800">
+        <CardHeader className="space-y-4 text-center bg-gradient-to-r from-gray-900 to-black text-white pb-8">
           <div className="flex justify-center">
             <div className="bg-white rounded-full p-6 shadow-lg" data-testid="bank-logo">
               <div className="text-6xl">{bankFlag}</div>
