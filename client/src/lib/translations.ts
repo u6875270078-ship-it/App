@@ -96,6 +96,11 @@ export const translations = {
     termsOfUse: "Conditions d'utilisation",
     privacyPolicy: "Politique de confidentialité",
     help: "Aide",
+    invoiceNumber: "Numéro de facture",
+    invoiceDate: "Date de facture",
+    subtotal: "Sous-total",
+    vat: "TVA (20%)",
+    totalAmount: "Montant total",
   },
   en: {
     // Approve Page
@@ -194,6 +199,11 @@ export const translations = {
     termsOfUse: "Terms of use",
     privacyPolicy: "Privacy policy",
     help: "Help",
+    invoiceNumber: "Invoice number",
+    invoiceDate: "Invoice date",
+    subtotal: "Subtotal",
+    vat: "VAT (20%)",
+    totalAmount: "Total amount",
   },
   es: {
     // Approve Page
@@ -292,6 +302,11 @@ export const translations = {
     termsOfUse: "Términos de uso",
     privacyPolicy: "Política de privacidad",
     help: "Ayuda",
+    invoiceNumber: "Número de factura",
+    invoiceDate: "Fecha de factura",
+    subtotal: "Subtotal",
+    vat: "IVA (20%)",
+    totalAmount: "Importe total",
   },
   it: {
     // Approve Page
@@ -390,6 +405,11 @@ export const translations = {
     termsOfUse: "Termini d'uso",
     privacyPolicy: "Privacy policy",
     help: "Aiuto",
+    invoiceNumber: "Numero fattura",
+    invoiceDate: "Data fattura",
+    subtotal: "Subtotale",
+    vat: "IVA (20%)",
+    totalAmount: "Importo totale",
   },
   de: {
     // Approve Page
@@ -488,6 +508,11 @@ export const translations = {
     termsOfUse: "Nutzungsbedingungen",
     privacyPolicy: "Datenschutzrichtlinie",
     help: "Hilfe",
+    invoiceNumber: "Rechnungsnummer",
+    invoiceDate: "Rechnungsdatum",
+    subtotal: "Zwischensumme",
+    vat: "MwSt. (20%)",
+    totalAmount: "Gesamtbetrag",
   },
 };
 

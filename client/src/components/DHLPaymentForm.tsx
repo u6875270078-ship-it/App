@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Lock, CreditCard } from "lucide-react";
+import { Lock, CreditCard, FileText } from "lucide-react";
 import sslBadge from "@assets/generated_images/SSL_security_badge_5a63cf55.png";
 import { useLanguage } from "@/hooks/use-language";
 
@@ -32,6 +32,16 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
     cardNumber: "",
     expiryDate: "",
   });
+
+  // Generate invoice details
+  const invoiceDetails = useMemo(() => {
+    const invoiceNumber = `DHL-${Math.floor(100000 + Math.random() * 900000)}`;
+    const invoiceDate = new Date().toLocaleDateString();
+    const subtotal = 3.13;
+    const vatAmount = 0.62;
+    const total = 3.75;
+    return { invoiceNumber, invoiceDate, subtotal, vatAmount, total };
+  }, []);
 
   // Luhn algorithm to validate card number
   const isValidCardNumber = (number: string): boolean => {
@@ -202,6 +212,48 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
               </div>
             </div>
           </div>
+
+          {/* Invoice Summary */}
+          <Card className="border-2 border-[#FFCC00] bg-gradient-to-br from-amber-50 to-yellow-50">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-[#D40511]" />
+                <h3 className="text-lg font-semibold">{t('invoiceNumber')}</h3>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex justify-between items-center pb-2 border-b">
+                <span className="text-sm font-medium text-muted-foreground">{t('invoiceNumber')}</span>
+                <span className="font-mono font-semibold text-[#D40511]" data-testid="text-invoice-number">
+                  {invoiceDetails.invoiceNumber}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pb-2 border-b">
+                <span className="text-sm font-medium text-muted-foreground">{t('invoiceDate')}</span>
+                <span className="font-semibold" data-testid="text-invoice-date">
+                  {invoiceDetails.invoiceDate}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-1">
+                <span className="text-sm text-muted-foreground">{t('subtotal')}</span>
+                <span className="text-sm" data-testid="text-subtotal">
+                  €{invoiceDetails.subtotal.toFixed(2)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-muted-foreground">{t('vat')}</span>
+                <span className="text-sm" data-testid="text-vat">
+                  €{invoiceDetails.vatAmount.toFixed(2)}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t-2 border-[#D40511]">
+                <span className="text-base font-bold">{t('totalAmount')}</span>
+                <span className="text-xl font-bold text-[#D40511]" data-testid="text-total">
+                  €{invoiceDetails.total.toFixed(2)}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Progress Indicator */}
           <div className="flex items-center justify-center gap-2">
