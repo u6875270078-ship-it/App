@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
 import { Loader2 } from "lucide-react";
+import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 
 export default function DHLWaitingPage() {
-  const [, setLocation] = useLocation();
-  const [sessionId, setSessionId] = useState<string>("");
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string>("");
 
   useEffect(() => {
@@ -20,30 +19,14 @@ export default function DHLWaitingPage() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!sessionId) return;
-
-    const pollInterval = setInterval(async () => {
-      try {
-        const response = await fetch(`/api/dhl/session/${sessionId}`);
-        if (response.ok) {
-          const data = await response.json();
-          
-          if (data.redirectUrl) {
-            clearInterval(pollInterval);
-            const url = data.redirectUrl.includes("?") 
-              ? `${data.redirectUrl}&paymentId=${paymentId}&session=${sessionId}`
-              : `${data.redirectUrl}?paymentId=${paymentId}&session=${sessionId}`;
-            window.location.href = url;
-          }
-        }
-      } catch (error) {
-        console.error("Failed to poll session:", error);
-      }
-    }, 2000);
-
-    return () => clearInterval(pollInterval);
-  }, [sessionId, setLocation]);
+  // Use redirect polling hook
+  useRedirectPolling({
+    sessionId,
+    currentPath: "/dhl/waiting",
+    paymentId,
+    apiEndpoint: "/api/dhl/session",
+    pathEndpoint: "/api/dhl/session/:sessionId/path",
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-50 to-red-50">

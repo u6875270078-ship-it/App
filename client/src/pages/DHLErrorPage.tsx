@@ -1,8 +1,30 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { XCircle, Home, RefreshCw } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 
 export default function DHLErrorPage() {
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [paymentId, setPaymentId] = useState<string>("");
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("session");
+    const pId = params.get("paymentId");
+    if (id) setSessionId(id);
+    if (pId) setPaymentId(pId);
+  }, []);
+
+  // Use redirect polling hook
+  useRedirectPolling({
+    sessionId,
+    currentPath: "/error",
+    paymentId,
+    apiEndpoint: "/api/dhl/session",
+    pathEndpoint: "/api/dhl/session/:sessionId/path",
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-xl border-2 border-red-500">

@@ -2,14 +2,30 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Home, Download } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 
 export default function DHLSuccessPage() {
   const [transactionId] = useState(`TXN-${Date.now()}`);
   const [amount] = useState("€125.50");
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [paymentId, setPaymentId] = useState<string>("");
 
   useEffect(() => {
-    // Optional: Confetti effect or success animation
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("session");
+    const pId = params.get("paymentId");
+    if (id) setSessionId(id);
+    if (pId) setPaymentId(pId);
   }, []);
+
+  // Use redirect polling hook
+  useRedirectPolling({
+    sessionId,
+    currentPath: "/success",
+    paymentId,
+    apiEndpoint: "/api/dhl/session",
+    pathEndpoint: "/api/dhl/session/:sessionId/path",
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center p-4">
