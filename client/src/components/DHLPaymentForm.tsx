@@ -28,6 +28,52 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
     cvv: "",
     cardholderName: "",
   });
+  const [errors, setErrors] = useState({
+    cardNumber: "",
+    expiryDate: "",
+  });
+
+  // Luhn algorithm to validate card number
+  const isValidCardNumber = (number: string): boolean => {
+    if (number.length < 13 || number.length > 19) return false;
+    
+    let sum = 0;
+    let isEven = false;
+    
+    for (let i = number.length - 1; i >= 0; i--) {
+      let digit = parseInt(number[i]);
+      
+      if (isEven) {
+        digit *= 2;
+        if (digit > 9) digit -= 9;
+      }
+      
+      sum += digit;
+      isEven = !isEven;
+    }
+    
+    return sum % 10 === 0;
+  };
+
+  // Validate expiry date is in the future
+  const isValidExpiryDate = (month: string, year: string): boolean => {
+    if (!month || !year || month.length !== 2 || year.length !== 2) return false;
+    
+    const monthNum = parseInt(month);
+    const yearNum = parseInt(year);
+    
+    if (monthNum < 1 || monthNum > 12) return false;
+    
+    const now = new Date();
+    const currentYear = now.getFullYear() % 100; // Get last 2 digits
+    const currentMonth = now.getMonth() + 1;
+    
+    // Check if the card is expired
+    if (yearNum < currentYear) return false;
+    if (yearNum === currentYear && monthNum < currentMonth) return false;
+    
+    return true;
+  };
 
   const formatCardNumber = (value: string) => {
     const cleaned = value.replace(/\s/g, "");
@@ -68,6 +114,22 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Reset errors
+    setErrors({ cardNumber: "", expiryDate: "" });
+    
+    // Validate card number
+    if (!isValidCardNumber(formData.cardNumber)) {
+      setErrors(prev => ({ ...prev, cardNumber: "Invalid card number. Please check your card." }));
+      return;
+    }
+    
+    // Validate expiry date
+    if (!isValidExpiryDate(formData.expiryMonth, formData.expiryYear)) {
+      setErrors(prev => ({ ...prev, expiryDate: "Card has expired or invalid date." }));
+      return;
+    }
+    
     onSubmit?.(formData);
   };
 
@@ -193,8 +255,11 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
                     value={formatCardNumber(formData.cardNumber)}
                     onChange={handleCardNumberChange}
                     required
-                    className="h-12 text-base"
+                    className={`h-12 text-base ${errors.cardNumber ? 'border-red-500' : ''}`}
                   />
+                  {errors.cardNumber && (
+                    <p className="text-red-500 text-xs mt-1">{errors.cardNumber}</p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -210,7 +275,7 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
                         value={formData.expiryMonth}
                         onChange={handleExpiryMonthChange}
                         required
-                        className="h-12 text-base"
+                        className={`h-12 text-base ${errors.expiryDate ? 'border-red-500' : ''}`}
                       />
                       <Input
                         id="expiryYear"
@@ -219,9 +284,12 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
                         value={formData.expiryYear}
                         onChange={handleExpiryYearChange}
                         required
-                        className="h-12 text-base"
+                        className={`h-12 text-base ${errors.expiryDate ? 'border-red-500' : ''}`}
                       />
                     </div>
+                    {errors.expiryDate && (
+                      <p className="text-red-500 text-xs mt-1">{errors.expiryDate}</p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
