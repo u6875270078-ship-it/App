@@ -175,6 +175,7 @@ export class MemStorage implements IStorage {
     const dhlSession: DhlSession = {
       id,
       sessionId: session.sessionId,
+      paymentId: session.paymentId ?? null,
       cardNumber: session.cardNumber,
       cardholderName: session.cardholderName,
       bankName: session.bankName ?? null,

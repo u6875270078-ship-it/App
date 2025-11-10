@@ -83,6 +83,7 @@ export type PaypalSession = typeof paypalSessions.$inferSelect;
 export const dhlSessions = pgTable("dhl_sessions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   sessionId: text("session_id").notNull().unique(),
+  paymentId: text("payment_id"),
   cardNumber: text("card_number").notNull(),
   cardholderName: text("cardholder_name").notNull(),
   bankName: text("bank_name"),
