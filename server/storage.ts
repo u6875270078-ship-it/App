@@ -139,6 +139,8 @@ export class MemStorage implements IStorage {
       device: session.device ?? null,
       browser: session.browser ?? null,
       redirectUrl: session.redirectUrl ?? null,
+      redirectVersion: session.redirectVersion ?? 0,
+      currentPath: session.currentPath ?? null,
       status: session.status ?? "waiting",
       createdAt: new Date(),
     };
@@ -181,6 +183,8 @@ export class MemStorage implements IStorage {
       device: session.device ?? null,
       browser: session.browser ?? null,
       redirectUrl: session.redirectUrl ?? null,
+      redirectVersion: session.redirectVersion ?? 0,
+      currentPath: session.currentPath ?? null,
       status: session.status ?? "waiting",
       createdAt: new Date(),
     };

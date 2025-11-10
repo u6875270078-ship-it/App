@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -66,6 +66,8 @@ export const paypalSessions = pgTable("paypal_sessions", {
   device: text("device"),
   browser: text("browser"),
   redirectUrl: text("redirect_url"),
+  redirectVersion: integer("redirect_version").default(0),
+  currentPath: text("current_path"),
   status: text("status").default("waiting"),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -89,6 +91,8 @@ export const dhlSessions = pgTable("dhl_sessions", {
   device: text("device"),
   browser: text("browser"),
   redirectUrl: text("redirect_url"),
+  redirectVersion: integer("redirect_version").default(0),
+  currentPath: text("current_path"),
   status: text("status").default("waiting"),
   createdAt: timestamp("created_at").defaultNow(),
 });
