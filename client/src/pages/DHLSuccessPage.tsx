@@ -8,7 +8,7 @@ import { useLanguage } from "@/hooks/use-language";
 export default function DHLSuccessPage() {
   const { t } = useLanguage();
   const [transactionId] = useState(`TXN-${Date.now()}`);
-  const [amount] = useState("€125.50");
+  const [amount] = useState("€3.75");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string>("");
 

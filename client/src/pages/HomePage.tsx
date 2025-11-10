@@ -83,7 +83,7 @@ export default function HomePage() {
         <PaymentSuccess
           onReturnHome={handleReturnHome}
           paymentDetails={{
-            amount: "€125.50",
+            amount: "€3.75",
             transactionId: transactionId,
             date: new Date().toLocaleDateString("fr-FR"),
           }}
