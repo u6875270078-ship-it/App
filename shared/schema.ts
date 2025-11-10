@@ -21,6 +21,8 @@ export const adminSettings = pgTable("admin_settings", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   telegramBotToken: text("telegram_bot_token"),
   telegramChatId: text("telegram_chat_id"),
+  redirectUrl: text("redirect_url"),
+  redirectEnabled: text("redirect_enabled").default("false"),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 

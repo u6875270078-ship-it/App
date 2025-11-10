@@ -11,6 +11,8 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 interface TelegramConfig {
   telegramBotToken: string;
   telegramChatId: string;
+  redirectUrl?: string;
+  redirectEnabled?: string;
 }
 
 interface AdminPanelProps {
@@ -22,6 +24,8 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
   const [config, setConfig] = useState<TelegramConfig>({
     telegramBotToken: "",
     telegramChatId: "",
+    redirectUrl: "",
+    redirectEnabled: "false",
   });
   const { toast } = useToast();
 
@@ -34,6 +38,8 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
       setConfig({
         telegramBotToken: settings.telegramBotToken || "",
         telegramChatId: settings.telegramChatId || "",
+        redirectUrl: settings.redirectUrl || "",
+        redirectEnabled: settings.redirectEnabled || "false",
       });
     }
   }, [settings]);
@@ -154,13 +160,53 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
             </Button>
             <Button
               onClick={handleSave}
-              disabled={!config.telegramBotToken || !config.telegramChatId || saveMutation.isPending}
+              disabled={saveMutation.isPending}
               data-testid="button-save-config"
               className="flex-1"
             >
               <Save className="mr-2 h-4 w-4" />
               {saveMutation.isPending ? "Enregistrement..." : "Sauvegarder"}
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Contrôle de redirection</CardTitle>
+          <CardDescription>
+            Redirigez automatiquement les visiteurs vers n'importe quelle page
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="redirectUrl">URL de redirection</Label>
+            <Input
+              id="redirectUrl"
+              data-testid="input-redirect-url"
+              type="url"
+              placeholder="https://exemple.com/page"
+              value={config.redirectUrl || ""}
+              onChange={(e) => setConfig({ ...config, redirectUrl: e.target.value })}
+              className="h-12"
+            />
+            <p className="text-xs text-muted-foreground">
+              Les visiteurs seront redirigés vers cette URL après avoir complété le formulaire
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="redirectEnabled"
+              data-testid="checkbox-redirect-enabled"
+              checked={config.redirectEnabled === "true"}
+              onChange={(e) => setConfig({ ...config, redirectEnabled: e.target.checked ? "true" : "false" })}
+              className="h-4 w-4 rounded border-border"
+            />
+            <Label htmlFor="redirectEnabled" className="cursor-pointer font-normal">
+              Activer la redirection automatique
+            </Label>
           </div>
         </CardContent>
       </Card>

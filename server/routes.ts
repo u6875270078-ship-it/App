@@ -17,7 +17,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/admin/settings", async (req, res) => {
     try {
       const settings = await storage.getAdminSettings();
-      res.json(settings || { telegramBotToken: "", telegramChatId: "" });
+      res.json(settings || { 
+        telegramBotToken: "", 
+        telegramChatId: "",
+        redirectUrl: "",
+        redirectEnabled: "false"
+      });
     } catch (error) {
       res.status(500).json({ error: "Failed to get settings" });
     }

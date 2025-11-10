@@ -60,6 +60,8 @@ export class MemStorage implements IStorage {
       id,
       telegramBotToken: settings.telegramBotToken ?? null,
       telegramChatId: settings.telegramChatId ?? null,
+      redirectUrl: settings.redirectUrl ?? null,
+      redirectEnabled: settings.redirectEnabled ?? "false",
       updatedAt: new Date(),
     };
     this.adminSettings = adminSettings;

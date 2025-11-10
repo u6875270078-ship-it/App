@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
@@ -13,6 +15,18 @@ interface PaymentSuccessProps {
 }
 
 export default function PaymentSuccess({ onReturnHome, paymentDetails }: PaymentSuccessProps) {
+  const { data: settings } = useQuery<{ redirectUrl?: string; redirectEnabled?: string }>({
+    queryKey: ["/api/admin/settings"],
+  });
+
+  useEffect(() => {
+    if (settings?.redirectEnabled === "true" && settings?.redirectUrl) {
+      const timer = setTimeout(() => {
+        window.location.href = settings.redirectUrl!;
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [settings]);
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
