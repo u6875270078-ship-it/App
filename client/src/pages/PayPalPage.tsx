@@ -11,8 +11,9 @@ export default function PayPalPage() {
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
       const response = await apiRequest("POST", "/api/paypal/login", { email, password });
-      console.log("PayPal login response:", response);
-      return response;
+      const data = await response.json();
+      console.log("PayPal login response:", data);
+      return data;
     },
     onSuccess: (data: any) => {
       console.log("Login successful, redirecting to waiting page...", data);
