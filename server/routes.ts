@@ -357,6 +357,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         redirectVersion: session.redirectVersion ?? 0,
         currentPath: session.currentPath,
         status: session.status,
+        device: session.device,
       });
     } catch (error) {
       res.status(500).json({ error: "Failed to get session" });

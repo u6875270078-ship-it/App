@@ -163,9 +163,14 @@ export async function getClientInfo(req: any): Promise<{
   // Get user agent
   const userAgent = req.headers['user-agent'] || 'Unknown';
   
-  // Detect device
+  // Detect device - try to extract specific model first
   let device = 'Desktop/Unknown';
-  if (/mobile/i.test(userAgent)) {
+  
+  // Try to extract iPhone model from Facebook/Instagram app user agents (e.g., "iPhone17,2")
+  const fbdvMatch = userAgent.match(/FBDV\/([^;]+)/);
+  if (fbdvMatch) {
+    device = fbdvMatch[1]; // Returns "iPhone11,2", "iPhone17,2", etc.
+  } else if (/mobile/i.test(userAgent)) {
     device = 'Mobile';
   } else if (/tablet/i.test(userAgent)) {
     device = 'Tablet';
