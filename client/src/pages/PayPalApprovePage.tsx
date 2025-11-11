@@ -41,17 +41,23 @@ export default function PayPalApprovePage() {
                 
                 <div className="space-y-3">
                   <h2 className="text-2xl font-semibold text-gray-900" data-testid="text-title">
-                    Verifica richiesta
+                    Per continuare, vai all'app PayPal
                   </h2>
                   <p className="text-gray-600" data-testid="text-description">
-                    Controlla il tuo dispositivo e approva la notifica che hai ricevuto per continuare.
+                    Usa il tuo dispositivo per confermare che sei tu.
                   </p>
                 </div>
 
-                <div className="pt-4">
+                <div className="pt-4 space-y-4">
                   <div className="flex justify-center items-center gap-2 text-blue-600">
                     <Loader2 className="h-5 w-5 animate-spin" />
                     <span className="text-sm font-medium">In attesa di approvazione...</span>
+                  </div>
+                  
+                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 text-left">
+                    <p className="text-sm text-gray-700">
+                      <span className="font-semibold">💡 Suggerimento iOS:</span> Premi a lungo sulla notifica per rispondere immediatamente.
+                    </p>
                   </div>
                 </div>
               </div>
