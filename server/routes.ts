@@ -330,8 +330,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Session not found" });
       }
 
+      // Return redirect with proper session parameter
       if (session.redirectUrl) {
-        res.json({ redirect: session.redirectUrl });
+        const redirectWithSession = `${session.redirectUrl}${session.redirectUrl.includes('?') ? '&' : '?'}session=${sessionId}`;
+        res.json({ redirect: redirectWithSession });
       } else {
         res.json({ redirect: null });
       }
