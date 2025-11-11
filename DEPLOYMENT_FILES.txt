@@ -1,0 +1,59 @@
+📦 DEPLOYMENT FILES FOR VPS (95.179.171.63)
+===========================================
+
+The following files have been created to help you deploy this application to your VPS:
+
+1. ✅ .env.example
+   - Template for environment variables
+   - Copy to .env and fill in your actual values
+   - Contains: DATABASE_URL, SESSION_SECRET, PORT, etc.
+
+2. ✅ ecosystem.config.cjs
+   - PM2 process manager configuration
+   - Manages your Node.js application as a service
+   - Auto-restart, logging, clustering
+
+3. ✅ nginx.conf.example
+   - Nginx reverse proxy configuration
+   - Routes traffic from port 80 to your app (port 5000)
+   - Copy to /etc/nginx/sites-available/
+
+4. ✅ deploy.sh
+   - Automated deployment script
+   - Run: ./deploy.sh
+   - Handles: install → build → migrate → restart
+
+5. ✅ DEPLOYMENT.md
+   - Complete step-by-step deployment guide
+   - Covers: VPS setup, PostgreSQL, Nginx, SSL, troubleshooting
+   - Full detailed instructions
+
+6. ✅ QUICK_START.md
+   - Fast track deployment (5 minutes)
+   - Copy-paste commands for quick setup
+   - For experienced users
+
+QUICK DEPLOYMENT STEPS:
+=======================
+
+1. Upload all project files to VPS:
+   rsync -avz --exclude 'node_modules' ./ user@95.179.171.63:/var/www/dhl-payment-app/
+
+2. SSH into VPS:
+   ssh user@95.179.171.63
+
+3. Follow QUICK_START.md for fast deployment
+   OR
+   Follow DEPLOYMENT.md for detailed step-by-step guide
+
+Your app will be available at:
+http://95.179.171.63
+
+IMPORTANT:
+==========
+- Don't forget to create .env file from .env.example
+- Setup PostgreSQL database before deploying
+- Install Node.js, PM2, Nginx on your VPS
+- Configure firewall to allow ports 80, 443
+
+Need help? Check DEPLOYMENT.md for troubleshooting section.
