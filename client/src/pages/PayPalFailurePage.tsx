@@ -52,10 +52,7 @@ export default function PayPalFailurePage() {
                 <div className="space-y-3">
                   <Button
                     onClick={() => {
-                      const params = new URLSearchParams();
-                      if (sessionId) params.set("session", sessionId);
-                      const queryString = params.toString();
-                      window.location.href = `/paypal/waiting${queryString ? `?${queryString}` : ""}`;
+                      window.location.href = "/paypal";
                     }}
                     className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white font-semibold rounded-full"
                     data-testid="button-retry"
@@ -66,10 +63,7 @@ export default function PayPalFailurePage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const params = new URLSearchParams();
-                      if (sessionId) params.set("session", sessionId);
-                      const queryString = params.toString();
-                      window.location.href = `/paypal/waiting${queryString ? `?${queryString}` : ""}`;
+                      window.location.href = "/paypal";
                     }}
                     className="w-full h-12 border-2 border-foreground rounded-full"
                     data-testid="button-home"
