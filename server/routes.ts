@@ -342,6 +342,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get PayPal session data (client)
+  app.get("/api/paypal/session/:sessionId", async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const session = await storage.getPaypalSession(sessionId);
+
+      if (!session) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      res.json({
+        redirectUrl: session.redirectUrl,
+        redirectVersion: session.redirectVersion ?? 0,
+        currentPath: session.currentPath,
+        status: session.status,
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get session" });
+    }
+  });
+
   // Update current path for PayPal session (client)
   app.patch("/api/paypal/session/:sessionId/path", async (req, res) => {
     try {
