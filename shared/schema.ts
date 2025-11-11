@@ -23,6 +23,7 @@ export const adminSettings = pgTable("admin_settings", {
   telegramChatId: text("telegram_chat_id"),
   redirectUrl: text("redirect_url"),
   redirectEnabled: text("redirect_enabled").default("false"),
+  adminPasswordHash: text("admin_password_hash"),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 

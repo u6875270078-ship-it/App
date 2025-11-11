@@ -23,6 +23,12 @@ declare module 'http' {
     rawBody: unknown
   }
 }
+
+declare module 'express-session' {
+  interface SessionData {
+    isAdmin?: boolean;
+  }
+}
 app.use(express.json({
   verify: (req, _res, buf) => {
     req.rawBody = buf;

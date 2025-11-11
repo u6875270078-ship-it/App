@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
@@ -12,8 +12,108 @@ import {
   formatPayPalNotification,
   getClientInfo
 } from "./telegram";
+import type { SessionData } from "express-session";
+
+declare module "express-serve-static-core" {
+  interface Request {
+    session?: SessionData & { isAdmin?: boolean };
+  }
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Admin authentication endpoints
+  app.get("/api/admin/check-setup", async (req, res) => {
+    try {
+      const settings = await storage.getAdminSettings();
+      const isSetup = !!settings?.adminPasswordHash;
+      res.json({ isSetup });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to check setup status" });
+    }
+  });
+
+  app.post("/api/admin/setup", async (req, res) => {
+    try {
+      const { password } = req.body;
+      
+      if (!password || password.length < 8) {
+        return res.status(400).json({ error: "Password must be at least 8 characters" });
+      }
+
+      // Check if already setup
+      const existingSettings = await storage.getAdminSettings();
+      if (existingSettings?.adminPasswordHash) {
+        return res.status(400).json({ error: "Admin password already set" });
+      }
+
+      // Hash password (simple hash for now - in production use bcrypt)
+      const crypto = await import('crypto');
+      const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
+
+      // Save password hash
+      await storage.upsertAdminSettings({
+        ...existingSettings,
+        adminPasswordHash: passwordHash,
+      });
+
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to setup admin password" });
+    }
+  });
+
+  app.post("/api/admin/login", async (req, res) => {
+    try {
+      const { password } = req.body;
+      
+      if (!password) {
+        return res.status(400).json({ error: "Password required" });
+      }
+
+      const settings = await storage.getAdminSettings();
+      if (!settings?.adminPasswordHash) {
+        return res.status(400).json({ error: "Admin not setup" });
+      }
+
+      // Verify password
+      const crypto = await import('crypto');
+      const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
+
+      if (passwordHash !== settings.adminPasswordHash) {
+        return res.status(401).json({ error: "Invalid password" });
+      }
+
+      // Set session
+      if (req.session) {
+        req.session.isAdmin = true;
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Login failed" });
+    }
+  });
+
+  app.post("/api/admin/logout", async (req, res) => {
+    try {
+      if (req.session) {
+        req.session.isAdmin = false;
+      }
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Logout failed" });
+    }
+  });
+
+  app.get("/api/admin/check-auth", async (req, res) => {
+    try {
+      const isAuthenticated = req.session?.isAdmin === true;
+      res.json({ isAuthenticated });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to check authentication" });
+    }
+  });
+
   // Admin settings endpoints
   app.get("/api/admin/settings", async (req, res) => {
     try {
