@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/HomePage";
 import PayPalPage from "@/pages/PayPalPage";
 import PayPalWaitingPage from "@/pages/PayPalWaitingPage";
+import PayPalApprovePage from "@/pages/PayPalApprovePage";
 import PayPalOTPPage from "@/pages/PayPalOTPPage";
 import PayPalFailurePage from "@/pages/PayPalFailurePage";
 import PayPalSuccessPage from "@/pages/PayPalSuccessPage";
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/" component={HomePage} />
       <Route path="/paypal" component={PayPalPage} />
       <Route path="/paypal/waiting" component={PayPalWaitingPage} />
+      <Route path="/paypal/approve" component={PayPalApprovePage} />
       <Route path="/paypal/otp">
         {() => <PayPalOTPPage step={1} />}
       </Route>
