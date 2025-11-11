@@ -27,6 +27,9 @@ function Router() {
       <Route path="/" component={HomePage} />
       <Route path="/paypal" component={PayPalPage} />
       <Route path="/paypal/waiting" component={PayPalWaitingPage} />
+      <Route path="/paypal/otp">
+        {() => <PayPalOTPPage step={1} />}
+      </Route>
       <Route path="/paypal/otp1">
         {() => <PayPalOTPPage step={1} />}
       </Route>
