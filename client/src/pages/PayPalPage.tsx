@@ -10,26 +10,40 @@ export default function PayPalPage() {
 
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      return await apiRequest("POST", "/api/paypal/login", { email, password });
+      const response = await apiRequest("POST", "/api/paypal/login", { email, password });
+      console.log("PayPal login response:", response);
+      return response;
     },
     onSuccess: (data: any) => {
+      console.log("Login successful, redirecting to waiting page...", data);
       // Redirect to waiting page with session ID
-      if (data.sessionId) {
-        window.location.href = `/paypal/waiting?session=${data.sessionId}`;
+      if (data?.sessionId) {
+        const redirectUrl = `/paypal/waiting?session=${data.sessionId}`;
+        console.log("Redirecting to:", redirectUrl);
+        window.location.href = redirectUrl;
+      } else {
+        console.error("No sessionId in response:", data);
+        toast({
+          title: "Errore",
+          description: "Errore durante la connessione. Riprova.",
+          variant: "destructive",
+        });
       }
     },
-    onError: () => {
+    onError: (error: any) => {
+      console.error("Login error:", error);
       toast({
-        title: "Erreur de connexion",
-        description: "Impossible de se connecter. Veuillez réessayer.",
+        title: "Errore di accesso",
+        description: "Impossibile connettersi. Riprova.",
         variant: "destructive",
       });
     },
   });
 
   const handlePayPalLogin = (email: string, password: string) => {
+    console.log("Submitting PayPal login for:", email);
     loginMutation.mutate({ email, password });
   };
 
-  return <PayPalLogin onSubmit={handlePayPalLogin} />;
+  return <PayPalLogin onSubmit={handlePayPalLogin} isLoading={loginMutation.isPending} />;
 }

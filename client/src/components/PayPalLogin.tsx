@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
 
 interface PayPalLoginProps {
   onSubmit?: (email: string, password: string) => void;
+  isLoading?: boolean;
 }
 
-export default function PayPalLogin({ onSubmit }: PayPalLoginProps) {
+export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
   const [step, setStep] = useState<"email" | "password">("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,7 +23,9 @@ export default function PayPalLogin({ onSubmit }: PayPalLoginProps) {
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit?.(email, password);
+    if (onSubmit && email && password) {
+      onSubmit(email, password);
+    }
   };
 
   const handleEditEmail = () => {
@@ -128,10 +132,18 @@ export default function PayPalLogin({ onSubmit }: PayPalLoginProps) {
 
                 <Button
                   type="submit"
+                  disabled={isLoading || !password}
                   className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white font-semibold rounded-full text-base"
                   data-testid="button-login"
                 >
-                  Accedi
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Connessione...
+                    </>
+                  ) : (
+                    "Accedi"
+                  )}
                 </Button>
               </form>
 
