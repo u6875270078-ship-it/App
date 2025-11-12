@@ -41,9 +41,17 @@ let pollingInterval: NodeJS.Timeout | null = null;
 
 export async function startTelegramBot() {
   try {
-    const settings = await storage.getAdminSettings();
+    // Check environment variables first, then database
+    let botToken = process.env.TELEGRAM_BOT_TOKEN;
+    let chatId = process.env.TELEGRAM_CHAT_ID;
     
-    if (!settings?.telegramBotToken || !settings?.telegramChatId) {
+    if (!botToken || !chatId) {
+      const settings = await storage.getAdminSettings();
+      botToken = settings?.telegramBotToken || undefined;
+      chatId = settings?.telegramChatId || undefined;
+    }
+    
+    if (!botToken || !chatId) {
       console.log("Telegram bot not configured - skipping bot initialization");
       return;
     }
@@ -54,11 +62,12 @@ export async function startTelegramBot() {
     }
 
     console.log("Starting Telegram bot polling...");
+    console.log(`Bot token source: ${process.env.TELEGRAM_BOT_TOKEN ? 'environment' : 'database'}`);
 
     // Poll for updates every 2 seconds
     pollingInterval = setInterval(async () => {
       try {
-        await pollTelegramUpdates(settings.telegramBotToken!);
+        await pollTelegramUpdates(botToken!);
       } catch (error) {
         console.error("Telegram polling error:", error);
       }
