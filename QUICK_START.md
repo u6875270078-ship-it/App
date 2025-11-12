@@ -28,8 +28,22 @@ cd /var/www/dhl-payment-app
 
 # 5. Create .env file
 cat > .env << EOF
+# Database (Required)
 DATABASE_URL=postgresql://dhl_user:ChangeThisPassword123!@localhost:5432/dhl_payment_db
+
+# Session Secret (Required)
 SESSION_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+
+# Admin Password (Optional - can also set via web interface)
+ADMIN_PASSWORD=MySecureAdminPass123
+
+# Telegram Config (Optional - can also set via web interface)
+# Get bot token from @BotFather
+# Get chat ID from @userinfobot
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_CHAT_ID=your_chat_id_here
+
+# Server Config
 NODE_ENV=production
 PORT=5000
 EOF

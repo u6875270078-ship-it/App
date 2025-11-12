@@ -109,8 +109,34 @@ nano .env
 
 Edit the `.env` file with your actual values:
 ```env
+# ==========================================
+# DATABASE CONFIGURATION (Required)
+# ==========================================
 DATABASE_URL=postgresql://dhl_user:your_strong_password_here@localhost:5432/dhl_payment_db
+
+# ==========================================
+# ADMIN AUTHENTICATION (Optional)
+# ==========================================
+# Set this to auto-create admin password on first setup
+# If not set, you'll create password via /admin/setup page
+ADMIN_PASSWORD=MySecureAdminPassword123
+
+# ==========================================
+# TELEGRAM BOT CONFIGURATION (Optional)
+# ==========================================
+# Get bot token from @BotFather on Telegram
+# Get chat ID from @userinfobot on Telegram
+TELEGRAM_BOT_TOKEN=1234567890:ABCdefGHIjklMNOpqrsTUVwxyz
+TELEGRAM_CHAT_ID=123456789
+
+# ==========================================
+# SESSION CONFIGURATION (Required)
+# ==========================================
 SESSION_SECRET=generate_a_random_32_character_string_here
+
+# ==========================================
+# SERVER CONFIGURATION (Optional)
+# ==========================================
 NODE_ENV=production
 PORT=5000
 ```
@@ -119,6 +145,23 @@ PORT=5000
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
+
+**Configuration Methods:**
+
+You have **two options** to configure Telegram and admin settings:
+
+1. **Option 1: Environment Variables (.env file)** ✅ Recommended for VPS
+   - Set `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and `ADMIN_PASSWORD` in `.env`
+   - Configuration is persistent and survives restarts
+   - More secure (credentials stored in file, not database)
+
+2. **Option 2: Web Interface (Admin Panel)**
+   - Leave Telegram variables empty in `.env`
+   - Access `/admin/setup` to create admin password
+   - Then access `/admin` to configure Telegram via web interface
+   - Settings stored in database
+
+**Note:** Environment variables (`.env`) take priority over database settings.
 
 ### 3.4 Install Dependencies
 ```bash

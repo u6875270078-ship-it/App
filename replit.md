@@ -149,6 +149,18 @@ Preferred communication style: Simple, everyday language.
 - Sends formatted notifications when payment data is captured
 - Uses HTML parse mode for rich message formatting
 - Supports custom message templates for DHL and PayPal flows
+- **Dual Configuration System:**
+  - **Method 1:** Environment Variables (`.env` file) - Priority
+    - `TELEGRAM_BOT_TOKEN` - Bot token from @BotFather
+    - `TELEGRAM_CHAT_ID` - Chat ID from @userinfobot
+    - `ADMIN_PASSWORD` - Initial admin password (optional)
+    - Recommended for VPS deployment
+    - Values override database settings
+  - **Method 2:** Admin Panel (Web Interface) - Fallback
+    - Access `/admin/setup` for first-time password creation
+    - Configure Telegram via `/admin` panel
+    - Settings stored in database
+  - Helper function `getTelegramConfig()` in `server/routes.ts` checks env vars first, then database
 
 **Database:**
 - Neon Database (serverless PostgreSQL) via `@neondatabase/serverless`
