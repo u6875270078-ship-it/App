@@ -4,6 +4,10 @@
 
 This is a payment verification application that simulates DHL and PayPal payment flows. The application captures payment card details, OTP verification codes, and PayPal login credentials, then sends notifications via Telegram bot integration. It features an admin panel for managing Telegram bot configuration, viewing payment records, and **redirecting visitors multiple times to different pages throughout their session**.
 
+**VPS Information:**
+- IP Address: 95.179.220.202
+- SSH Access: `ssh root@95.179.220.202`
+
 **Tech Stack:**
 - Frontend: React + TypeScript with Vite
 - Backend: Express.js (Node.js)
