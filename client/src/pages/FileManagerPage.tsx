@@ -41,7 +41,7 @@ export default function FileManagerPage() {
   const readFileMutation = useMutation<{ content: string; path: string }, Error, string>({
     mutationFn: async (filePath: string) => {
       const response = await apiRequest("POST", "/api/files/read", { path: filePath });
-      return response as { content: string; path: string };
+      return response as unknown as { content: string; path: string };
     },
     onSuccess: (data) => {
       setEditContent(data.content);
@@ -100,7 +100,7 @@ export default function FileManagerPage() {
   const executeCommandMutation = useMutation<{ output: string; error?: string }, Error, string>({
     mutationFn: async (command: string) => {
       const response = await apiRequest("POST", "/api/files/exec", { command });
-      return response as { output: string; error?: string };
+      return response as unknown as { output: string; error?: string };
     },
     onSuccess: (data) => {
       setCommandOutput(data.error || data.output);
