@@ -53,7 +53,7 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
       onSave?.(config);
       toast({
         title: "Configuration sauvegardée",
-        description: "Les paramètres Telegram ont été enregistrés avec succès.",
+        description: "Les paramètres Telegram ont été enregistrés avec succès. Le fichier .env a été créé automatiquement.",
       });
     },
     onError: () => {

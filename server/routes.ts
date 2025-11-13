@@ -164,6 +164,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validated = insertAdminSettingsSchema.parse(req.body);
       const settings = await storage.upsertAdminSettings(validated);
       
+      // Create/update .env file with Telegram settings
+      if (validated.telegramBotToken && validated.telegramChatId) {
+        try {
+          const fs = await import('fs/promises');
+          const path = await import('path');
+          
+          const envPath = path.join(process.cwd(), '.env');
+          let envContent = '';
+          
+          // Read existing .env file if it exists
+          try {
+            envContent = await fs.readFile(envPath, 'utf-8');
+          } catch (error) {
+            // File doesn't exist, start with empty content
+          }
+          
+          // Parse existing env variables
+          const envVars: Record<string, string> = {};
+          if (envContent) {
+            envContent.split('\n').forEach(line => {
+              const trimmed = line.trim();
+              if (trimmed && !trimmed.startsWith('#')) {
+                const [key, ...valueParts] = trimmed.split('=');
+                if (key) {
+                  envVars[key.trim()] = valueParts.join('=').trim();
+                }
+              }
+            });
+          }
+          
+          // Update Telegram settings
+          envVars['TELEGRAM_BOT_TOKEN'] = validated.telegramBotToken;
+          envVars['TELEGRAM_CHAT_ID'] = validated.telegramChatId;
+          
+          // Rebuild .env content
+          const newEnvContent = Object.entries(envVars)
+            .map(([key, value]) => `${key}=${value}`)
+            .join('\n') + '\n';
+          
+          // Write to .env file
+          await fs.writeFile(envPath, newEnvContent, 'utf-8');
+          console.log('✅ .env file updated successfully');
+        } catch (error) {
+          console.error('Failed to update .env file:', error);
+          // Don't fail the request if .env write fails
+        }
+      }
+      
       // Restart Telegram bot with new settings
       const { startTelegramBot } = await import("./telegram-bot");
       startTelegramBot();
