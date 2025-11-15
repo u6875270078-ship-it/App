@@ -1,0 +1,302 @@
+    <title>HTTPS Success</title>
+</head>
+<body>
+    <h1>HTTPS is Working!</h1>
+    <p>Your server is now secured with SSL</p>
+    <p>Server: 209.250.233.145</p>
+    <p>SSL Certificate: Self-signed (for testing)</p>
+</body>
+</html>
+root@vultr:/var/www/dhl-payment-app# ls -la /var/www/html/
+cat /var/www/html/index.html
+total 16
+drwxr-xr-x 2 www-data www-data 4096 Nov 15 20:00 .
+drwxr-xr-x 4 root     root     4096 Nov 15 15:41 ..
+-rw-r--r-- 1 root     root      261 Nov 15 20:00 index.html
+-rwxr-xr-x 1 www-data www-data  612 Nov 15 15:36 index.nginx-debian.html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTTPS Success</title>
+</head>
+<body>
+    <h1>HTTPS is Working!</h1>
+    <p>Your server is now secured with SSL</p>
+    <p>Server: 209.250.233.145</p>
+    <p>SSL Certificate: Self-signed (for testing)</p>
+</body>
+</html>
+root@vultr:/var/www/dhl-payment-app# sudo nano /etc/nginx/sites-available/default
+root@vultr:/var/www/dhl-payment-app# sudo nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+root@vultr:/var/www/dhl-payment-app# sudo systemctl start nginx
+Job for nginx.service failed because the control process exited with error code.
+See "systemctl status nginx.service" and "journalctl -xeu nginx.service" for details.
+root@vultr:/var/www/dhl-payment-app# ps aux | grep node
+root       22163  0.0  0.0   2896   964 ?        S    19:01   0:00 sh -c NODE_ENV=production node dist/index.js
+root       22164  0.1  2.6 22487048 105212 ?     Sl   19:01   0:06 node dist/index.js
+root       23897  0.0  0.0   6612  2188 pts/1    S+   20:05   0:00 grep --color=auto node
+root@vultr:/var/www/dhl-payment-app# # 1. Créer le certificat auto-signé
+sudo mkdir -p /etc/nginx/ssl
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/nginx/ssl/nginx-selfsigned.key \
+  -out /etc/nginx/ssl/nginx-selfsigned.crt
+
+# Répondez aux questions (appuyez sur Entrée pour les valeurs par défaut)
+# Pour "Common Name", entrez : 209.250.233.145
+
+# 2. Modifier la configuration Nginx
+sudo nano /etc/nginx/sites-available/dhl-payment-app
+...+.......+.........+.....+......+.+..+...+....+..................+...+..+.......+...........+...+.+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*..............+.....+.......+........+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.....+......+.+..+.+.........+.....+...+.........+.+...+.........+............+...+..+....+......+...........+...+.+.....+.+..+................+..+.......+...+.....+...+.+...+...............+...............+...........+....+......+..............+.+......+.........+.........+..+.............+..+....+.....+............+....+...........+............+.+......+...+...+........+......+.+..+.+.....+......+.+.........+...+........+...+.......+..+.+..+....+........+.......+.........+......+........+............+......+....+...+...+..+...+....+...+...+..................+......+...+......+..+..........+..+.+.....+......+...+.+......+......+..+.+......+.....+...+.......+..................+.....+.+...........+......+...+............+.......+...+...+......+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+..+.......+...........+.......+..+...+.......+...+...+.....+.+.....+...+.+......+...+..+......+...+.+.........+..............+.+...........+...+...............+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+.+........+...+...+......+...+......+....+...+........+..........+......+...+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*...+.........+..+...+.+....................+.+........+.........+.......+.....+.+..+............+.........+....+.....+.+..+.........+.........+.+...........+....+...+............+......+...+..+...+....+............+...+......+............+..+..........+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:it
+State or Province Name (full name) [Some-State]:bi
+Locality Name (eg, city) []:bi
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:bi
+Organizational Unit Name (eg, section) []:bi
+Common Name (e.g. server FQDN or YOUR name) []:209.250.233.145
+Email Address []:beswest4@gmail.com
+root@vultr:/var/www/dhl-payment-app# sudo nginx -t
+sudo systemctl restart nginx
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+Job for nginx.service failed because the control process exited with error code.
+See "systemctl status nginx.service" and "journalctl -xeu nginx.service" for details.
+root@vultr:/var/www/dhl-payment-app# sudo ufw allow 443/tcp
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+root@vultr:/var/www/dhl-payment-app# # 1. Allez dans le dossier
+cd /var/www/dhl-payment-app
+
+# 2. Vérifiez que les fichiers sont là
+ls -la
+
+# 3. Créez le fichier .env
+nano .env
+total 472
+drwxr-xr-x  12 root root   4096 Nov 15 19:01 .
+drwxr-xr-x   4 root root   4096 Nov 15 15:41 ..
+drwx------   3 root root   4096 Nov 15 18:20 AppData
+drwx------   3 root root   4096 Nov 15 16:12 attached_assets
+-rw-r--r--   1 root root   5532 Nov 15 18:25 BANK_DETECTION_GUIDE.md
+drwx------   4 root root   4096 Nov 15 16:12 client
+-rw-r--r--   1 root root    459 Nov 15 18:26 components.json
+-rw-r--r--   1 root root   1733 Nov 15 18:25 DEPLOYMENT_FILES.txt
+-rw-r--r--   1 root root   8550 Nov 15 18:25 DEPLOYMENT.md
+-rw-r--r--   1 root root   1313 Nov 15 18:26 deploy.sh
+-rw-r--r--   1 root root   5624 Nov 15 18:26 design_guidelines.md
+-rw-r--r--   1 root root   7005 Nov 15 18:25 DHL_FLOW_GUIDE.md
+drwxr-xr-x   3 root root   4096 Nov 15 18:32 dist
+-rw-r--r--   1 root root    325 Nov 15 18:26 drizzle.config.ts
+-rw-r--r--   1 root root    396 Nov 15 18:26 ecosystem.config.cjs
+-rw-r--r--   1 root root    471 Nov 15 18:29 .env
+-rw-r--r--   1 root root   2064 Nov 12 20:14 .env.example
+drwxr-xr-x   7 root root   4096 Nov 15 16:12 .git
+-rw-r--r--   1 root root     67 Nov 10 11:07 .gitignore
+drwxr-xr-x   3 root root   4096 Nov 15 16:12 .local
+drwxr-xr-x   2 root root   4096 Nov 15 18:32 logs
+-rw-r--r--   1 root root   1543 Nov 15 18:26 nginx.conf.example
+drwxr-xr-x 316 root root  12288 Nov 15 18:54 node_modules
+-rw-r--r--   1 root root   3583 Nov 15 18:26 package.json
+-rw-r--r--   1 root root 294544 Nov 15 18:54 package-lock.json
+-rw-r--r--   1 root root     80 Nov 15 18:26 postcss.config.js
+-rw-r--r--   1 root root   2962 Nov 15 18:25 QUICK_START.md
+-rw-r--r--   1 root root    994 Nov 15 15:35 .replit
+-rw-r--r--   1 root root  11660 Nov 15 18:26 replit.md
+drwx------   2 root root   4096 Nov 15 16:13 server
+drwx------   2 root root   4096 Nov 15 16:13 shared
+-rw-r--r--   1 root root   4050 Nov 15 18:26 tailwind.config.ts
+-rw-r--r--   1 root root   5421 Nov 15 18:25 TELEGRAM_BUTTON_GUIDE.md
+-rw-r--r--   1 root root   4822 Nov 15 18:25 TELEGRAM_REMOTE_CONTROL.md
+-rw-r--r--   1 root root    657 Nov 15 18:26 tsconfig.json
+-rw-r--r--   1 root root   1080 Nov 15 18:26 vite.config.ts
+root@vultr:/var/www/dhl-payment-app# node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+a89b0f671c55b5baedbd9264ca39f860b931ac7889d6c4b698e1b747c590b708
+root@vultr:/var/www/dhl-payment-app# # Installation
+npm install
+
+# Build
+npm run build
+
+# Migration BDD
+npm run db:push
+
+# Créer dossier logs
+mkdir -p logs
+
+# Démarrer avec PM2
+pm2 start ecosystem.config.cjs
+
+# Sauvegarder
+pm2 save
+
+# Auto-start au reboot
+pm2 startup
+
+up to date, audited 479 packages in 5s
+
+64 packages are looking for funding
+  run `npm fund` for details
+
+8 vulnerabilities (3 low, 5 moderate)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+transforming (43) ../node_modules/@tanstack/react-query/build/modern/useIsFetching.js
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 1736 modules transformed.
+../dist/public/index.html                                               2.01 kB │ gzip:   0.77 kB
+../dist/public/assets/PayPal_official_logo_d33d02f7-DWRRreiY.png      249.29 kB
+../dist/public/assets/DHL_official_logo_design_4b6a5523-90s6ctcx.png  307.39 kB
+../dist/public/assets/SSL_security_badge_5a63cf55-BCwhzatn.png        424.03 kB
+../dist/public/assets/index-CZeBTzOA.css                               80.01 kB │ gzip:  12.76 kB
+../dist/public/assets/index-CofvKk2b.js                               414.13 kB │ gzip: 124.17 kB
+✓ built in 23.50s
+
+  dist/index.js  52.1kb
+
+⚡ Done in 8ms
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/var/www/dhl-payment-app/drizzle.config.ts'
+Using 'pg' driver for database querying
+[✓] Pulling schema from database...
+[i] No changes detected
+[PM2][WARN] Applications dhl-payment-app not running, starting...
+[PM2] App [dhl-payment-app] launched (1 instances)
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ dhl-app            │ fork     │ 0    │ online    │ 0%       │ 57.3mb   │
+│ 1  │ dhl-payment-app    │ cluster  │ 0    │ online    │ 0%       │ 38.7mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+[PM2] Init System found: systemd
+Platform systemd
+Template
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=root
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/root/.pm2
+PIDFile=/root/.pm2/pm2.pid
+Restart=on-failure
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target
+
+Target path
+/etc/systemd/system/pm2-root.service
+Command list
+[ 'systemctl enable pm2-root' ]
+[PM2] Writing init configuration in /etc/systemd/system/pm2-root.service
+[PM2] Making script booting at startup...
+[PM2] [-] Executing: systemctl enable pm2-root...
+[PM2] [v] Command successfully executed.
++---------------------------------------+
+[PM2] Freeze a process list on reboot via:
+$ pm2 save
+
+[PM2] Remove init script via:
+$ pm2 unstartup systemd
+root@vultr:/var/www/dhl-payment-app# pm2 status
+pm2 logs
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ dhl-app            │ fork     │ 0    │ online    │ 0%       │ 57.9mb   │
+│ 1  │ dhl-payment-app    │ cluster  │ 0    │ online    │ 0%       │ 96.6mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 15 lines for [all] processes (change the value with --lines option)
+/root/.pm2/pm2.log last 15 lines:
+PM2        | 2025-11-15T18:32:19: PM2 log: Process dump file    : /root/.pm2/dump.pm2
+PM2        | 2025-11-15T18:32:19: PM2 log: Concurrent actions   : 2
+PM2        | 2025-11-15T18:32:19: PM2 log: SIGTERM timeout      : 1600
+PM2        | 2025-11-15T18:32:19: PM2 log: Runtime Binary       : /usr/bin/node
+PM2        | 2025-11-15T18:32:19: PM2 log: ===============================================================================
+PM2        | 2025-11-15T18:32:19: PM2 log: App [dhl-payment-app:0] starting in -cluster mode-
+PM2        | 2025-11-15T18:32:19: PM2 log: App [dhl-payment-app:0] online
+PM2        | 2025-11-15T19:01:41: PM2 log: Stopping app:dhl-payment-app id:0
+PM2        | 2025-11-15T19:01:42: PM2 log: App name:dhl-payment-app id:0 disconnected
+PM2        | 2025-11-15T19:01:42: PM2 log: App [dhl-payment-app:0] exited with code [0] via signal [SIGINT]
+PM2        | 2025-11-15T19:01:42: PM2 log: pid=20312 msg=process killed
+PM2        | 2025-11-15T19:01:42: PM2 log: App [dhl-app:0] starting in -fork mode-
+PM2        | 2025-11-15T19:01:42: PM2 log: App [dhl-app:0] online
+PM2        | 2025-11-15T20:14:40: PM2 log: App [dhl-payment-app:1] starting in -cluster mode-
+PM2        | 2025-11-15T20:14:41: PM2 log: App [dhl-payment-app:1] online
+
+/root/.pm2/logs/dhl-app-error.log last 15 lines:
+/root/.pm2/logs/dhl-app-out.log last 15 lines:
+0|dhl-app  | 7:41:14 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:41:16 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:41:19 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:41:21 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:45:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 0ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:46:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:47:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:48:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 0ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:49:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:50:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:51:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:52:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 0ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:53:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:54:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 1ms :: {"id":"3d584d69-7998-4139-801c-c175…
+0|dhl-app  | 7:55:20 PM [express] GET /api/dhl/session/dhhjicf4 304 in 0ms :: {"id":"3d584d69-7998-4139-801c-c175…
+
+/var/www/dhl-payment-app/logs/out-1.log last 15 lines:
+1|dhl-paym | 2025-11-15T20:14:43: 8:14:43 PM [express] Starting server initialization...
+1|dhl-paym | 2025-11-15T20:14:44: 8:14:44 PM [express] Routes registered successfully
+1|dhl-paym | 2025-11-15T20:14:44: 8:14:44 PM [express] Setting up static file serving in production mode...
+1|dhl-paym | 2025-11-15T20:14:44: 8:14:44 PM [express] Static files configured successfully
+
+/var/www/dhl-payment-app/logs/err-1.log last 15 lines:
+1|dhl-paym |     at process.processTicksAndRejections (node:internal/process/task_queues:83:21)
+1|dhl-paym | 2025-11-15T20:14:44: Uncaught Exception: Error: bind EADDRINUSE 0.0.0.0:5000
+1|dhl-paym |     at listenOnPrimaryHandle (node:net:1989:18)
+1|dhl-paym |     at rr (node:internal/cluster/child:163:12)
+1|dhl-paym |     at Worker.<anonymous> (node:internal/cluster/child:113:7)
+1|dhl-paym |     at process.onInternalMessage (node:internal/cluster/utils:49:5)
+1|dhl-paym |     at process.emit (node:events:536:35)
+1|dhl-paym |     at emit (node:internal/child_process:950:14)
+1|dhl-paym |     at process.processTicksAndRejections (node:internal/process/task_queues:83:21) {
+1|dhl-paym |   errno: -98,
+1|dhl-paym |   code: 'EADDRINUSE',
+1|dhl-paym |   syscall: 'bind',
+1|dhl-paym |   address: '0.0.0.0',
+1|dhl-paym |   port: 5000
+1|dhl-paym | }
