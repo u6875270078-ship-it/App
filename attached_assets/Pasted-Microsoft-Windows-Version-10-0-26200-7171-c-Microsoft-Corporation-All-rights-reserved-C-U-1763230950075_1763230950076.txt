@@ -1,0 +1,25 @@
+Microsoft Windows [Version 10.0.26200.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\amine>scp -r * root@209.250.233.145:/var/www/dhl-payment-app/
+root@209.250.233.145's password:
+scp: local opendir "AppData/Local/Application Data": Invalid argument
+lastCompatBackupTime.txt                                                              100%   15     0.1KB/s   00:00
+b9ec05f41810b130c38c3dc281312718d7eede5a                                              100%   11KB 102.2KB/s   00:00
+AggregateCache.uca                                                                    100%    4     0.1KB/s   00:00
+store.jfm                                                                             100%   16KB 149.5KB/s   00:00
+store.vol                                                                             100% 5632KB   2.2MB/s   00:02
+USS.jcp                                                                               100% 8192   119.4KB/s   00:00
+USS.jtx                                                                               100% 3072KB   2.2MB/s   00:01
+USSres00001.jrs                                                                       100% 3072KB   2.2MB/s   00:01
+USSres00002.jrs                                                                       100% 3072KB   2.3MB/s   00:01
+USStmp.jtx                                                                            100% 3072KB   2.0MB/s   00:01
+ActivitiesCache.db                                                                    100% 1904KB   1.8MB/s   00:01
+ActivitiesCache.db-shm                                                                100%   32KB 551.7KB/s   00:00
+ActivitiesCache.db-wal                                                                100% 3086KB   2.2MB/s   00:01
+325065c5b484306d.cdp                                                                  100% 1591     6.6KB/s   00:00
+325065c5b484306d.cdpresource                                                          100%   54     0.8KB/s   00:00
+ActivitiesCache.db                                                                    100% 1024KB   1.8MB/s   00:00
+ActivitiesCache.db-shm                                                                100%   32KB 323.2KB/s   00:00
+ActivitiesCache.db-wal                                                                100%    0     0.0KB/s   00:00
+3b13abb91904075c.cdp                                                                  100% 1302    14.1KB/s   00:00
