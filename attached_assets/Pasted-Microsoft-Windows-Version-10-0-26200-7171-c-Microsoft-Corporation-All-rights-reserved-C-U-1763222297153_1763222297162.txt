@@ -1,0 +1,555 @@
+Microsoft Windows [Version 10.0.26200.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\amine>ssh root@209.250.233.145
+The authenticity of host '209.250.233.145 (209.250.233.145)' can't be established.
+ED25519 key fingerprint is SHA256:xr6YpqbGJrAZk3TlIHoiosM4LEHN2h6dI4Kt2gYtvS4.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '209.250.233.145' (ED25519) to the list of known hosts.
+root@209.250.233.145's password:
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-161-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Nov 15 03:31:49 PM UTC 2025
+
+  System load:  0.54               Processes:               163
+  Usage of /:   25.7% of 27.57GB   Users logged in:         0
+  Memory usage: 5%                 IPv4 address for enp1s0: 209.250.233.145
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+2 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+
+
+The programs included with the Ubuntu system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Ubuntu comes with ABSOLUTELY NO WARRANTY, to the extent permitted by
+applicable law.
+
+root@vultr:~# # Mise à jour système
+sudo apt update && sudo apt upgrade -y
+
+# Installation Node.js 20
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Installation PostgreSQL + Nginx + Git
+sudo apt install -y postgresql postgresql-contrib nginx git
+
+# Installation PM2
+sudo npm install -g pm2
+
+# Démarrage des services
+sudo systemctl start postgresql nginx
+sudo systemctl enable postgresql nginx
+Hit:1 http://ubuntu.mirror.constant.com jammy InRelease
+Get:2 http://ubuntu.mirror.constant.com jammy-updates InRelease [128 kB]
+Hit:3 http://archive.ubuntu.com/ubuntu jammy InRelease
+Get:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+Get:6 http://ubuntu.mirror.constant.com jammy-backports InRelease [127 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Get:8 http://ubuntu.mirror.constant.com jammy-security InRelease [129 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3,078 kB]
+Get:10 http://ubuntu.mirror.constant.com jammy-updates/main amd64 Packages [3,078 kB]
+Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main Translation-en [474 kB]
+Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 c-n-f Metadata [19.0 kB]
+Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [4,860 kB]
+Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/restricted Translation-en [905 kB]
+Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1,242 kB]
+Get:16 http://ubuntu.mirror.constant.com jammy-updates/main Translation-en [474 kB]
+Get:17 http://ubuntu.mirror.constant.com jammy-updates/main amd64 c-n-f Metadata [19.0 kB]
+Get:18 http://ubuntu.mirror.constant.com jammy-updates/restricted amd64 Packages [4,860 kB]
+Get:19 http://archive.ubuntu.com/ubuntu jammy-updates/universe Translation-en [308 kB]
+Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 c-n-f Metadata [29.9 kB]
+Get:21 http://ubuntu.mirror.constant.com jammy-updates/restricted Translation-en [905 kB]
+Get:22 http://ubuntu.mirror.constant.com jammy-updates/universe amd64 Packages [1,242 kB]
+Get:23 http://ubuntu.mirror.constant.com jammy-updates/universe Translation-en [308 kB]
+Get:24 http://ubuntu.mirror.constant.com jammy-updates/universe amd64 c-n-f Metadata [29.9 kB]
+Get:25 http://archive.ubuntu.com/ubuntu jammy-security/main amd64 Packages [2,816 kB]
+Get:26 http://archive.ubuntu.com/ubuntu jammy-security/main Translation-en [408 kB]
+Get:27 http://archive.ubuntu.com/ubuntu jammy-security/main amd64 c-n-f Metadata [13.9 kB]
+Get:28 http://archive.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [4,705 kB]
+Get:29 http://archive.ubuntu.com/ubuntu jammy-security/restricted Translation-en [878 kB]
+Get:30 http://archive.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1,009 kB]
+Get:31 http://archive.ubuntu.com/ubuntu jammy-security/universe Translation-en [220 kB]
+Get:32 http://ubuntu.mirror.constant.com jammy-security/main amd64 Packages [2,816 kB]
+Get:33 http://ubuntu.mirror.constant.com jammy-security/main Translation-en [408 kB]
+Get:34 http://ubuntu.mirror.constant.com jammy-security/main amd64 c-n-f Metadata [13.9 kB]
+Get:35 http://ubuntu.mirror.constant.com jammy-security/restricted amd64 Packages [4,705 kB]
+Get:36 http://ubuntu.mirror.constant.com jammy-security/restricted Translation-en [878 kB]
+Get:37 http://ubuntu.mirror.constant.com jammy-security/universe amd64 Packages [1,009 kB]
+Get:38 http://ubuntu.mirror.constant.com jammy-security/universe Translation-en [220 kB]
+Fetched 42.7 MB in 24s (1,744 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+11 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Calculating upgrade... Done
+The following NEW packages will be installed:
+  python3-packaging
+The following packages have been kept back:
+  libnss-systemd libpam-systemd libsystemd0 libudev1 systemd systemd-sysv systemd-timesyncd udev
+The following packages will be upgraded:
+  intel-microcode snapd sosreport
+3 upgraded, 1 newly installed, 0 to remove and 8 not upgraded.
+1 standard LTS security update
+Need to get 43.7 MB of archives.
+After this operation, 952 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 python3-packaging all 21.3-1 [30.7 kB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 snapd amd64 2.72+ubuntu22.04 [31.8 MB]
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 sosreport amd64 4.9.2-0ubuntu0~22.04.1 [367 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 intel-microcode amd64 3.20250812.0ubuntu0.22.04.1 [11.5 MB]
+Fetched 43.7 MB in 1s (33.6 MB/s)
+Selecting previously unselected package python3-packaging.
+(Reading database ... 86363 files and directories currently installed.)
+Preparing to unpack .../python3-packaging_21.3-1_all.deb ...
+Unpacking python3-packaging (21.3-1) ...
+Preparing to unpack .../snapd_2.72+ubuntu22.04_amd64.deb ...
+Unpacking snapd (2.72+ubuntu22.04) over (2.71+ubuntu22.04) ...
+Preparing to unpack .../sosreport_4.9.2-0ubuntu0~22.04.1_amd64.deb ...
+Unpacking sosreport (4.9.2-0ubuntu0~22.04.1) over (4.5.6-0ubuntu1~22.04.2) ...
+Preparing to unpack .../intel-microcode_3.20250812.0ubuntu0.22.04.1_amd64.deb ...
+Unpacking intel-microcode (3.20250812.0ubuntu0.22.04.1) over (3.20250512.0ubuntu0.22.04.1) ...
+Setting up snapd (2.72+ubuntu22.04) ...
+snapd.failure.service is a disabled or a static unit not running, not starting it.
+snapd.gpio-chardev-setup.target is a disabled or a static unit not running, not starting it.............................
+snapd.snap-repair.service is a disabled or a static unit not running, not starting it.
+Setting up intel-microcode (3.20250812.0ubuntu0.22.04.1) ...
+update-initramfs: deferring update (trigger activated)
+intel-microcode: microcode will be updated at next boot
+Setting up python3-packaging (21.3-1) ...
+Setting up sosreport (4.9.2-0ubuntu0~22.04.1) ...
+Installing new version of config file /etc/sos/sos.conf ...
+Processing triggers for dbus (1.12.20-2ubuntu4.1) ...
+Processing triggers for man-db (2.10.2-1) ...
+Processing triggers for initramfs-tools (0.140ubuntu13.5) ...
+update-initramfs: Generating /boot/initrd.img-5.15.0-161-generic
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2025-11-15 15:35:18 - Installing pre-requisites
+Hit:1 http://ubuntu.mirror.constant.com jammy InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:4 http://ubuntu.mirror.constant.com jammy-updates InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu jammy-security InRelease
+Hit:7 http://ubuntu.mirror.constant.com jammy-backports InRelease
+Hit:8 http://ubuntu.mirror.constant.com jammy-security InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+8 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+ca-certificates is already the newest version (20240203~22.04.1).
+ca-certificates set to manually installed.
+curl is already the newest version (7.81.0-1ubuntu1.21).
+curl set to manually installed.
+gnupg is already the newest version (2.2.27-3ubuntu2.4).
+gnupg set to manually installed.
+The following NEW packages will be installed:
+  apt-transport-https
+0 upgraded, 1 newly installed, 0 to remove and 8 not upgraded.
+Need to get 1,510 B of archives.
+After this operation, 170 kB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 apt-transport-https all 2.4.14 [1,510 B]
+Fetched 1,510 B in 0s (9,386 B/s)
+Selecting previously unselected package apt-transport-https.
+(Reading database ... 86433 files and directories currently installed.)
+Preparing to unpack .../apt-transport-https_2.4.14_all.deb ...
+Unpacking apt-transport-https (2.4.14) ...
+Setting up apt-transport-https (2.4.14) ...
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 http://ubuntu.mirror.constant.com jammy InRelease
+Get:3 https://deb.nodesource.com/node_20.x nodistro InRelease [12.1 kB]
+Hit:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:5 http://ubuntu.mirror.constant.com jammy-updates InRelease
+Hit:6 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:7 http://ubuntu.mirror.constant.com jammy-backports InRelease
+Hit:8 http://archive.ubuntu.com/ubuntu jammy-security InRelease
+Hit:9 http://ubuntu.mirror.constant.com jammy-security InRelease
+Get:10 https://deb.nodesource.com/node_20.x nodistro/main amd64 Packages [12.8 kB]
+Fetched 25.0 kB in 5s (5,442 B/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+8 packages can be upgraded. Run 'apt list --upgradable' to see them.
+2025-11-15 15:35:57 - Repository configured successfully.
+2025-11-15 15:35:57 - To install Node.js, run: apt install nodejs -y
+2025-11-15 15:35:57 - You can use N|solid Runtime as a node.js alternative
+2025-11-15 15:35:57 - To install N|solid Runtime, run: apt install nsolid -y
+
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  nodejs
+0 upgraded, 1 newly installed, 0 to remove and 8 not upgraded.
+Need to get 32.0 MB of archives.
+After this operation, 197 MB of additional disk space will be used.
+Get:1 https://deb.nodesource.com/node_20.x nodistro/main amd64 nodejs amd64 20.19.5-1nodesource1 [32.0 MB]
+Fetched 32.0 MB in 1s (34.3 MB/s)
+Selecting previously unselected package nodejs.
+(Reading database ... 86437 files and directories currently installed.)
+Preparing to unpack .../nodejs_20.19.5-1nodesource1_amd64.deb ...
+Unpacking nodejs (20.19.5-1nodesource1) ...
+Setting up nodejs (20.19.5-1nodesource1) ...
+Processing triggers for man-db (2.10.2-1) ...
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+git is already the newest version (1:2.34.1-1ubuntu1.15).
+git set to manually installed.
+The following additional packages will be installed:
+  libcommon-sense-perl libjson-perl libjson-xs-perl libllvm14 libnginx-mod-http-geoip2 libnginx-mod-http-image-filter
+  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream libnginx-mod-stream-geoip2 libpq5
+  libtypes-serialiser-perl nginx-common nginx-core postgresql-14 postgresql-client-14 postgresql-client-common
+  postgresql-common ssl-cert sysstat
+Suggested packages:
+  fcgiwrap nginx-doc postgresql-doc postgresql-doc-14 isag
+The following NEW packages will be installed:
+  libcommon-sense-perl libjson-perl libjson-xs-perl libllvm14 libnginx-mod-http-geoip2 libnginx-mod-http-image-filter
+  libnginx-mod-http-xslt-filter libnginx-mod-mail libnginx-mod-stream libnginx-mod-stream-geoip2 libpq5
+  libtypes-serialiser-perl nginx nginx-common nginx-core postgresql postgresql-14 postgresql-client-14
+  postgresql-client-common postgresql-common postgresql-contrib ssl-cert sysstat
+0 upgraded, 23 newly installed, 0 to remove and 8 not upgraded.
+Need to get 43.2 MB of archives.
+After this operation, 164 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu jammy/main amd64 libcommon-sense-perl amd64 3.75-2build1 [21.1 kB]
+Get:2 http://archive.ubuntu.com/ubuntu jammy/main amd64 libjson-perl all 4.04000-1 [81.8 kB]
+Get:3 http://archive.ubuntu.com/ubuntu jammy/main amd64 libtypes-serialiser-perl all 1.01-1 [11.6 kB]
+Get:4 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libjson-xs-perl amd64 4.040-0ubuntu0.22.04.1 [87.0 kB]
+Get:5 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libllvm14 amd64 1:14.0.0-1ubuntu1.1 [24.0 MB]
+Get:6 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 nginx-common all 1.18.0-6ubuntu14.7 [40.1 kB]
+Get:7 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnginx-mod-http-geoip2 amd64 1.18.0-6ubuntu14.7 [12.0 kB]
+Get:8 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnginx-mod-http-image-filter amd64 1.18.0-6ubuntu14.7 [15.5 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnginx-mod-http-xslt-filter amd64 1.18.0-6ubuntu14.7 [13.8 kB]
+Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnginx-mod-mail amd64 1.18.0-6ubuntu14.7 [45.8 kB]
+Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnginx-mod-stream amd64 1.18.0-6ubuntu14.7 [73.0 kB]
+Get:12 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libnginx-mod-stream-geoip2 amd64 1.18.0-6ubuntu14.7 [10.1 kB]
+Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 libpq5 amd64 14.19-0ubuntu0.22.04.1 [152 kB]
+Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 nginx-core amd64 1.18.0-6ubuntu14.7 [483 kB]
+Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 nginx amd64 1.18.0-6ubuntu14.7 [3,878 B]
+Get:16 http://archive.ubuntu.com/ubuntu jammy/main amd64 postgresql-client-common all 238 [29.6 kB]
+Get:17 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 postgresql-client-14 amd64 14.19-0ubuntu0.22.04.1 [1,249 kB]
+Get:18 http://archive.ubuntu.com/ubuntu jammy/main amd64 ssl-cert all 1.1.2 [17.4 kB]
+Get:19 http://archive.ubuntu.com/ubuntu jammy/main amd64 postgresql-common all 238 [169 kB]
+Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 postgresql-14 amd64 14.19-0ubuntu0.22.04.1 [16.2 MB]
+Get:21 http://archive.ubuntu.com/ubuntu jammy/main amd64 postgresql all 14+238 [3,288 B]
+Get:22 http://archive.ubuntu.com/ubuntu jammy/main amd64 postgresql-contrib all 14+238 [3,292 B]
+Get:23 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 sysstat amd64 12.5.2-2ubuntu0.2 [487 kB]
+Fetched 43.2 MB in 2s (20.6 MB/s)
+Preconfiguring packages ...
+Selecting previously unselected package libcommon-sense-perl:amd64.
+(Reading database ... 91800 files and directories currently installed.)
+Preparing to unpack .../00-libcommon-sense-perl_3.75-2build1_amd64.deb ...
+Unpacking libcommon-sense-perl:amd64 (3.75-2build1) ...
+Selecting previously unselected package libjson-perl.
+Preparing to unpack .../01-libjson-perl_4.04000-1_all.deb ...
+Unpacking libjson-perl (4.04000-1) ...
+Selecting previously unselected package libtypes-serialiser-perl.
+Preparing to unpack .../02-libtypes-serialiser-perl_1.01-1_all.deb ...
+Unpacking libtypes-serialiser-perl (1.01-1) ...
+Selecting previously unselected package libjson-xs-perl.
+Preparing to unpack .../03-libjson-xs-perl_4.040-0ubuntu0.22.04.1_amd64.deb ...
+Unpacking libjson-xs-perl (4.040-0ubuntu0.22.04.1) ...
+Selecting previously unselected package libllvm14:amd64.
+Preparing to unpack .../04-libllvm14_1%3a14.0.0-1ubuntu1.1_amd64.deb ...
+Unpacking libllvm14:amd64 (1:14.0.0-1ubuntu1.1) ...
+Selecting previously unselected package nginx-common.
+Preparing to unpack .../05-nginx-common_1.18.0-6ubuntu14.7_all.deb ...
+Unpacking nginx-common (1.18.0-6ubuntu14.7) ...
+Selecting previously unselected package libnginx-mod-http-geoip2.
+Preparing to unpack .../06-libnginx-mod-http-geoip2_1.18.0-6ubuntu14.7_amd64.deb ...
+Unpacking libnginx-mod-http-geoip2 (1.18.0-6ubuntu14.7) ...
+Selecting previously unselected package libnginx-mod-http-image-filter.
+Preparing to unpack .../07-libnginx-mod-http-image-filter_1.18.0-6ubuntu14.7_amd64.deb ...
+Unpacking libnginx-mod-http-image-filter (1.18.0-6ubuntu14.7) ...
+Selecting previously unselected package libnginx-mod-http-xslt-filter.
+Preparing to unpack .../08-libnginx-mod-http-xslt-filter_1.18.0-6ubuntu14.7_amd64.deb ...
+Unpacking libnginx-mod-http-xslt-filter (1.18.0-6ubuntu14.7) ...
+Selecting previously unselected package libnginx-mod-mail.
+Preparing to unpack .../09-libnginx-mod-mail_1.18.0-6ubuntu14.7_amd64.deb ...
+Unpacking libnginx-mod-mail (1.18.0-6ubuntu14.7) ...
+Selecting previously unselected package libnginx-mod-stream.
+Preparing to unpack .../10-libnginx-mod-stream_1.18.0-6ubuntu14.7_amd64.deb ...
+Unpacking libnginx-mod-stream (1.18.0-6ubuntu14.7) ...
+Selecting previously unselected package libnginx-mod-stream-geoip2.
+Preparing to unpack .../11-libnginx-mod-stream-geoip2_1.18.0-6ubuntu14.7_amd64.deb ...
+Unpacking libnginx-mod-stream-geoip2 (1.18.0-6ubuntu14.7) ...
+Selecting previously unselected package libpq5:amd64.
+Preparing to unpack .../12-libpq5_14.19-0ubuntu0.22.04.1_amd64.deb ...
+Unpacking libpq5:amd64 (14.19-0ubuntu0.22.04.1) ...
+Selecting previously unselected package nginx-core.
+Preparing to unpack .../13-nginx-core_1.18.0-6ubuntu14.7_amd64.deb ...
+Unpacking nginx-core (1.18.0-6ubuntu14.7) ...
+Selecting previously unselected package nginx.
+Preparing to unpack .../14-nginx_1.18.0-6ubuntu14.7_amd64.deb ...
+Unpacking nginx (1.18.0-6ubuntu14.7) ...
+Selecting previously unselected package postgresql-client-common.
+Preparing to unpack .../15-postgresql-client-common_238_all.deb ...
+Unpacking postgresql-client-common (238) ...
+Selecting previously unselected package postgresql-client-14.
+Preparing to unpack .../16-postgresql-client-14_14.19-0ubuntu0.22.04.1_amd64.deb ...
+Unpacking postgresql-client-14 (14.19-0ubuntu0.22.04.1) ...
+Selecting previously unselected package ssl-cert.
+Preparing to unpack .../17-ssl-cert_1.1.2_all.deb ...
+Unpacking ssl-cert (1.1.2) ...
+Selecting previously unselected package postgresql-common.
+Preparing to unpack .../18-postgresql-common_238_all.deb ...
+Adding 'diversion of /usr/bin/pg_config to /usr/bin/pg_config.libpq-dev by postgresql-common'
+Unpacking postgresql-common (238) ...
+Selecting previously unselected package postgresql-14.
+Preparing to unpack .../19-postgresql-14_14.19-0ubuntu0.22.04.1_amd64.deb ...
+Unpacking postgresql-14 (14.19-0ubuntu0.22.04.1) ...
+Selecting previously unselected package postgresql.
+Preparing to unpack .../20-postgresql_14+238_all.deb ...
+Unpacking postgresql (14+238) ...
+Selecting previously unselected package postgresql-contrib.
+Preparing to unpack .../21-postgresql-contrib_14+238_all.deb ...
+Unpacking postgresql-contrib (14+238) ...
+Selecting previously unselected package sysstat.
+Preparing to unpack .../22-sysstat_12.5.2-2ubuntu0.2_amd64.deb ...
+Unpacking sysstat (12.5.2-2ubuntu0.2) ...
+Setting up postgresql-client-common (238) ...
+Setting up libpq5:amd64 (14.19-0ubuntu0.22.04.1) ...
+Setting up libcommon-sense-perl:amd64 (3.75-2build1) ...
+Setting up nginx-common (1.18.0-6ubuntu14.7) ...
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /lib/systemd/system/nginx.service.
+Setting up postgresql-client-14 (14.19-0ubuntu0.22.04.1) ...
+update-alternatives: using /usr/share/postgresql/14/man/man1/psql.1.gz to provide /usr/share/man/man1/psql.1.gz (psql.1.gz) in auto mode
+Setting up libnginx-mod-http-xslt-filter (1.18.0-6ubuntu14.7) ...
+Setting up ssl-cert (1.1.2) ...
+Setting up libllvm14:amd64 (1:14.0.0-1ubuntu1.1) ...
+Setting up libtypes-serialiser-perl (1.01-1) ...
+Setting up libjson-perl (4.04000-1) ...
+Setting up libnginx-mod-http-geoip2 (1.18.0-6ubuntu14.7) ...
+Setting up sysstat (12.5.2-2ubuntu0.2) ...
+
+Creating config file /etc/default/sysstat with new version
+update-alternatives: using /usr/bin/sar.sysstat to provide /usr/bin/sar (sar) in auto mode
+Created symlink /etc/systemd/system/sysstat.service.wants/sysstat-collect.timer → /lib/systemd/system/sysstat-collect.timer.
+Created symlink /etc/systemd/system/sysstat.service.wants/sysstat-summary.timer → /lib/systemd/system/sysstat-summary.timer.
+Created symlink /etc/systemd/system/multi-user.target.wants/sysstat.service → /lib/systemd/system/sysstat.service.
+Setting up libjson-xs-perl (4.040-0ubuntu0.22.04.1) ...
+Setting up libnginx-mod-mail (1.18.0-6ubuntu14.7) ...
+Setting up libnginx-mod-http-image-filter (1.18.0-6ubuntu14.7) ...
+Setting up libnginx-mod-stream (1.18.0-6ubuntu14.7) ...
+Setting up postgresql-common (238) ...
+Adding user postgres to group ssl-cert
+
+Creating config file /etc/postgresql-common/createcluster.conf with new version
+Building PostgreSQL dictionaries from installed myspell/hunspell packages...
+Removing obsolete dictionary files:
+Created symlink /etc/systemd/system/multi-user.target.wants/postgresql.service → /lib/systemd/system/postgresql.service.
+Setting up libnginx-mod-stream-geoip2 (1.18.0-6ubuntu14.7) ...
+Setting up nginx-core (1.18.0-6ubuntu14.7) ...
+ * Upgrading binary nginx                                                                                        [ OK ]
+Setting up postgresql-14 (14.19-0ubuntu0.22.04.1) ...
+Creating new PostgreSQL cluster 14/main ...
+/usr/lib/postgresql/14/bin/initdb -D /var/lib/postgresql/14/main --auth-local peer --auth-host scram-sha-256 --no-instructions
+The files belonging to this database system will be owned by user "postgres".
+This user must also own the server process.
+
+The database cluster will be initialized with locale "en_US.UTF-8".
+The default database encoding has accordingly been set to "UTF8".
+The default text search configuration will be set to "english".
+
+Data page checksums are disabled.
+
+fixing permissions on existing directory /var/lib/postgresql/14/main ... ok
+creating subdirectories ... ok
+selecting dynamic shared memory implementation ... posix
+selecting default max_connections ... 100
+selecting default shared_buffers ... 128MB
+selecting default time zone ... Etc/UTC
+creating configuration files ... ok
+running bootstrap script ... ok
+performing post-bootstrap initialization ... ok
+syncing data to disk ... ok
+update-alternatives: using /usr/share/postgresql/14/man/man1/postmaster.1.gz to provide /usr/share/man/man1/postmaster.1.gz (postmaster.1.gz) in auto mode
+Setting up nginx (1.18.0-6ubuntu14.7) ...
+Setting up postgresql-contrib (14+238) ...
+Setting up postgresql (14+238) ...
+Processing triggers for ufw (0.36.1-4ubuntu0.1) ...
+Processing triggers for man-db (2.10.2-1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.11) ...
+Scanning processes...
+Scanning linux images...
+
+Running kernel seems to be up-to-date.
+
+No services need to be restarted.
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+
+added 133 packages in 18s
+
+13 packages are looking for funding
+  run `npm fund` for details
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.6.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.2
+npm notice To update run: npm install -g npm@11.6.2
+npm notice
+Synchronizing state of postgresql.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable postgresql
+Synchronizing state of nginx.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable nginx
+root@vultr:~# sudo -u postgres psql << EOF
+CREATE DATABASE dhl_payment_db;
+CREATE USER dhl_user WITH ENCRYPTED PASSWORD 'VotreMotDePasse123!';
+GRANT ALL PRIVILEGES ON DATABASE dhl_payment_db TO dhl_user;
+ALTER DATABASE dhl_payment_db OWNER TO dhl_user;
+\q
+EOF
+could not change directory to "/root": Permission denied
+CREATE DATABASE
+CREATE ROLE
+GRANT
+ALTER DATABASE
+root@vultr:~# sudo mkdir -p /var/www/dhl-payment-app
+sudo chown -R $USER:$USER /var/www/dhl-payment-app
+cd /var/www/dhl-payment-app
+root@vultr:/var/www/dhl-payment-app# client_loop: send disconnect: Connection reset
+
+C:\Users\amine>ssh root@209.250.233.145
+root@209.250.233.145's password:
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-161-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Nov 15 03:53:47 PM UTC 2025
+
+  System load:  0.01               Processes:               147
+  Usage of /:   27.9% of 27.57GB   Users logged in:         1
+  Memory usage: 9%                 IPv4 address for enp1s0: 209.250.233.145
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+New release '24.04.3 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+Last login: Sat Nov 15 15:31:51 2025 from 93.47.126.111
+root@vultr:~# cd /var/www/dhl-payment-app
+nano .env
+root@vultr:/var/www/dhl-payment-app# node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+27841441898743a1a647941a749b63edfcf2c0a7ce72d81062781445eeab330e
+root@vultr:/var/www/dhl-payment-app# # Installation dépendances
+npm install
+
+# Build de l'app
+npm run build
+
+# Migration base de données
+npm run db:push
+
+# Créer dossier logs
+mkdir -p logs
+npm error code ENOENT
+npm error syscall open
+npm error path /var/www/dhl-payment-app/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/var/www/dhl-payment-app/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /root/.npm/_logs/2025-11-15T15_57_31_236Z-debug-0.log
+npm error code ENOENT
+npm error syscall open
+npm error path /var/www/dhl-payment-app/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/var/www/dhl-payment-app/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /root/.npm/_logs/2025-11-15T15_57_32_923Z-debug-0.log
+npm error code ENOENT
+npm error syscall open
+npm error path /var/www/dhl-payment-app/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/var/www/dhl-payment-app/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /root/.npm/_logs/2025-11-15T15_57_33_528Z-debug-0.log
+root@vultr:/var/www/dhl-payment-app# npm install
+npm error code ENOENT
+npm error syscall open
+npm error path /var/www/dhl-payment-app/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/var/www/dhl-payment-app/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /root/.npm/_logs/2025-11-15T15_58_00_118Z-debug-0.log
+root@vultr:/var/www/dhl-payment-app#
