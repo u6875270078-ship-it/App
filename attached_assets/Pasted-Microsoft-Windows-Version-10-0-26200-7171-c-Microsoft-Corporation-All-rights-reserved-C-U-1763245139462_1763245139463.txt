@@ -1,0 +1,133 @@
+Microsoft Windows [Version 10.0.26200.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\amine>ssh root@209.250.233.145
+root@209.250.233.145's password:
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-161-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Nov 15 10:16:31 PM UTC 2025
+
+  System load:  0.05               Processes:               154
+  Usage of /:   29.6% of 27.57GB   Users logged in:         1
+  Memory usage: 13%                IPv4 address for enp1s0: 209.250.233.145
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+New release '24.04.3 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+Last login: Sat Nov 15 19:59:50 2025 from 93.47.126.111
+root@vultr:~# # 1. Installer Certbot
+sudo apt update
+sudo apt install -y certbot python3-certbot-nginx
+
+# 2. Obtenir le certificat SSL automatiquement
+sudo certbot --nginx -d smartpayplatform.info -d www.smartpayplatform.info
+Hit:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:2 https://deb.nodesource.com/node_20.x nodistro InRelease
+Get:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Hit:4 http://ubuntu.mirror.constant.com jammy InRelease
+Hit:5 http://ubuntu.mirror.constant.com jammy-updates InRelease
+Hit:6 http://ubuntu.mirror.constant.com jammy-backports InRelease
+Hit:7 http://ubuntu.mirror.constant.com jammy-security InRelease
+Get:8 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+Get:9 http://archive.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Get:10 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [3,078 kB]
+Get:11 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1,242 kB]
+Fetched 4,705 kB in 7s (663 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+8 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+certbot is already the newest version (1.21.0-1build1).
+python3-certbot-nginx is already the newest version (1.21.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 8 not upgraded.
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Enter email address (used for urgent renewal and security notices)
+ (Enter 'c' to cancel): c
+An e-mail address or --register-unsafely-without-email must be provided.
+Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
+root@vultr:~# # 1. Installer Certbot
+sudo apt update
+sudo apt install -y certbot python3-certbot-nginx
+
+# 2. Obtenir le certificat SSL automatiquement
+sudo certbot --nginx -d smartpayplatform.info -d www.smartpayplatform.info
+Hit:1 https://deb.nodesource.com/node_20.x nodistro InRelease
+Hit:2 http://ubuntu.mirror.constant.com jammy InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu jammy InRelease
+Hit:4 http://ubuntu.mirror.constant.com jammy-updates InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:6 http://ubuntu.mirror.constant.com jammy-backports InRelease
+Hit:7 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Hit:8 http://ubuntu.mirror.constant.com jammy-security InRelease
+Hit:9 http://archive.ubuntu.com/ubuntu jammy-security InRelease
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+8 packages can be upgraded. Run 'apt list --upgradable' to see them.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+certbot is already the newest version (1.21.0-1build1).
+python3-certbot-nginx is already the newest version (1.21.0-1).
+0 upgraded, 0 newly installed, 0 to remove and 8 not upgraded.
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Enter email address (used for urgent renewal and security notices)
+ (Enter 'c' to cancel): beswest4@gmail.com
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please read the Terms of Service at
+https://letsencrypt.org/documents/LE-SA-v1.6-August-18-2025.pdf. You must agree
+in order to register with the ACME server. Do you agree?
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(Y)es/(N)o: yes
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Would you be willing, once your first certificate is successfully issued, to
+share your email address with the Electronic Frontier Foundation, a founding
+partner of the Let's Encrypt project and the non-profit organization that
+develops Certbot? We'd like to send you email about our work encrypting the web,
+EFF news, campaigns, and ways to support digital freedom.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+(Y)es/(N)o: yes
+Account registered.
+Requesting a certificate for smartpayplatform.info and www.smartpayplatform.info
+yes
+
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/smartpayplatform.info/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/smartpayplatform.info/privkey.pem
+This certificate expires on 2026-02-13.
+These files will be updated when the certificate renews.
+Certbot has set up a scheduled task to automatically renew this certificate in the background.
+
+Deploying certificate
+Could not install certificate
+
+NEXT STEPS:
+- The certificate was saved, but could not be installed (installer: nginx). After fixing the error shown below, try installing it again by running:
+  certbot install --cert-name smartpayplatform.info
+
+Could not automatically find a matching server block for smartpayplatform.info. Set the `server_name` directive to use the Nginx installer.
+Ask for help or search for solutions at https://community.letsencrypt.org. See the logfile /var/log/letsencrypt/letsencrypt.log or re-run Certbot with -v for more details.
+root@vultr:~#
