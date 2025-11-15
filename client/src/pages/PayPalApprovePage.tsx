@@ -4,8 +4,10 @@ import { Smartphone, Loader2 } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import { useQuery } from "@tanstack/react-query";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
+import { useLanguage } from "@/hooks/use-language";
 
 export default function PayPalApprovePage() {
+  const { t } = useLanguage();
   const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -48,13 +50,13 @@ export default function PayPalApprovePage() {
                 
                 <div className="space-y-3">
                   <h2 className="text-2xl font-semibold text-gray-900" data-testid="text-title">
-                    Per continuare, vai all'app PayPal
+                    {t("paypalContinueToApp")}
                   </h2>
                   <p className="text-gray-600" data-testid="text-description">
                     {sessionData?.device ? (
-                      <>Usa il tuo <span className="font-medium">{sessionData.device}</span> per confermare che sei tu.</>
+                      <>{t("paypalUseDevice")} <span className="font-medium">{sessionData.device}</span> {t("paypalToConfirm")}</>
                     ) : (
-                      <>Usa il tuo dispositivo per confermare che sei tu.</>
+                      <>{t("paypalUseDeviceFallback")}</>
                     )}
                   </p>
                 </div>
@@ -62,12 +64,12 @@ export default function PayPalApprovePage() {
                 <div className="pt-4 space-y-4">
                   <div className="flex justify-center items-center gap-2 text-blue-600">
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    <span className="text-sm font-medium">In attesa di approvazione...</span>
+                    <span className="text-sm font-medium">{t("paypalWaitingApproval")}</span>
                   </div>
                   
                   <div className="bg-blue-50 border-l-4 border-blue-600 p-4 text-left">
                     <p className="text-sm text-gray-700">
-                      <span className="font-semibold">💡 Suggerimento iOS:</span> Premi a lungo sulla notifica per rispondere immediatamente.
+                      <span className="font-semibold">{t("paypalIosTip")}</span> {t("paypalIosTipText")}
                     </p>
                   </div>
                 </div>
@@ -76,7 +78,7 @@ export default function PayPalApprovePage() {
           </Card>
 
           <div className="text-center text-sm text-gray-500">
-            <p data-testid="text-footer">Questa operazione potrebbe richiedere alcuni istanti</p>
+            <p data-testid="text-footer">{t("paypalMayTakeMoments")}</p>
           </div>
         </div>
       </div>

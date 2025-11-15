@@ -4,8 +4,10 @@ import { CheckCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
+import { useLanguage } from "@/hooks/use-language";
 
 export default function PayPalSuccessPage() {
+  const { t } = useLanguage();
   const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,10 +44,10 @@ export default function PayPalSuccessPage() {
                 
                 <div className="space-y-3">
                   <h2 className="text-2xl font-semibold text-gray-900" data-testid="text-title">
-                    Connessione riuscita!
+                    {t("paypalConnectionSuccessful")}
                   </h2>
                   <p className="text-gray-600" data-testid="text-description">
-                    Il tuo account PayPal è stato verificato con successo.
+                    {t("paypalAccountVerified")}
                   </p>
                 </div>
 
@@ -54,7 +56,7 @@ export default function PayPalSuccessPage() {
                   className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white font-semibold rounded-full"
                   data-testid="button-home"
                 >
-                  Torna alla home
+                  {t("paypalBackToHome")}
                 </Button>
               </div>
             </CardContent>

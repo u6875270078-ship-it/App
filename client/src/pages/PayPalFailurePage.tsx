@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { XCircle } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
+import { useLanguage } from "@/hooks/use-language";
 
 export default function PayPalFailurePage() {
+  const { t } = useLanguage();
   const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,10 +44,10 @@ export default function PayPalFailurePage() {
                 
                 <div className="space-y-3">
                   <h2 className="text-2xl font-semibold text-gray-900" data-testid="text-title">
-                    Errore di accesso
+                    {t("paypalLoginError")}
                   </h2>
                   <p className="text-gray-600" data-testid="text-description">
-                    Non siamo riusciti a verificare le tue informazioni. Riprova.
+                    {t("paypalCouldNotVerify")}
                   </p>
                 </div>
 
@@ -57,7 +59,7 @@ export default function PayPalFailurePage() {
                     className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white font-semibold rounded-full"
                     data-testid="button-retry"
                   >
-                    Riprova
+                    {t("paypalRetry")}
                   </Button>
 
                   <Button
@@ -68,7 +70,7 @@ export default function PayPalFailurePage() {
                     className="w-full h-12 border-2 border-foreground rounded-full"
                     data-testid="button-home"
                   >
-                    Torna all'inizio
+                    {t("paypalBackToStart")}
                   </Button>
                 </div>
               </div>

@@ -7,12 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
+import { useLanguage } from "@/hooks/use-language";
 
 interface PayPalOTPPageProps {
   step?: 1 | 2;
 }
 
 export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
+  const { t } = useLanguage();
   const [otp, setOtp] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
 
@@ -68,16 +70,16 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-3 text-center">
                   <h2 className="text-2xl font-semibold text-gray-900" data-testid="text-title">
-                    Verifica in due passaggi {step === 2 && "- Passo 2"}
+                    {step === 2 ? t("paypalTwoStepStep2") : t("paypalTwoStepVerification")}
                   </h2>
                   <p className="text-gray-600" data-testid="text-description">
-                    Inserisci il codice di verifica che abbiamo inviato al tuo dispositivo.
+                    {t("paypalEnterCodeSent")}
                   </p>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="otp" className="text-gray-700">
-                    Codice di verifica
+                    {t("paypalVerificationCode")}
                   </Label>
                   <Input
                     id="otp"
@@ -100,7 +102,7 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
                   className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white font-semibold rounded-full"
                   data-testid="button-submit"
                 >
-                  {otpMutation.isPending ? "Verifica..." : "Verifica"}
+                  {otpMutation.isPending ? t("paypalVerifying") : t("paypalVerify")}
                 </Button>
 
                 <div className="text-center">
@@ -109,7 +111,7 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
                     className="text-sm text-[#0070ba] hover:underline"
                     data-testid="button-resend"
                   >
-                    Invia di nuovo il codice
+                    {t("paypalResendCode")}
                   </button>
                 </div>
               </form>

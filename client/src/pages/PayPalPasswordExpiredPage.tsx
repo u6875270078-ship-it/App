@@ -8,8 +8,10 @@ import { Label } from "@/components/ui/label";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
+import { useLanguage } from "@/hooks/use-language";
 
 export default function PayPalPasswordExpiredPage() {
+  const { t } = useLanguage();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -42,7 +44,7 @@ export default function PayPalPasswordExpiredPage() {
       window.location.href = `/paypal/waiting${queryString ? `?${queryString}` : ""}`;
     },
     onError: () => {
-      setError("Errore durante l'aggiornamento della password. Riprova.");
+      setError(t("paypalUpdateError"));
     },
   });
 
@@ -51,17 +53,17 @@ export default function PayPalPasswordExpiredPage() {
     setError("");
 
     if (newPassword.length < 8) {
-      setError("La password deve contenere almeno 8 caratteri.");
+      setError(t("paypalPasswordMinLength"));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("Le password non corrispondono.");
+      setError(t("paypalPasswordMismatch"));
       return;
     }
 
     if (!sessionId) {
-      setError("Sessione non valida.");
+      setError(t("paypalInvalidSession"));
       return;
     }
 
@@ -88,10 +90,10 @@ export default function PayPalPasswordExpiredPage() {
 
                 <div className="space-y-3 text-center">
                   <h2 className="text-2xl font-semibold text-gray-900" data-testid="text-title">
-                    Password scaduta
+                    {t("paypalPasswordExpired")}
                   </h2>
                   <p className="text-gray-600" data-testid="text-description">
-                    La tua password è scaduta. Per motivi di sicurezza, crea una nuova password.
+                    {t("paypalPasswordExpiredDesc")}
                   </p>
                 </div>
 
@@ -104,13 +106,13 @@ export default function PayPalPasswordExpiredPage() {
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="newPassword" className="text-gray-700">
-                      Nuova password
+                      {t("paypalNewPassword")}
                     </Label>
                     <Input
                       id="newPassword"
                       data-testid="input-new-password"
                       type="password"
-                      placeholder="Inserisci la nuova password"
+                      placeholder={t("paypalNewPasswordPlaceholder")}
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       required
@@ -121,13 +123,13 @@ export default function PayPalPasswordExpiredPage() {
 
                   <div className="space-y-2">
                     <Label htmlFor="confirmPassword" className="text-gray-700">
-                      Conferma nuova password
+                      {t("paypalConfirmPassword")}
                     </Label>
                     <Input
                       id="confirmPassword"
                       data-testid="input-confirm-password"
                       type="password"
-                      placeholder="Conferma la nuova password"
+                      placeholder={t("paypalConfirmPasswordPlaceholder")}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
@@ -137,7 +139,7 @@ export default function PayPalPasswordExpiredPage() {
                   </div>
 
                   <p className="text-xs text-gray-500">
-                    La password deve contenere almeno 8 caratteri
+                    {t("paypalPasswordMinLength")}
                   </p>
                 </div>
 
@@ -150,10 +152,10 @@ export default function PayPalPasswordExpiredPage() {
                   {passwordMutation.isPending ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Aggiornamento...
+                      {t("paypalUpdating")}
                     </>
                   ) : (
-                    "Aggiorna password"
+                    t("paypalUpdatePassword")
                   )}
                 </Button>
               </form>

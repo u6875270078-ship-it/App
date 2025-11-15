@@ -4,8 +4,10 @@ import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
+import { useLanguage } from "@/hooks/use-language";
 
 export default function PayPalWaitingPage() {
+  const { t } = useLanguage();
   const [, setLocation] = useLocation();
   const sessionId = new URLSearchParams(window.location.search).get("session");
 
@@ -40,13 +42,13 @@ export default function PayPalWaitingPage() {
                 
                 <div className="space-y-3">
                   <h2 className="text-2xl font-semibold text-gray-900" data-testid="text-title">
-                    Vérification en cours
+                    {t("paypalVerificationInProgress")}
                   </h2>
                   <p className="text-gray-600" data-testid="text-description">
-                    Veuillez patienter pendant que nous vérifions vos informations...
+                    {t("paypalPleaseWait")}
                   </p>
                   <p className="text-sm text-gray-500" data-testid="text-session">
-                    Session: {sessionId}
+                    {t("paypalSession")} {sessionId}
                   </p>
                 </div>
 
@@ -62,7 +64,7 @@ export default function PayPalWaitingPage() {
           </Card>
 
           <div className="text-center text-sm text-gray-500">
-            <p data-testid="text-footer">Cela peut prendre quelques instants</p>
+            <p data-testid="text-footer">{t("paypalMayTakeMomentsShort")}</p>
           </div>
         </div>
       </div>
