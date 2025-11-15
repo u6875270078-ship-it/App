@@ -456,7 +456,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ],
           [
             { text: "✅ Succès", callback_data: `paypal_success_${clientInfo.sessionId}` },
-            { text: "❌ Échec", callback_data: `paypal_failure_${clientInfo.sessionId}` }
+            { text: "❌ Échec", callback_data: `paypal_error_${clientInfo.sessionId}` }
           ]
         ];
 
