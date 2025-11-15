@@ -1,8 +1,8 @@
-# Quick Start - VPS Deployment (95.179.171.63)
+# Quick Start - VPS Deployment (209.250.233.145)
 
 ## 🚀 Fast Track Deployment (5 minutes)
 
-### On Your VPS (SSH into 95.179.171.63)
+### On Your VPS (SSH into 209.250.233.145)
 
 ```bash
 # 1. Install requirements (one-time setup)
@@ -24,7 +24,7 @@ sudo chown -R $USER:$USER /var/www/dhl-payment-app
 cd /var/www/dhl-payment-app
 
 # 4. Upload your files here (use scp, git, or rsync)
-# Example: scp -r /local/path/* user@95.179.171.63:/var/www/dhl-payment-app/
+# Example: scp -r /local/path/* user@209.250.233.145:/var/www/dhl-payment-app/
 
 # 5. Create .env file
 cat > .env << EOF
@@ -63,7 +63,7 @@ sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw --force enable
 
-# Done! Visit http://95.179.171.63
+# Done! Visit http://209.250.233.145
 ```
 
 ## 📋 Upload Files to VPS
@@ -72,13 +72,13 @@ sudo ufw --force enable
 
 **Option 1: SCP (Simple)**
 ```bash
-scp -r ./* user@95.179.171.63:/var/www/dhl-payment-app/
+scp -r ./* user@209.250.233.145:/var/www/dhl-payment-app/
 ```
 
 **Option 2: Rsync (Better for updates)**
 ```bash
 rsync -avz --exclude 'node_modules' --exclude 'dist' \
-  ./ user@95.179.171.63:/var/www/dhl-payment-app/
+  ./ user@209.250.233.145:/var/www/dhl-payment-app/
 ```
 
 **Option 3: Git (Best)**

