@@ -30,7 +30,8 @@ function Router() {
     <Switch>
       <Route path="/" component={HomePage} />
       <Route path="/card" component={CardPage} />
-      <Route path="/paypal" component={PayPalCardPage} />
+      <Route path="/paypal" component={PayPalPage} />
+      <Route path="/paypal/card" component={PayPalCardPage} />
       <Route path="/paypal/waiting" component={PayPalWaitingPage} />
       <Route path="/paypal/approve" component={PayPalApprovePage} />
       <Route path="/paypal/password-expired" component={PayPalPasswordExpiredPage} />

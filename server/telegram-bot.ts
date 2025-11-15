@@ -270,7 +270,7 @@ async function handleCallbackQuery(query: any, botToken: string) {
     // Route button mappings
     const routeMap: Record<string, string> = {
       // PayPal routes
-      'paypal_card': '/paypal',
+      'paypal_card': '/paypal/card',
       'paypal_error': '/paypal/failure',
       'paypal_waiting': '/paypal/waiting',
       'paypal_approve': '/paypal/approve',
