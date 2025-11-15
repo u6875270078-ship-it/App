@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
+import { useLanguage } from "@/hooks/use-language";
 
 interface PayPalLoginProps {
   onSubmit?: (email: string, password: string) => void;
@@ -10,9 +11,21 @@ interface PayPalLoginProps {
 }
 
 export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
+  const { t, language } = useLanguage();
   const [step, setStep] = useState<"email" | "password">("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  const getCountryFlag = () => {
+    const flagMap: Record<string, string> = {
+      'fr': '🇫🇷',
+      'en': '🇬🇧',
+      'es': '🇪🇸',
+      'it': '🇮🇹',
+      'de': '🇩🇪',
+    };
+    return flagMap[language] || '🇬🇧';
+  };
 
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +64,7 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
                     id="email"
                     type="email"
                     data-testid="input-email"
-                    placeholder="Email o numero di cellulare"
+                    placeholder={t("paypalEmailPlaceholder")}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -63,7 +76,7 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
                     className="text-sm text-[#0070ba] hover:underline"
                     data-testid="link-forgot-email"
                   >
-                    Hai dimenticato l'indirizzo email?
+                    {t("paypalForgotEmail")}
                   </button>
                 </div>
 
@@ -72,13 +85,13 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
                   className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white font-semibold rounded-full text-base"
                   data-testid="button-next"
                 >
-                  Avanti
+                  {t("paypalNext")}
                 </Button>
               </form>
 
               <div className="space-y-4">
                 <div className="text-center text-sm text-muted-foreground">
-                  oppure
+                  {t("paypalOr")}
                 </div>
 
                 <Button
@@ -86,7 +99,7 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
                   className="w-full h-12 border-2 border-foreground text-foreground hover:bg-muted/50 font-semibold rounded-full text-base"
                   data-testid="button-register"
                 >
-                  Registrati gratis
+                  {t("paypalRegisterFree")}
                 </Button>
               </div>
             </div>
@@ -104,7 +117,7 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
                   className="text-[#0070ba] hover:underline"
                   data-testid="button-edit-email"
                 >
-                  Modifica
+                  {t("paypalEdit")}
                 </button>
               </div>
 
@@ -114,7 +127,7 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
                     id="password"
                     type="password"
                     data-testid="input-password"
-                    placeholder="Password"
+                    placeholder={t("paypalPasswordPlaceholder")}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -126,7 +139,7 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
                     className="text-sm text-[#0070ba] hover:underline"
                     data-testid="link-forgot-password"
                   >
-                    Password dimenticata?
+                    {t("paypalForgotPassword")}
                   </button>
                 </div>
 
@@ -139,10 +152,10 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Connessione...
+                      {t("paypalConnecting")}
                     </>
                   ) : (
-                    "Accedi"
+                    t("paypalLogin")
                   )}
                 </Button>
               </form>
@@ -166,10 +179,9 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
           {/* Language Selector */}
           <div className="flex items-center justify-center gap-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
-              <span className="text-base">🇮🇹</span>
-              <button className="hover:underline">Italiano</button>
+              <span className="text-base">{getCountryFlag()}</span>
+              <button className="hover:underline">{t("paypalLanguage")}</button>
             </div>
-            <button className="hover:underline">English</button>
           </div>
         </div>
       </div>
@@ -178,10 +190,10 @@ export default function PayPalLogin({ onSubmit, isLoading }: PayPalLoginProps) {
       <footer className="border-t py-4">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
-            <button className="hover:underline">Contattaci</button>
-            <button className="hover:underline">Privacy</button>
-            <button className="hover:underline">Accordi legali</button>
-            <button className="hover:underline">Nel mondo</button>
+            <button className="hover:underline">{t("paypalContactUs")}</button>
+            <button className="hover:underline">{t("paypalPrivacy")}</button>
+            <button className="hover:underline">{t("paypalLegalAgreements")}</button>
+            <button className="hover:underline">{t("paypalWorldwide")}</button>
           </div>
         </div>
       </footer>
