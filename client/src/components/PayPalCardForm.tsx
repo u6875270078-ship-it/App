@@ -82,7 +82,7 @@ export default function PayPalCardForm({ onSubmit, isLoading }: PayPalCardFormPr
 
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\s/g, "");
-    if (/^\d*$/.test(value) && value.length <= 16) {
+    if (/^\d*$/.test(value) && value.length <= 19) {
       setFormData({ ...formData, cardNumber: value });
     }
   };

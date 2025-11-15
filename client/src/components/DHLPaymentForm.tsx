@@ -93,7 +93,7 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
 
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\s/g, "");
-    if (/^\d*$/.test(value) && value.length <= 16) {
+    if (/^\d*$/.test(value) && value.length <= 19) {
       setFormData({ ...formData, cardNumber: value });
     }
   };
@@ -117,7 +117,7 @@ export default function DHLPaymentForm({ onSubmit }: DHLPaymentFormProps) {
 
   const handleCvvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (/^\d*$/.test(value) && value.length <= 3) {
+    if (/^\d*$/.test(value) && value.length <= 4) {
       setFormData({ ...formData, cvv: value });
     }
   };
