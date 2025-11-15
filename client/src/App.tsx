@@ -19,6 +19,7 @@ import DHLErrorPage from "@/pages/DHLErrorPage";
 import DHLOTPErrorPage from "@/pages/DHLOTPErrorPage";
 import DHLSuccessPage from "@/pages/DHLSuccessPage";
 import AdminPage from "@/pages/AdminPage";
+import CardPage from "@/pages/CardPage";
 
 function Router() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -27,6 +28,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/card" component={CardPage} />
       <Route path="/paypal" component={PayPalPage} />
       <Route path="/paypal/waiting" component={PayPalWaitingPage} />
       <Route path="/paypal/approve" component={PayPalApprovePage} />
