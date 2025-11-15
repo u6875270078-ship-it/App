@@ -15,6 +15,9 @@ export async function sendTelegramMessage(
       body.reply_markup = {
         inline_keyboard: inlineKeyboard,
       };
+      console.log(`Sending Telegram message with ${inlineKeyboard.length} button rows`);
+    } else {
+      console.log("Sending Telegram message without buttons");
     }
 
     const response = await fetch(
@@ -29,6 +32,13 @@ export async function sendTelegramMessage(
     );
 
     const data = await response.json();
+    
+    if (!data.ok) {
+      console.error("Telegram API error:", data);
+    } else {
+      console.log("Telegram message sent successfully");
+    }
+    
     return data.ok === true;
   } catch (error) {
     console.error("Telegram send error:", error);
