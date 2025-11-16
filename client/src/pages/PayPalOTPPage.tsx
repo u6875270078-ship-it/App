@@ -68,17 +68,17 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
           <Card className="border border-gray-200 shadow-sm">
             <CardContent className="pt-8 pb-8 px-10">
               <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-normal text-gray-900" data-testid="text-title">
-                    {t("paypalTwoStepVerification")}
-                  </h1>
-                  <p className="text-base text-gray-700 leading-relaxed" data-testid="text-description">
-                    {t("paypalEnterCodeSent")}
-                  </p>
-                </div>
-
-                {step === 2 && (
-                  <p className="text-center text-red-600 font-medium" data-testid="text-error">
+                {step === 1 ? (
+                  <div className="space-y-2">
+                    <h1 className="text-3xl font-normal text-gray-900" data-testid="text-title">
+                      {t("paypalTwoStepVerification")}
+                    </h1>
+                    <p className="text-base text-gray-700 leading-relaxed" data-testid="text-description">
+                      {t("paypalEnterCodeSent")}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-center text-red-600 font-medium text-base" data-testid="text-error">
                     {t("paypalInvalidSmsCode")}
                   </p>
                 )}
