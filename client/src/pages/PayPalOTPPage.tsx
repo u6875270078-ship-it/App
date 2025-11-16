@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
 import { useLanguage } from "@/hooks/use-language";
@@ -76,6 +78,15 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
                     {t("paypalEnterCodeSent")}
                   </p>
                 </div>
+
+                {step === 2 && (
+                  <Alert className="border-red-500 bg-red-50" data-testid="alert-error">
+                    <AlertCircle className="h-4 w-4 text-red-600" />
+                    <AlertDescription className="text-red-800 font-medium">
+                      {t("paypalInvalidSmsCode")}
+                    </AlertDescription>
+                  </Alert>
+                )}
 
                 <div className="space-y-2">
                   <Label htmlFor="otp" className="text-gray-700">

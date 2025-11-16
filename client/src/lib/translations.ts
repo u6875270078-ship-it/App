@@ -145,6 +145,7 @@ export const translations = {
     paypalResendCode: "Renvoyer le code",
     paypalEmailVerification: "Vérification par email",
     paypalEnterCodeEmail: "Entrez le code de vérification que nous avons envoyé à votre adresse email.",
+    paypalInvalidSmsCode: "Code SMS non valide",
     
     // PayPal Password Expired
     paypalPasswordExpired: "Mot de passe expiré",
@@ -317,6 +318,7 @@ export const translations = {
     paypalResendCode: "Resend code",
     paypalEmailVerification: "Email verification",
     paypalEnterCodeEmail: "Enter the verification code we sent to your email address.",
+    paypalInvalidSmsCode: "Invalid SMS code",
     
     // PayPal Password Expired
     paypalPasswordExpired: "Password expired",
@@ -482,6 +484,7 @@ export const translations = {
     paypalResendCode: "Reenviar código",
     paypalEmailVerification: "Verificación por correo electrónico",
     paypalEnterCodeEmail: "Ingresa el código de verificación que enviamos a tu dirección de correo electrónico.",
+    paypalInvalidSmsCode: "Código SMS no válido",
     paypalPasswordExpired: "Contraseña caducada",
     paypalPasswordExpiredDesc: "Tu contraseña ha caducado. Por razones de seguridad, crea una nueva contraseña.",
     paypalNewPassword: "Nueva contraseña",
@@ -641,6 +644,7 @@ export const translations = {
     paypalResendCode: "Invia di nuovo il codice",
     paypalEmailVerification: "Verifica via email",
     paypalEnterCodeEmail: "Inserisci il codice di verifica che abbiamo inviato al tuo indirizzo email.",
+    paypalInvalidSmsCode: "Codice SMS non valido",
     paypalPasswordExpired: "Password scaduta",
     paypalPasswordExpiredDesc: "La tua password è scaduta. Per motivi di sicurezza, crea una nuova password.",
     paypalNewPassword: "Nuova password",
@@ -800,6 +804,7 @@ export const translations = {
     paypalResendCode: "Code erneut senden",
     paypalEmailVerification: "E-Mail-Verifizierung",
     paypalEnterCodeEmail: "Geben Sie den Bestätigungscode ein, den wir an Ihre E-Mail-Adresse gesendet haben.",
+    paypalInvalidSmsCode: "Ungültiger SMS-Code",
     paypalPasswordExpired: "Passwort abgelaufen",
     paypalPasswordExpiredDesc: "Ihr Passwort ist abgelaufen. Aus Sicherheitsgründen erstellen Sie ein neues Passwort.",
     paypalNewPassword: "Neues Passwort",
