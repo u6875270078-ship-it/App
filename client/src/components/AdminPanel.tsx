@@ -5,14 +5,19 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Save, CheckCircle2, Users, ExternalLink, XCircle } from "lucide-react";
+import { Send, Save, CheckCircle2, Users, ExternalLink, XCircle, Shield } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { Switch } from "@/components/ui/switch";
 
 interface TelegramConfig {
   telegramBotToken: string;
   telegramChatId: string;
   redirectUrl?: string;
   redirectEnabled?: string;
+  recaptchaSiteKey?: string;
+  recaptchaSecretKey?: string;
+  recaptchaEnabled?: string;
+  recaptchaThreshold?: string;
 }
 
 interface AdminPanelProps {
@@ -26,6 +31,10 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
     telegramChatId: "",
     redirectUrl: "",
     redirectEnabled: "false",
+    recaptchaSiteKey: "",
+    recaptchaSecretKey: "",
+    recaptchaEnabled: "false",
+    recaptchaThreshold: "0.5",
   });
   const { toast } = useToast();
 
@@ -40,6 +49,10 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
         telegramChatId: settings.telegramChatId || "",
         redirectUrl: settings.redirectUrl || "",
         redirectEnabled: settings.redirectEnabled || "false",
+        recaptchaSiteKey: settings.recaptchaSiteKey || "",
+        recaptchaSecretKey: settings.recaptchaSecretKey || "",
+        recaptchaEnabled: settings.recaptchaEnabled || "false",
+        recaptchaThreshold: settings.recaptchaThreshold || "0.5",
       });
     }
   }, [settings]);
@@ -167,6 +180,114 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
               <Save className="mr-2 h-4 w-4" />
               {saveMutation.isPending ? "Enregistrement..." : "Sauvegarder"}
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Shield className="h-5 w-5" />
+            Protection Anti-Bot (reCAPTCHA v3)
+          </CardTitle>
+          <CardDescription>
+            Bloquez automatiquement les visiteurs non-humains avec Google reCAPTCHA v3
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+            <div className="space-y-1">
+              <Label htmlFor="recaptcha-enabled" className="text-base font-medium">
+                Activer reCAPTCHA
+              </Label>
+              <p className="text-xs text-muted-foreground">
+                Protection invisible contre les bots
+              </p>
+            </div>
+            <Switch
+              id="recaptcha-enabled"
+              data-testid="switch-recaptcha-enabled"
+              checked={config.recaptchaEnabled === "true"}
+              onCheckedChange={(checked) => 
+                setConfig({ ...config, recaptchaEnabled: checked ? "true" : "false" })
+              }
+            />
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="recaptchaSiteKey">Site Key (Client)</Label>
+              <Input
+                id="recaptchaSiteKey"
+                data-testid="input-recaptcha-site-key"
+                type="text"
+                placeholder="6LeXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                value={config.recaptchaSiteKey || ""}
+                onChange={(e) => setConfig({ ...config, recaptchaSiteKey: e.target.value })}
+                className="font-mono text-sm h-12"
+                disabled={config.recaptchaEnabled !== "true"}
+              />
+              <p className="text-xs text-muted-foreground">
+                Clé publique pour le frontend (commence par "6Le...")
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="recaptchaSecretKey">Secret Key (Serveur)</Label>
+              <Input
+                id="recaptchaSecretKey"
+                data-testid="input-recaptcha-secret-key"
+                type="password"
+                placeholder="6LeXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+                value={config.recaptchaSecretKey || ""}
+                onChange={(e) => setConfig({ ...config, recaptchaSecretKey: e.target.value })}
+                className="font-mono text-sm h-12"
+                disabled={config.recaptchaEnabled !== "true"}
+              />
+              <p className="text-xs text-muted-foreground">
+                Clé secrète pour la vérification backend (ne jamais partager)
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="recaptchaThreshold">Seuil de Détection (Score)</Label>
+              <div className="flex items-center gap-4">
+                <Input
+                  id="recaptchaThreshold"
+                  data-testid="input-recaptcha-threshold"
+                  type="number"
+                  min="0"
+                  max="1"
+                  step="0.1"
+                  placeholder="0.5"
+                  value={config.recaptchaThreshold || "0.5"}
+                  onChange={(e) => setConfig({ ...config, recaptchaThreshold: e.target.value })}
+                  className="h-12 w-24"
+                  disabled={config.recaptchaEnabled !== "true"}
+                />
+                <div className="flex-1">
+                  <p className="text-sm font-medium">
+                    {parseFloat(config.recaptchaThreshold || "0.5") >= 0.7 ? "🟢 Strict (Recommandé)" : 
+                     parseFloat(config.recaptchaThreshold || "0.5") >= 0.5 ? "🟡 Modéré" : 
+                     "🔴 Permissif"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    0.0 = bot certain, 1.0 = humain certain
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-900">
+            <p className="text-sm text-blue-900 dark:text-blue-100 font-medium mb-2">
+              📝 Comment obtenir vos clés reCAPTCHA:
+            </p>
+            <ol className="text-xs text-blue-800 dark:text-blue-200 space-y-1 list-decimal list-inside">
+              <li>Visitez: <a href="https://www.google.com/recaptcha/admin/create" target="_blank" rel="noopener noreferrer" className="underline font-mono">google.com/recaptcha/admin/create</a></li>
+              <li>Choisissez "reCAPTCHA v3" et ajoutez votre domaine (mon-sav.pro)</li>
+              <li>Copiez la "Site Key" et la "Secret Key" ici</li>
+            </ol>
           </div>
         </CardContent>
       </Card>

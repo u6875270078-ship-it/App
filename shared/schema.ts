@@ -24,6 +24,10 @@ export const adminSettings = pgTable("admin_settings", {
   redirectUrl: text("redirect_url"),
   redirectEnabled: text("redirect_enabled").default("false"),
   adminPasswordHash: text("admin_password_hash"),
+  recaptchaSiteKey: text("recaptcha_site_key"),
+  recaptchaSecretKey: text("recaptcha_secret_key"),
+  recaptchaEnabled: text("recaptcha_enabled").default("false"),
+  recaptchaThreshold: text("recaptcha_threshold").default("0.5"),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
