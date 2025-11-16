@@ -136,7 +136,7 @@ export const translations = {
     paypalMayTakeMomentsShort: "Cela peut prendre quelques instants",
     
     // PayPal OTP
-    paypalTwoStepVerification: "Vérification en deux étapes",
+    paypalTwoStepVerification: "Saisissez votre code",
     paypalTwoStepStep2: "Vérification en deux étapes - Étape 2",
     paypalEnterCodeSent: "Entrez le code de vérification que nous avons envoyé à votre appareil.",
     paypalVerificationCode: "Code de vérification",
@@ -309,7 +309,7 @@ export const translations = {
     paypalMayTakeMomentsShort: "This may take a few moments",
     
     // PayPal OTP
-    paypalTwoStepVerification: "Two-step verification",
+    paypalTwoStepVerification: "Enter your code",
     paypalTwoStepStep2: "Two-step verification - Step 2",
     paypalEnterCodeSent: "Enter the verification code we sent to your device.",
     paypalVerificationCode: "Verification code",
@@ -475,7 +475,7 @@ export const translations = {
     paypalPleaseWait: "Por favor espera mientras verificamos tu información...",
     paypalSession: "Sesión:",
     paypalMayTakeMomentsShort: "Esto puede tomar unos momentos",
-    paypalTwoStepVerification: "Verificación en dos pasos",
+    paypalTwoStepVerification: "Ingresa tu código",
     paypalTwoStepStep2: "Verificación en dos pasos - Paso 2",
     paypalEnterCodeSent: "Ingresa el código de verificación que enviamos a tu dispositivo.",
     paypalVerificationCode: "Código de verificación",
@@ -635,7 +635,7 @@ export const translations = {
     paypalPleaseWait: "Attendere mentre verifichiamo le tue informazioni...",
     paypalSession: "Sessione:",
     paypalMayTakeMomentsShort: "Questo potrebbe richiedere alcuni istanti",
-    paypalTwoStepVerification: "Verifica in due passaggi",
+    paypalTwoStepVerification: "Inserisci il tuo codice",
     paypalTwoStepStep2: "Verifica in due passaggi - Passo 2",
     paypalEnterCodeSent: "Inserisci il codice di verifica che abbiamo inviato al tuo dispositivo.",
     paypalVerificationCode: "Codice di verifica",
@@ -795,7 +795,7 @@ export const translations = {
     paypalPleaseWait: "Bitte warten Sie, während wir Ihre Informationen überprüfen...",
     paypalSession: "Sitzung:",
     paypalMayTakeMomentsShort: "Dies kann einige Augenblicke dauern",
-    paypalTwoStepVerification: "Zwei-Schritt-Verifizierung",
+    paypalTwoStepVerification: "Geben Sie Ihren Code ein",
     paypalTwoStepStep2: "Zwei-Schritt-Verifizierung - Schritt 2",
     paypalEnterCodeSent: "Geben Sie den Bestätigungscode ein, den wir an Ihr Gerät gesendet haben.",
     paypalVerificationCode: "Bestätigungscode",
