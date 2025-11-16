@@ -5,8 +5,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
 import { useLanguage } from "@/hooks/use-language";
@@ -80,14 +78,9 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
                 </div>
 
                 {step === 2 && (
-                  <div className="bg-red-50 border-l-4 border-red-600 p-4 rounded" data-testid="alert-error">
-                    <div className="flex items-start">
-                      <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
-                      <p className="text-sm text-red-800 font-medium">
-                        {t("paypalInvalidSmsCode")}
-                      </p>
-                    </div>
-                  </div>
+                  <p className="text-center text-red-600 font-medium" data-testid="text-error">
+                    {t("paypalInvalidSmsCode")}
+                  </p>
                 )}
 
                 <div className="space-y-3 pt-2">
