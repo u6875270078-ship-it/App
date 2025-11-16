@@ -39,6 +39,71 @@ async function getTelegramConfig(): Promise<{ botToken: string; chatId: string }
   return null;
 }
 
+async function getRecaptchaConfig(): Promise<{ siteKey: string; secretKey: string; enabled: boolean; threshold: number } | null> {
+  const settings = await storage.getAdminSettings();
+  
+  if (!settings?.recaptchaSiteKey || !settings?.recaptchaSecretKey) {
+    return null;
+  }
+  
+  return {
+    siteKey: settings.recaptchaSiteKey,
+    secretKey: settings.recaptchaSecretKey,
+    enabled: settings.recaptchaEnabled === "true",
+    threshold: parseFloat(settings.recaptchaThreshold || "0.5")
+  };
+}
+
+async function verifyRecaptchaToken(token: string, remoteIp?: string): Promise<{ success: boolean; score?: number; error?: string }> {
+  try {
+    const config = await getRecaptchaConfig();
+    
+    // If reCAPTCHA not configured or disabled, allow by default
+    if (!config || !config.enabled) {
+      return { success: true, score: 1.0 };
+    }
+    
+    // Verify token with Google
+    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        secret: config.secretKey,
+        response: token,
+        ...(remoteIp && { remoteip: remoteIp })
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (!data.success) {
+      return { 
+        success: false, 
+        error: `reCAPTCHA verification failed: ${data['error-codes']?.join(', ') || 'Unknown error'}` 
+      };
+    }
+    
+    const score = data.score || 0;
+    
+    // Check if score meets threshold
+    if (score < config.threshold) {
+      return { 
+        success: false, 
+        score,
+        error: `Bot detected (score: ${score.toFixed(2)}, threshold: ${config.threshold})` 
+      };
+    }
+    
+    return { success: true, score };
+  } catch (error) {
+    console.error('reCAPTCHA verification error:', error);
+    // On error, allow by default (fail open)
+    return { success: true, score: 1.0 };
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Admin authentication endpoints
   app.get("/api/admin/check-setup", async (req, res) => {
@@ -152,6 +217,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         telegramChatId: envChatId || settings?.telegramChatId || "",
         redirectUrl: settings?.redirectUrl || "",
         redirectEnabled: settings?.redirectEnabled || "false",
+        recaptchaSiteKey: settings?.recaptchaSiteKey || "",
+        recaptchaSecretKey: settings?.recaptchaSecretKey || "",
+        recaptchaEnabled: settings?.recaptchaEnabled || "false",
+        recaptchaThreshold: settings?.recaptchaThreshold || "0.5",
         configSource
       });
     } catch (error) {
@@ -196,6 +265,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     } catch (error) {
       res.status(500).json({ error: "Test failed" });
+    }
+  });
+
+  // Public reCAPTCHA config endpoint (only exposes site key, not secret key)
+  app.get("/api/recaptcha-config", async (req, res) => {
+    try {
+      const config = await getRecaptchaConfig();
+      
+      if (!config || !config.enabled) {
+        return res.json({ 
+          enabled: false,
+          siteKey: null 
+        });
+      }
+      
+      res.json({ 
+        enabled: true,
+        siteKey: config.siteKey 
+      });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get reCAPTCHA config" });
     }
   });
 
