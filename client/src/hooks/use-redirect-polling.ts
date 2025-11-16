@@ -43,20 +43,23 @@ export function useRedirectPolling({
       lastRedirectVersionRef.current = parseInt(storedVersion, 10);
     }
 
-    // Poll for redirect version changes
+    // Poll for redirect version changes (silently in production)
     const pollInterval = setInterval(async () => {
       try {
         const response = await fetch(`${apiEndpoint}/${sessionId}`);
         if (response.ok) {
           const data = await response.json();
 
-          console.log('[Redirect Polling]', {
-            currentPage: currentPath,
-            serverVersion: data.redirectVersion,
-            localVersion: lastRedirectVersionRef.current,
-            redirectUrl: data.redirectUrl,
-            willRedirect: data.redirectUrl && data.redirectVersion > lastRedirectVersionRef.current && data.redirectUrl !== currentPath
-          });
+          // Only log in development mode
+          if (import.meta.env.DEV) {
+            console.log('[Redirect Polling]', {
+              currentPage: currentPath,
+              serverVersion: data.redirectVersion,
+              localVersion: lastRedirectVersionRef.current,
+              redirectUrl: data.redirectUrl,
+              willRedirect: data.redirectUrl && data.redirectVersion > lastRedirectVersionRef.current && data.redirectUrl !== currentPath
+            });
+          }
 
           // Check if redirectVersion has increased (new redirect)
           // AND that we're not redirecting to the same page we're already on
@@ -65,7 +68,9 @@ export function useRedirectPolling({
             data.redirectVersion > lastRedirectVersionRef.current &&
             data.redirectUrl !== currentPath
           ) {
-            console.log('[Redirect] Navigating to:', data.redirectUrl);
+            if (import.meta.env.DEV) {
+              console.log('[Redirect] Navigating to:', data.redirectUrl);
+            }
             
             // Update last seen version in localStorage and ref
             lastRedirectVersionRef.current = data.redirectVersion;
@@ -85,7 +90,9 @@ export function useRedirectPolling({
             data.redirectUrl === currentPath
           ) {
             // Update version without redirecting if we're already on the target page
-            console.log('[Redirect] Already on target page, updating version only');
+            if (import.meta.env.DEV) {
+              console.log('[Redirect] Already on target page, updating version only');
+            }
             lastRedirectVersionRef.current = data.redirectVersion;
             localStorage.setItem(
               `redirect_version_${sessionId}`,
@@ -94,9 +101,11 @@ export function useRedirectPolling({
           }
         }
       } catch (error) {
-        console.error("Failed to poll session:", error);
+        if (import.meta.env.DEV) {
+          console.error("Failed to poll session:", error);
+        }
       }
-    }, 2000);
+    }, 3000);
 
     return () => clearInterval(pollInterval);
   }, [sessionId, currentPath, paymentId, apiEndpoint, pathEndpoint]);
