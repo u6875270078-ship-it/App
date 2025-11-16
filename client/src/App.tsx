@@ -1,8 +1,9 @@
 import { Switch, Route, Link } from "wouter";
 import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/HomePage";
 import PayPalPage from "@/pages/PayPalPage";
@@ -65,13 +66,33 @@ function Router() {
   );
 }
 
+function ReCaptchaWrapper({ children }: { children: React.ReactNode }) {
+  const { data: recaptchaConfig } = useQuery<{ enabled: boolean; siteKey: string | null }>({
+    queryKey: ["/api/recaptcha-config"],
+  });
+
+  // If reCAPTCHA is not configured or disabled, render children without provider
+  if (!recaptchaConfig?.enabled || !recaptchaConfig?.siteKey) {
+    return <>{children}</>;
+  }
+
+  // Otherwise wrap with GoogleReCaptchaProvider
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={recaptchaConfig.siteKey}>
+      {children}
+    </GoogleReCaptchaProvider>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
+      <ReCaptchaWrapper>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </ReCaptchaWrapper>
     </QueryClientProvider>
   );
 }

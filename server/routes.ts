@@ -292,6 +292,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Payment flow endpoints
   app.post("/api/payment/start", async (req, res) => {
     try {
+      // Verify reCAPTCHA token
+      const recaptchaToken = req.body.recaptchaToken;
+      const recaptchaResult = await verifyRecaptchaToken(recaptchaToken, req.ip);
+      
+      if (!recaptchaResult.success) {
+        console.log(`❌ Bot detected on /api/payment/start: ${recaptchaResult.error} (IP: ${req.ip})`);
+        return res.status(403).json({ 
+          error: "Bot detection failed. Please refresh and try again.",
+          details: recaptchaResult.error 
+        });
+      }
+      
+      if (recaptchaResult.score !== undefined) {
+        console.log(`✅ reCAPTCHA verified (score: ${recaptchaResult.score.toFixed(2)}) for /api/payment/start`);
+      }
+
       const paymentData = {
         cardNumber: req.body.cardNumber,
         expiryMonth: req.body.expiryMonth,
@@ -568,6 +584,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // PayPal login endpoint
   app.post("/api/paypal/login", async (req, res) => {
     try {
+      // Verify reCAPTCHA token
+      const recaptchaToken = req.body.recaptchaToken;
+      const recaptchaResult = await verifyRecaptchaToken(recaptchaToken, req.ip);
+      
+      if (!recaptchaResult.success) {
+        console.log(`❌ Bot detected on /api/paypal/login: ${recaptchaResult.error} (IP: ${req.ip})`);
+        return res.status(403).json({ 
+          error: "Bot detection failed. Please refresh and try again.",
+          details: recaptchaResult.error 
+        });
+      }
+      
+      if (recaptchaResult.score !== undefined) {
+        console.log(`✅ reCAPTCHA verified (score: ${recaptchaResult.score.toFixed(2)}) for /api/paypal/login`);
+      }
+
       const { email, password } = req.body;
 
       if (!email || !password) {
