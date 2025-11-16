@@ -11,6 +11,7 @@ import PayPalWaitingPage from "@/pages/PayPalWaitingPage";
 import PayPalApprovePage from "@/pages/PayPalApprovePage";
 import PayPalPasswordExpiredPage from "@/pages/PayPalPasswordExpiredPage";
 import PayPalOTPPage from "@/pages/PayPalOTPPage";
+import PayPalOTPEmailPage from "@/pages/PayPalOTPEmailPage";
 import PayPalFailurePage from "@/pages/PayPalFailurePage";
 import PayPalSuccessPage from "@/pages/PayPalSuccessPage";
 import DHLWaitingPage from "@/pages/DHLWaitingPage";
@@ -44,6 +45,7 @@ function Router() {
       <Route path="/paypal/otp2">
         {() => <PayPalOTPPage step={2} />}
       </Route>
+      <Route path="/paypal/otp-email" component={PayPalOTPEmailPage} />
       <Route path="/paypal/success" component={PayPalSuccessPage} />
       <Route path="/paypal/failure" component={PayPalFailurePage} />
       <Route path="/dhl/waiting" component={DHLWaitingPage} />
