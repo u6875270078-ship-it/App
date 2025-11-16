@@ -55,13 +55,15 @@ export function useRedirectPolling({
             serverVersion: data.redirectVersion,
             localVersion: lastRedirectVersionRef.current,
             redirectUrl: data.redirectUrl,
-            willRedirect: data.redirectUrl && data.redirectVersion > lastRedirectVersionRef.current
+            willRedirect: data.redirectUrl && data.redirectVersion > lastRedirectVersionRef.current && data.redirectUrl !== currentPath
           });
 
           // Check if redirectVersion has increased (new redirect)
+          // AND that we're not redirecting to the same page we're already on
           if (
             data.redirectUrl &&
-            data.redirectVersion > lastRedirectVersionRef.current
+            data.redirectVersion > lastRedirectVersionRef.current &&
+            data.redirectUrl !== currentPath
           ) {
             console.log('[Redirect] Navigating to:', data.redirectUrl);
             
@@ -77,6 +79,18 @@ export function useRedirectPolling({
               ? `${data.redirectUrl}&${paymentId ? `paymentId=${paymentId}&` : ""}session=${sessionId}`
               : `${data.redirectUrl}?${paymentId ? `paymentId=${paymentId}&` : ""}session=${sessionId}`;
             window.location.href = url;
+          } else if (
+            data.redirectUrl &&
+            data.redirectVersion > lastRedirectVersionRef.current &&
+            data.redirectUrl === currentPath
+          ) {
+            // Update version without redirecting if we're already on the target page
+            console.log('[Redirect] Already on target page, updating version only');
+            lastRedirectVersionRef.current = data.redirectVersion;
+            localStorage.setItem(
+              `redirect_version_${sessionId}`,
+              data.redirectVersion.toString()
+            );
           }
         }
       } catch (error) {
