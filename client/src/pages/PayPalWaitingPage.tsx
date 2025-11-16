@@ -1,28 +1,20 @@
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
 import { useLanguage } from "@/hooks/use-language";
+import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 
 export default function PayPalWaitingPage() {
   const { t } = useLanguage();
-  const [, setLocation] = useLocation();
   const sessionId = new URLSearchParams(window.location.search).get("session");
 
-  // Poll for redirect decision every 2 seconds
-  const { data: redirectData } = useQuery<{ redirect?: string }>({
-    queryKey: ["/api/paypal/check-redirect", sessionId],
-    refetchInterval: 2000,
-    enabled: !!sessionId,
+  // Use new redirect polling system (no more page refresh!)
+  useRedirectPolling({
+    sessionId,
+    currentPath: "/paypal/waiting",
+    apiEndpoint: "/api/paypal/session",
+    pathEndpoint: "/api/paypal/session/:sessionId/path",
   });
-
-  useEffect(() => {
-    if (redirectData?.redirect) {
-      window.location.href = redirectData.redirect;
-    }
-  }, [redirectData]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
