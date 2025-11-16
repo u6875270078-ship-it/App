@@ -61,35 +61,37 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md space-y-6">
           {/* PayPal Logo */}
-          <div className="flex justify-center">
-            <img src={paypalLogo} alt="PayPal" className="h-40 w-auto" data-testid="img-paypal-logo" />
+          <div className="flex justify-center mb-8">
+            <img src={paypalLogo} alt="PayPal" className="h-32 w-auto" data-testid="img-paypal-logo" />
           </div>
 
-          <Card className="border-2">
-            <CardContent className="pt-6 pb-8 px-8">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-3 text-center">
-                  <h2 className="text-2xl font-semibold text-gray-900" data-testid="text-title">
-                    {step === 2 ? t("paypalTwoStepStep2") : t("paypalTwoStepVerification")}
-                  </h2>
-                  <p className="text-gray-600" data-testid="text-description">
+          <Card className="border border-gray-200 shadow-sm">
+            <CardContent className="pt-8 pb-8 px-10">
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-normal text-gray-900" data-testid="text-title">
+                    {t("paypalTwoStepVerification")}
+                  </h1>
+                  <p className="text-base text-gray-700 leading-relaxed" data-testid="text-description">
                     {t("paypalEnterCodeSent")}
                   </p>
                 </div>
 
                 {step === 2 && (
-                  <Alert className="border-red-500 bg-red-50" data-testid="alert-error">
-                    <AlertCircle className="h-4 w-4 text-red-600" />
-                    <AlertDescription className="text-red-800 font-medium">
-                      {t("paypalInvalidSmsCode")}
-                    </AlertDescription>
-                  </Alert>
+                  <div className="bg-red-50 border-l-4 border-red-600 p-4 rounded" data-testid="alert-error">
+                    <div className="flex items-start">
+                      <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+                      <p className="text-sm text-red-800 font-medium">
+                        {t("paypalInvalidSmsCode")}
+                      </p>
+                    </div>
+                  </div>
                 )}
 
-                <div className="space-y-2">
-                  <Label htmlFor="otp" className="text-gray-700">
+                <div className="space-y-3 pt-2">
+                  <Label htmlFor="otp" className="text-sm font-medium text-gray-800">
                     {t("paypalVerificationCode")}
                   </Label>
                   <Input
@@ -102,7 +104,7 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                     maxLength={6}
-                    className="h-12 text-center text-2xl tracking-widest font-mono border-2 border-border focus:border-[#0070ba]"
+                    className="h-14 text-center text-2xl tracking-widest font-mono border-2 border-gray-300 focus:border-[#0070ba] focus:ring-2 focus:ring-[#0070ba]/20 rounded"
                     required
                   />
                 </div>
@@ -110,16 +112,16 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
                 <Button
                   type="submit"
                   disabled={otp.length !== 6 || otpMutation.isPending}
-                  className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white font-semibold rounded-full"
+                  className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white text-base font-medium rounded-full mt-6"
                   data-testid="button-submit"
                 >
                   {otpMutation.isPending ? t("paypalVerifying") : t("paypalVerify")}
                 </Button>
 
-                <div className="text-center">
+                <div className="text-center pt-2">
                   <button
                     type="button"
-                    className="text-sm text-[#0070ba] hover:underline"
+                    className="text-sm text-[#0070ba] hover:text-[#005ea6] hover:underline font-medium"
                     data-testid="button-resend"
                   >
                     {t("paypalResendCode")}
