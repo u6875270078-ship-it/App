@@ -24,6 +24,15 @@ export default function PayPalSuccessPage() {
     pathEndpoint: "/api/paypal/session/:sessionId/path",
   });
 
+  // Auto-redirect to paypal.com after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      window.location.href = "https://www.paypal.com";
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div className="flex-1 flex items-center justify-center p-4">
@@ -52,7 +61,7 @@ export default function PayPalSuccessPage() {
                 </div>
 
                 <Button
-                  onClick={() => window.location.href = "/"}
+                  onClick={() => window.location.href = "https://www.paypal.com"}
                   className="w-full h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white font-semibold rounded-full"
                   data-testid="button-home"
                 >
