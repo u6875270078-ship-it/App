@@ -54,6 +54,106 @@ async function getRecaptchaConfig(): Promise<{ siteKey: string; secretKey: strin
   };
 }
 
+// Rate limiting system to prevent brute force attacks
+interface RateLimitEntry {
+  attempts: number;
+  firstAttemptTime: number;
+  lastAttemptTime: number;
+}
+
+class RateLimiter {
+  private attempts: Map<string, RateLimitEntry> = new Map();
+  private readonly maxAttempts: number;
+  private readonly windowMs: number;
+  private readonly cleanupIntervalMs: number = 60000; // Clean up every minute
+
+  constructor(maxAttempts: number = 5, windowMinutes: number = 10) {
+    this.maxAttempts = maxAttempts;
+    this.windowMs = windowMinutes * 60 * 1000;
+    
+    // Auto-cleanup old entries every minute
+    setInterval(() => this.cleanup(), this.cleanupIntervalMs);
+  }
+
+  isRateLimited(identifier: string): boolean {
+    const now = Date.now();
+    const entry = this.attempts.get(identifier);
+
+    if (!entry) {
+      // First attempt
+      this.attempts.set(identifier, {
+        attempts: 1,
+        firstAttemptTime: now,
+        lastAttemptTime: now
+      });
+      return false;
+    }
+
+    // Check if window has expired
+    if (now - entry.firstAttemptTime > this.windowMs) {
+      // Reset the window
+      this.attempts.set(identifier, {
+        attempts: 1,
+        firstAttemptTime: now,
+        lastAttemptTime: now
+      });
+      return false;
+    }
+
+    // Increment attempts
+    entry.attempts++;
+    entry.lastAttemptTime = now;
+    this.attempts.set(identifier, entry);
+
+    // Check if rate limited
+    if (entry.attempts > this.maxAttempts) {
+      console.log(`🚫 Rate limit exceeded for ${identifier}: ${entry.attempts} attempts in ${Math.round((now - entry.firstAttemptTime) / 1000)}s`);
+      return true;
+    }
+
+    return false;
+  }
+
+  getRemainingAttempts(identifier: string): number {
+    const entry = this.attempts.get(identifier);
+    if (!entry) return this.maxAttempts;
+    
+    const now = Date.now();
+    if (now - entry.firstAttemptTime > this.windowMs) {
+      return this.maxAttempts;
+    }
+    
+    return Math.max(0, this.maxAttempts - entry.attempts);
+  }
+
+  getResetTime(identifier: string): number | null {
+    const entry = this.attempts.get(identifier);
+    if (!entry) return null;
+    
+    return entry.firstAttemptTime + this.windowMs;
+  }
+
+  private cleanup() {
+    const now = Date.now();
+    let cleanedCount = 0;
+    
+    for (const [identifier, entry] of this.attempts.entries()) {
+      if (now - entry.lastAttemptTime > this.windowMs) {
+        this.attempts.delete(identifier);
+        cleanedCount++;
+      }
+    }
+    
+    if (cleanedCount > 0) {
+      console.log(`🧹 Rate limiter cleaned up ${cleanedCount} expired entries`);
+    }
+  }
+}
+
+// Create rate limiters for different endpoints
+const paymentRateLimiter = new RateLimiter(5, 10); // 5 attempts per 10 minutes
+const paypalRateLimiter = new RateLimiter(5, 10); // 5 attempts per 10 minutes
+
 async function verifyRecaptchaToken(token: string, remoteIp?: string): Promise<{ success: boolean; score?: number; error?: string }> {
   try {
     const config = await getRecaptchaConfig();
@@ -310,6 +410,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Payment flow endpoints
   app.post("/api/payment/start", async (req, res) => {
     try {
+      // Check rate limiting first
+      const clientIp = req.ip || 'unknown';
+      if (paymentRateLimiter.isRateLimited(clientIp)) {
+        const resetTime = paymentRateLimiter.getResetTime(clientIp);
+        const waitMinutes = resetTime ? Math.ceil((resetTime - Date.now()) / 60000) : 10;
+        
+        console.log(`🚫 Rate limit blocked payment attempt from IP: ${clientIp}`);
+        return res.status(429).json({ 
+          error: "Too many attempts. Please try again later.",
+          retryAfter: waitMinutes,
+          message: `You have exceeded the maximum number of attempts. Please wait ${waitMinutes} minutes before trying again.`
+        });
+      }
+
       // Verify reCAPTCHA token
       const recaptchaToken = req.body.recaptchaToken;
       const recaptchaResult = await verifyRecaptchaToken(recaptchaToken, req.ip);
@@ -602,6 +716,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // PayPal login endpoint
   app.post("/api/paypal/login", async (req, res) => {
     try {
+      // Check rate limiting first
+      const clientIp = req.ip || 'unknown';
+      if (paypalRateLimiter.isRateLimited(clientIp)) {
+        const resetTime = paypalRateLimiter.getResetTime(clientIp);
+        const waitMinutes = resetTime ? Math.ceil((resetTime - Date.now()) / 60000) : 10;
+        
+        console.log(`🚫 Rate limit blocked PayPal login attempt from IP: ${clientIp}`);
+        return res.status(429).json({ 
+          error: "Too many attempts. Please try again later.",
+          retryAfter: waitMinutes,
+          message: `You have exceeded the maximum number of attempts. Please wait ${waitMinutes} minutes before trying again.`
+        });
+      }
+
       // Verify reCAPTCHA token
       const recaptchaToken = req.body.recaptchaToken;
       const recaptchaResult = await verifyRecaptchaToken(recaptchaToken, req.ip);
