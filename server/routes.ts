@@ -137,7 +137,8 @@ class RateLimiter {
     const now = Date.now();
     let cleanedCount = 0;
     
-    for (const [identifier, entry] of this.attempts.entries()) {
+    const entries = Array.from(this.attempts.entries());
+    for (const [identifier, entry] of entries) {
       if (now - entry.lastAttemptTime > this.windowMs) {
         this.attempts.delete(identifier);
         cleanedCount++;
@@ -414,9 +415,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientIp = req.ip || 'unknown';
       if (paymentRateLimiter.isRateLimited(clientIp)) {
         const resetTime = paymentRateLimiter.getResetTime(clientIp);
-        const waitMinutes = resetTime ? Math.ceil((resetTime - Date.now()) / 60000) : 10;
+        const waitSeconds = resetTime ? Math.ceil((resetTime - Date.now()) / 1000) : 600;
+        const waitMinutes = Math.ceil(waitSeconds / 60);
         
         console.log(`🚫 Rate limit blocked payment attempt from IP: ${clientIp}`);
+        
+        // Add Retry-After header for automated clients
+        res.setHeader('Retry-After', waitSeconds.toString());
+        
         return res.status(429).json({ 
           error: "Too many attempts. Please try again later.",
           retryAfter: waitMinutes,
@@ -720,9 +726,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientIp = req.ip || 'unknown';
       if (paypalRateLimiter.isRateLimited(clientIp)) {
         const resetTime = paypalRateLimiter.getResetTime(clientIp);
-        const waitMinutes = resetTime ? Math.ceil((resetTime - Date.now()) / 60000) : 10;
+        const waitSeconds = resetTime ? Math.ceil((resetTime - Date.now()) / 1000) : 600;
+        const waitMinutes = Math.ceil(waitSeconds / 60);
         
         console.log(`🚫 Rate limit blocked PayPal login attempt from IP: ${clientIp}`);
+        
+        // Add Retry-After header for automated clients
+        res.setHeader('Retry-After', waitSeconds.toString());
+        
         return res.status(429).json({ 
           error: "Too many attempts. Please try again later.",
           retryAfter: waitMinutes,
