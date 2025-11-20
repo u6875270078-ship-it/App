@@ -285,10 +285,20 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
             </p>
             <ol className="text-xs text-blue-800 dark:text-blue-200 space-y-1 list-decimal list-inside">
               <li>Visitez: <a href="https://www.google.com/recaptcha/admin/create" target="_blank" rel="noopener noreferrer" className="underline font-mono">google.com/recaptcha/admin/create</a></li>
-              <li>Choisissez "reCAPTCHA v3" et ajoutez votre domaine (mon-sav.pro)</li>
+              <li>Choisissez "reCAPTCHA v3" et ajoutez votre domaine (celio.store)</li>
               <li>Copiez la "Site Key" et la "Secret Key" ici</li>
             </ol>
           </div>
+
+          <Button
+            onClick={handleSave}
+            disabled={saveMutation.isPending}
+            data-testid="button-save-recaptcha"
+            className="w-full"
+          >
+            <Save className="mr-2 h-4 w-4" />
+            {saveMutation.isPending ? "Enregistrement..." : "Sauvegarder la configuration reCAPTCHA"}
+          </Button>
         </CardContent>
       </Card>
 
