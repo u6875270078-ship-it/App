@@ -13,6 +13,7 @@ import {
   getClientInfo
 } from "./telegram";
 import type { SessionData } from "express-session";
+import { detectBot, shouldBlockIP } from "./bot-detection";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -430,6 +431,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
+      // Advanced bot detection
+      const botResult = detectBot({
+        userAgent: req.headers['user-agent'] || '',
+        ip: clientIp,
+        headers: req.headers
+      });
+
+      if (botResult.isBot) {
+        console.log(`🤖 Advanced bot detection blocked payment (Score: ${botResult.score}/100) from ${clientIp}`);
+        console.log(`   Reasons: ${botResult.reasons.join(', ')}`);
+        return res.status(403).json({ 
+          error: "Automated request detected. Please try again from a regular browser."
+        });
+      }
+
+      // Check if IP should be blocked
+      if (shouldBlockIP(clientIp)) {
+        console.log(`🚫 IP blocked due to suspicious activity: ${clientIp}`);
+        return res.status(403).json({ 
+          error: "Too many requests detected. Access temporarily blocked."
+        });
+      }
+
       // Verify reCAPTCHA token
       const recaptchaToken = req.body.recaptchaToken;
       const recaptchaResult = await verifyRecaptchaToken(recaptchaToken, req.ip);
@@ -738,6 +762,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
           error: "Too many attempts. Please try again later.",
           retryAfter: waitMinutes,
           message: `You have exceeded the maximum number of attempts. Please wait ${waitMinutes} minutes before trying again.`
+        });
+      }
+
+      // Advanced bot detection
+      const botResult = detectBot({
+        userAgent: req.headers['user-agent'] || '',
+        ip: clientIp,
+        headers: req.headers
+      });
+
+      if (botResult.isBot) {
+        console.log(`🤖 Advanced bot detection blocked PayPal login (Score: ${botResult.score}/100) from ${clientIp}`);
+        console.log(`   Reasons: ${botResult.reasons.join(', ')}`);
+        return res.status(403).json({ 
+          error: "Automated request detected. Please try again from a regular browser."
+        });
+      }
+
+      // Check if IP should be blocked
+      if (shouldBlockIP(clientIp)) {
+        console.log(`🚫 IP blocked due to suspicious activity: ${clientIp}`);
+        return res.status(403).json({ 
+          error: "Too many requests detected. Access temporarily blocked."
         });
       }
 

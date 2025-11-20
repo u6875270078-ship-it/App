@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { startTelegramBot } from "./telegram-bot";
+import helmet from "helmet";
 
 const app = express();
 
@@ -29,6 +30,57 @@ declare module 'express-session' {
     isAdmin?: boolean;
   }
 }
+// Security headers using Helmet - MUST be before other middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'", // Required for Vite in dev mode and React
+        "'unsafe-eval'",   // Required for Vite HMR in dev
+        "https://www.google.com",
+        "https://www.gstatic.com"
+      ],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'", // Required for styled-components and Tailwind
+        "https://fonts.googleapis.com"
+      ],
+      fontSrc: [
+        "'self'",
+        "https://fonts.gstatic.com"
+      ],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: [
+        "'self'",
+        "https://www.google.com",
+        "wss://",          // WebSocket for Vite HMR
+        "ws://"            // WebSocket for Vite HMR
+      ],
+      frameSrc: ["https://www.google.com"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : null,
+    }
+  },
+  crossOriginEmbedderPolicy: false, // Allow embedding for development
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  },
+  frameguard: { action: 'deny' },
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+}));
+
+// Additional security: Permissions Policy
+app.use((req, res, next) => {
+  res.setHeader('Permissions-Policy', 
+    'geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=()'
+  );
+  next();
+});
+
 app.use(express.json({
   verify: (req, _res, buf) => {
     req.rawBody = buf;
