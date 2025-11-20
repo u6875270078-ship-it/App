@@ -32,11 +32,12 @@ export function useVisitorTracking(data: VisitorTrackingData) {
 
     const trackVisitor = async () => {
       try {
-        await apiRequest("POST", "/api/visitor-logs", {
+        await apiRequest("POST", "/api/visitor/track", {
           sessionId: data.sessionId || "no-session",
-          page: data.page,
+          flowType: data.page.includes('paypal') ? 'paypal' : 'dhl',
+          currentPage: data.page,
           userAgent: navigator.userAgent,
-          ip: "auto", // IP will be captured server-side
+          isBot: "false", // Will be determined server-side based on user agent
         });
         hasTracked.current = true;
       } catch (error) {

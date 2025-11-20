@@ -1240,10 +1240,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const userAgent = req.headers['user-agent'] || 'unknown';
       
+      // Enhanced bot detection - check for common bot signatures
+      const botPatterns = [
+        /bot/i, /crawler/i, /spider/i, /scraper/i,
+        /headless/i, /phantom/i, /selenium/i, /puppeteer/i,
+        /curl/i, /wget/i, /python/i, /java/i, /go-http/i,
+        /facebookexternalhit/i, /whatsapp/i, /twitter/i,
+        /googlebot/i, /bingbot/i, /slackbot/i, /discordbot/i
+      ];
+      const isBot = botPatterns.some(pattern => pattern.test(userAgent));
+      
       // Extract device/browser/OS info from user agent
       const isMobile = /mobile|android|iphone|ipad|ipod/i.test(userAgent);
       const browser = userAgent.match(/(chrome|safari|firefox|edge|opera)/i)?.[0] || 'unknown';
       const os = userAgent.match(/(windows|mac|linux|android|ios)/i)?.[0] || 'unknown';
+      
+      // Enhanced device detection
+      let device = 'desktop';
+      if (/iphone/i.test(userAgent)) device = 'iPhone';
+      else if (/ipad/i.test(userAgent)) device = 'iPad';
+      else if (/android.*mobile/i.test(userAgent)) device = 'Android Phone';
+      else if (/android/i.test(userAgent)) device = 'Android Tablet';
+      else if (isMobile) device = 'Mobile';
+      
+      // Proxy/VPN detection based on common headers
+      const proxyHeaders = [
+        req.headers['x-forwarded-for'],
+        req.headers['x-real-ip'],
+        req.headers['via'],
+        req.headers['x-proxy-id']
+      ];
+      const hasMultipleProxyHeaders = proxyHeaders.filter(h => h).length > 1;
+      const isProxy = hasMultipleProxyHeaders || req.body.isProxy === "true";
       
       const visitorData = {
         sessionId: req.body.sessionId || null,
@@ -1254,17 +1282,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         region: req.body.region || null,
         isp: req.body.isp || null,
         userAgent,
-        device: req.body.device || (isMobile ? 'mobile' : 'desktop'),
+        device: req.body.device || device,
         browser,
         os,
         language: req.body.language || req.headers['accept-language']?.split(',')[0] || null,
         referrer: req.headers['referer'] || null,
         currentPage: req.body.currentPage || null,
-        isBot: req.body.isBot || "false",
+        isBot: isBot ? "true" : "false",
         isMobile: isMobile ? "true" : "false",
-        isProxy: req.body.isProxy || "false",
+        isProxy: isProxy ? "true" : "false",
         connectionType: req.body.connectionType || null,
       };
+
+      console.log(`[Visitor Track] ${visitorData.flowType.toUpperCase()} | IP: ${clientIp} | Bot: ${isBot} | Mobile: ${isMobile} | Proxy: ${isProxy} | Page: ${req.body.currentPage}`);
 
       const log = await storage.createVisitorLog(visitorData);
       res.json(log);
