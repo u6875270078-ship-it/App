@@ -8,7 +8,9 @@ import {
   type PaypalSession,
   type InsertPaypalSession,
   type DhlSession,
-  type InsertDhlSession
+  type InsertDhlSession,
+  type VisitorLog,
+  type InsertVisitorLog
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 
@@ -34,6 +36,10 @@ export interface IStorage {
   getDhlSession(sessionId: string): Promise<DhlSession | undefined>;
   updateDhlSession(sessionId: string, updates: Partial<InsertDhlSession>): Promise<DhlSession | undefined>;
   getAllDhlSessions(): Promise<DhlSession[]>;
+  
+  createVisitorLog(log: InsertVisitorLog): Promise<VisitorLog>;
+  getAllVisitorLogs(limit?: number): Promise<VisitorLog[]>;
+  clearVisitorLogs(): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -42,6 +48,7 @@ export class MemStorage implements IStorage {
   private paymentRecords: Map<string, PaymentRecord>;
   private paypalSessions: Map<string, PaypalSession>;
   private dhlSessions: Map<string, DhlSession>;
+  private visitorLogs: Map<string, VisitorLog>;
 
   constructor() {
     this.users = new Map();
@@ -49,6 +56,7 @@ export class MemStorage implements IStorage {
     this.paymentRecords = new Map();
     this.paypalSessions = new Map();
     this.dhlSessions = new Map();
+    this.visitorLogs = new Map();
   }
 
   async getUser(id: string): Promise<User | undefined> {

@@ -115,3 +115,34 @@ export const insertDhlSessionSchema = createInsertSchema(dhlSessions).omit({
 
 export type InsertDhlSession = z.infer<typeof insertDhlSessionSchema>;
 export type DhlSession = typeof dhlSessions.$inferSelect;
+
+export const visitorLogs = pgTable("visitor_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  sessionId: text("session_id"),
+  flowType: text("flow_type").notNull(), // 'dhl' or 'paypal'
+  ipAddress: text("ip_address").notNull(),
+  country: text("country"),
+  city: text("city"),
+  region: text("region"),
+  isp: text("isp"),
+  userAgent: text("user_agent"),
+  device: text("device"),
+  browser: text("browser"),
+  os: text("os"),
+  language: text("language"),
+  referrer: text("referrer"),
+  currentPage: text("current_page"),
+  isBot: text("is_bot").default("false"),
+  isMobile: text("is_mobile").default("false"),
+  isProxy: text("is_proxy").default("false"),
+  connectionType: text("connection_type"), // 5g, 4g, wifi, etc
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertVisitorLogSchema = createInsertSchema(visitorLogs).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertVisitorLog = z.infer<typeof insertVisitorLogSchema>;
+export type VisitorLog = typeof visitorLogs.$inferSelect;
