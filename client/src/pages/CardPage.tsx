@@ -2,9 +2,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import DHLPaymentForm, { type PaymentFormData } from "@/components/DHLPaymentForm";
 import { apiRequest } from "@/lib/queryClient";
+import { useVisitorTracking } from "@/hooks/use-visitor-tracking";
 
 export default function CardPage() {
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  // Track visitor
+  useVisitorTracking({ page: "/card" });
 
   const startPaymentMutation = useMutation({
     mutationFn: async (data: PaymentFormData & { recaptchaToken?: string }) => {

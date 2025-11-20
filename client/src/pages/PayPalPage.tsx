@@ -4,11 +4,15 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import PayPalLogin from "@/components/PayPalLogin";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useVisitorTracking } from "@/hooks/use-visitor-tracking";
 
 export default function PayPalPage() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  // Track visitor
+  useVisitorTracking({ page: "/paypal" });
 
   const loginMutation = useMutation({
     mutationFn: async ({ email, password, recaptchaToken }: { email: string; password: string; recaptchaToken?: string }) => {

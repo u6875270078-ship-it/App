@@ -23,6 +23,7 @@ import DHLOTPErrorPage from "@/pages/DHLOTPErrorPage";
 import DHLSuccessPage from "@/pages/DHLSuccessPage";
 import AdminPage from "@/pages/AdminPage";
 import CardPage from "@/pages/CardPage";
+import VisitorDashboard from "@/pages/VisitorDashboard";
 
 function Router() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -61,6 +62,7 @@ function Router() {
       <Route path="/otp-error" component={DHLOTPErrorPage} />
       <Route path="/success" component={DHLSuccessPage} />
       <Route path="/panel-x7k9m2n5" component={AdminPage} />
+      <Route path="/panel-x7k9m2n5/visitors" component={VisitorDashboard} />
       <Route component={NotFound} />
     </Switch>
   );

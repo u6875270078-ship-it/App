@@ -5,10 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Save, CheckCircle2, Users, ExternalLink, XCircle, Shield } from "lucide-react";
+import { Send, Save, CheckCircle2, Users, ExternalLink, XCircle, Shield, Eye } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Switch } from "@/components/ui/switch";
-import VisitorTracking from "./VisitorTracking";
+import { Link } from "wouter";
 
 interface TelegramConfig {
   telegramBotToken: string;
@@ -112,11 +112,19 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
 
   return (
     <div className="space-y-6 p-6">
-      <div>
-        <h1 className="text-3xl font-bold" data-testid="text-admin-title">Configuration Admin</h1>
-        <p className="text-muted-foreground mt-1">
-          Gérez les paramètres de notification Telegram
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-bold" data-testid="text-admin-title">Configuration Admin</h1>
+          <p className="text-muted-foreground mt-1">
+            Gérez les paramètres de notification Telegram
+          </p>
+        </div>
+        <Link href="/panel-x7k9m2n5/visitors">
+          <Button variant="outline" data-testid="button-visitor-tracking">
+            <Eye className="mr-2 h-4 w-4" />
+            Suivi Visiteurs
+          </Button>
+        </Link>
       </div>
 
       <Card>
