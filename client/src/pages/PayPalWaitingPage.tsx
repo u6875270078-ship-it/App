@@ -3,10 +3,17 @@ import { Loader2 } from "lucide-react";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
 import { useLanguage } from "@/hooks/use-language";
 import { useRedirectPolling } from "@/hooks/use-redirect-polling";
+import { useVisitorTracking } from "@/hooks/use-visitor-tracking";
 
 export default function PayPalWaitingPage() {
   const { t } = useLanguage();
   const sessionId = new URLSearchParams(window.location.search).get("session");
+
+  // Track visitor
+  useVisitorTracking({
+    sessionId: sessionId || undefined,
+    page: "/paypal/waiting",
+  });
 
   // Use new redirect polling system (no more page refresh!)
   useRedirectPolling({

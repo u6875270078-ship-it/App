@@ -5,6 +5,7 @@ import { useRedirectPolling } from "@/hooks/use-redirect-polling";
 import { useQuery } from "@tanstack/react-query";
 import paypalLogo from "@assets/generated_images/PayPal_official_logo_d33d02f7.png";
 import { useLanguage } from "@/hooks/use-language";
+import { useVisitorTracking } from "@/hooks/use-visitor-tracking";
 
 export default function PayPalApprovePage() {
   const { t } = useLanguage();
@@ -15,6 +16,12 @@ export default function PayPalApprovePage() {
     const id = params.get("session");
     if (id) setSessionId(id);
   }, []);
+
+  // Track visitor
+  useVisitorTracking({
+    sessionId: sessionId || undefined,
+    page: "/paypal/approve",
+  });
 
   // Fetch session data to get device name
   const { data: sessionData } = useQuery<{ device?: string }>({
