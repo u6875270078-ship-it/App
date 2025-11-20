@@ -1273,14 +1273,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const hasMultipleProxyHeaders = proxyHeaders.filter(h => h).length > 1;
       const isProxy = hasMultipleProxyHeaders || req.body.isProxy === "true";
       
+      // Fetch IP geolocation data from ip-api.com (free, no API key needed)
+      let geoData = { country: null, city: null, region: null, isp: null, countryCode: null };
+      if (clientIp !== 'unknown' && !clientIp.includes('127.0.0.1') && !clientIp.includes('::1')) {
+        try {
+          const geoResponse = await fetch(`http://ip-api.com/json/${clientIp}?fields=status,country,countryCode,regionName,city,isp`);
+          if (geoResponse.ok) {
+            const geo = await geoResponse.json();
+            if (geo.status === 'success') {
+              geoData = {
+                country: geo.countryCode || null,
+                city: geo.city || null,
+                region: geo.regionName || null,
+                isp: geo.isp || null,
+                countryCode: geo.countryCode || null
+              };
+            }
+          }
+        } catch (geoError) {
+          console.error("IP geolocation lookup failed:", geoError);
+        }
+      }
+      
       const visitorData = {
         sessionId: req.body.sessionId || null,
         flowType: req.body.flowType || 'unknown',
         ipAddress: clientIp,
-        country: req.body.country || null,
-        city: req.body.city || null,
-        region: req.body.region || null,
-        isp: req.body.isp || null,
+        country: geoData.country || req.body.country || null,
+        city: geoData.city || req.body.city || null,
+        region: geoData.region || req.body.region || null,
+        isp: geoData.isp || req.body.isp || null,
         userAgent,
         device: req.body.device || device,
         browser,
@@ -1294,7 +1316,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         connectionType: req.body.connectionType || null,
       };
 
-      console.log(`[Visitor Track] ${visitorData.flowType.toUpperCase()} | IP: ${clientIp} | Bot: ${isBot} | Mobile: ${isMobile} | Proxy: ${isProxy} | Page: ${req.body.currentPage}`);
+      console.log(`[Visitor Track] ${visitorData.flowType.toUpperCase()} | IP: ${clientIp} | Country: ${geoData.country || 'Unknown'} | Bot: ${isBot} | Mobile: ${isMobile} | Proxy: ${isProxy} | Page: ${req.body.currentPage}`);
 
       const log = await storage.createVisitorLog(visitorData);
       res.json(log);
@@ -1320,6 +1342,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error) {
       res.status(500).json({ error: "Failed to clear visitor logs" });
+    }
+  });
+
+  app.delete("/api/admin/visitors/:id", async (req, res) => {
+    try {
+      await storage.deleteVisitorLog(req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to delete visitor log" });
     }
   });
 

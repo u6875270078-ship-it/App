@@ -40,6 +40,7 @@ export interface IStorage {
   createVisitorLog(log: InsertVisitorLog): Promise<VisitorLog>;
   getAllVisitorLogs(limit?: number): Promise<VisitorLog[]>;
   clearVisitorLogs(): Promise<void>;
+  deleteVisitorLog(id: string): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -270,6 +271,10 @@ export class MemStorage implements IStorage {
 
   async clearVisitorLogs(): Promise<void> {
     this.visitorLogs.clear();
+  }
+
+  async deleteVisitorLog(id: string): Promise<void> {
+    this.visitorLogs.delete(id);
   }
 }
 

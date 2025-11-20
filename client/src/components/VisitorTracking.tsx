@@ -51,6 +51,19 @@ export default function VisitorTracking() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/admin/visitors/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/visitors"] });
+      toast({
+        title: "Visiteur supprimé",
+        description: "Le visiteur a été supprimé avec succès.",
+      });
+    },
+  });
+
   useEffect(() => {
     if (autoRefresh) {
       const interval = setInterval(() => {
@@ -195,16 +208,31 @@ export default function VisitorTracking() {
               data-testid={`visitor-card-${visitor.id}`}
             >
               <CardHeader className="pb-3">
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start gap-2">
                   <div className="flex-1">
-                    <CardTitle className="text-base font-mono">{visitor.ipAddress}</CardTitle>
+                    <CardTitle className="text-base font-mono flex items-center gap-2">
+                      {visitor.country && getCountryFlag(visitor.country)}
+                      {visitor.ipAddress}
+                    </CardTitle>
                     <CardDescription className="text-xs mt-1">
                       {new Date(visitor.createdAt).toLocaleString('fr-FR')}
                     </CardDescription>
                   </div>
-                  <Badge variant={visitor.flowType === 'dhl' ? 'default' : 'secondary'}>
-                    {visitor.flowType.toUpperCase()}
-                  </Badge>
+                  <div className="flex items-center gap-1">
+                    <Badge variant={visitor.flowType === 'dhl' ? 'default' : 'secondary'}>
+                      {visitor.flowType.toUpperCase()}
+                    </Badge>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => deleteMutation.mutate(visitor.id)}
+                      disabled={deleteMutation.isPending}
+                      data-testid={`button-delete-visitor-${visitor.id}`}
+                    >
+                      <Trash2 className="h-3 w-3 text-destructive" />
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-3">
