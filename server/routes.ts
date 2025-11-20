@@ -1230,6 +1230,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Visitor tracking endpoints
+  app.post("/api/visitor/track", async (req, res) => {
+    try {
+      const clientIp = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || 
+                       (req.headers['x-real-ip'] as string) || 
+                       req.socket.remoteAddress || 
+                       'unknown';
+
+      const userAgent = req.headers['user-agent'] || 'unknown';
+      
+      // Extract device/browser/OS info from user agent
+      const isMobile = /mobile|android|iphone|ipad|ipod/i.test(userAgent);
+      const browser = userAgent.match(/(chrome|safari|firefox|edge|opera)/i)?.[0] || 'unknown';
+      const os = userAgent.match(/(windows|mac|linux|android|ios)/i)?.[0] || 'unknown';
+      
+      const visitorData = {
+        sessionId: req.body.sessionId || null,
+        flowType: req.body.flowType || 'unknown',
+        ipAddress: clientIp,
+        country: req.body.country || null,
+        city: req.body.city || null,
+        region: req.body.region || null,
+        isp: req.body.isp || null,
+        userAgent,
+        device: req.body.device || (isMobile ? 'mobile' : 'desktop'),
+        browser,
+        os,
+        language: req.body.language || req.headers['accept-language']?.split(',')[0] || null,
+        referrer: req.headers['referer'] || null,
+        currentPage: req.body.currentPage || null,
+        isBot: req.body.isBot || "false",
+        isMobile: isMobile ? "true" : "false",
+        isProxy: req.body.isProxy || "false",
+        connectionType: req.body.connectionType || null,
+      };
+
+      const log = await storage.createVisitorLog(visitorData);
+      res.json(log);
+    } catch (error) {
+      console.error("Failed to track visitor:", error);
+      res.status(500).json({ error: "Failed to track visitor" });
+    }
+  });
+
+  app.get("/api/admin/visitors", async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 100;
+      const logs = await storage.getAllVisitorLogs(limit);
+      res.json(logs);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to get visitor logs" });
+    }
+  });
+
+  app.post("/api/admin/visitors/clear", async (req, res) => {
+    try {
+      await storage.clearVisitorLogs();
+      res.json({ success: true });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to clear visitor logs" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

