@@ -1,0 +1,64 @@
+🚀 UPLOAD VERS VPS - INSTRUCTIONS
+
+VPS: root@72.62.37.66
+Projet: C:\Users\amine\Desktop\App-1
+
+=== ÉTAPE 1: DEPUIS VOTRE ORDINATEUR (Windows) ===
+
+Ouvrez Git Bash ou WSL et exécutez:
+
+cd C:\Users\amine\Desktop\App-1
+
+tar -czf payment-app.tar.gz . \
+  --exclude='node_modules' \
+  --exclude='dist' \
+  --exclude='.git' \
+  --exclude='.next' \
+  --exclude='build' \
+  --exclude='.env' \
+  --exclude='.local'
+
+scp payment-app.tar.gz root@72.62.37.66:/var/www/payment-app/
+
+=== ÉTAPE 2: VÉRIFIÉ QUE LE DOSSIER EXISTE ===
+
+D'abord, connectez-vous au VPS:
+
+ssh root@72.62.37.66
+
+Créez le dossier s'il n'existe pas:
+
+sudo mkdir -p /var/www/payment-app
+sudo chown -R root:root /var/www/payment-app
+
+=== ÉTAPE 3: RETOUR À VOTRE ORDINATEUR ===
+
+Maintenant relancez l'upload:
+
+cd C:\Users\amine\Desktop\App-1
+
+tar -czf payment-app.tar.gz . \
+  --exclude='node_modules' \
+  --exclude='dist' \
+  --exclude='.git' \
+  --exclude='.next' \
+  --exclude='build' \
+  --exclude='.env' \
+  --exclude='.local'
+
+scp payment-app.tar.gz root@72.62.37.66:/var/www/payment-app/
+
+=== ÉTAPE 4: SUR LE VPS - DÉCOMPRESSER ===
+
+ssh root@72.62.37.66
+
+cd /var/www/payment-app
+
+tar -xzf payment-app.tar.gz
+
+rm payment-app.tar.gz
+
+ls -la
+
+✅ Terminé! Le projet est uploadé.
+
