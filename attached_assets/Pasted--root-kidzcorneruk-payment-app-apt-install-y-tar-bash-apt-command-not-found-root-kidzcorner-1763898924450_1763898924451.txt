@@ -1,0 +1,40 @@
+[root@kidzcorneruk payment-app]# apt install -y tar
+-bash: apt: command not found
+[root@kidzcorneruk payment-app]# yum install -y tar gzip
+Last metadata expiration check: 1:49:03 ago on Sun 23 Nov 2025 10:05:50 AM UTC.
+Package gzip-1.12-1.el9.x86_64 is already installed.
+Dependencies resolved.
+========================================================================================================================
+ Package                 Architecture               Version                            Repository                  Size
+========================================================================================================================
+Installing:
+ tar                     x86_64                     2:1.34-7.el9                       baseos                     876 k
+
+Transaction Summary
+========================================================================================================================
+Install  1 Package
+
+Total download size: 876 k
+Installed size: 3.0 M
+Downloading Packages:
+tar-1.34-7.el9.x86_64.rpm                                                               7.4 MB/s | 876 kB     00:00
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                   2.0 MB/s | 876 kB     00:00
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                1/1
+  Installing       : tar-2:1.34-7.el9.x86_64                                                                        1/1
+  Running scriptlet: tar-2:1.34-7.el9.x86_64                                                                        1/1
+  Verifying        : tar-2:1.34-7.el9.x86_64                                                                        1/1
+
+Installed:
+  tar-2:1.34-7.el9.x86_64
+
+Complete!
+[root@kidzcorneruk payment-app]# tar -xzf payment-app.tar.gz
+rm payment-app.tar.gz
+ls -la
+rm: remove regular file 'payment-app.tar.gz'?
