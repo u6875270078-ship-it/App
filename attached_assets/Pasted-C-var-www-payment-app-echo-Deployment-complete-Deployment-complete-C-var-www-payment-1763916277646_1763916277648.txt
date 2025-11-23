@@ -1,0 +1,146 @@
+C:\var\www\payment-app>echo "✅ Deployment complete!"
+"✅ Deployment complete!"
+
+C:\var\www\payment-app>pm2 status
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 8308     │ 0s     │ 10   │ online    │ 0%       │ 0b       │ amine    │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+C:\var\www\payment-app>pm2 logs payment-app --lines 20 --nostream
+[TAILING] Tailing last 20 lines for [payment-app] process (change the value with --lines option)
+C:\Users\amine\.pm2\logs\payment-app-out.log last 20 lines:
+C:\Users\amine\.pm2\logs\payment-app-error.log last 20 lines:
+0|payment- |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+0|payment- |     at node:internal/main/run_main_module:36:49
+0|payment- |
+0|payment- | Node.js v22.19.0
+0|payment- | C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+0|payment- | :: Created by npm, please don't edit manually.
+0|payment- | ^
+0|payment- |
+0|payment- | SyntaxError: Unexpected token ':'
+0|payment- |     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+0|payment- |     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+0|payment- |     at Object..js (node:internal/modules/cjs/loader:1839:10)
+0|payment- |     at Module.load (node:internal/modules/cjs/loader:1441:32)
+0|payment- |     at Function._load (node:internal/modules/cjs/loader:1263:12)
+0|payment- |     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+0|payment- |     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+0|payment- |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+0|payment- |     at node:internal/main/run_main_module:36:49
+0|payment- |
+0|payment- | Node.js v22.19.0
+
+
+C:\var\www\payment-app>
+C:\var\www\payment-app>EOF
+C:\var\www\payment-app>ssh root@185.255.112.198 << 'EOF'
+<< was unexpected at this time.
+C:\var\www\payment-app>cd /var/www/payment-app && tar -xzf payment-app.tar.gz && rm payment-app.tar.gz && cat > .env << 'ENVEOF'
+<< was unexpected at this time.
+C:\var\www\payment-app>DATABASE_URL=postgresql://neondb_owner:npg_Wm9VIU0gvenO@ep-delicate-cake-af0hyp2v.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require
+'DATABASE_URL' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>TELEGRAM_BOT_TOKEN=8332648469:AAG0nSTVcu5DuLsvXEGa0cr5MV_Ae7BB4_g
+'TELEGRAM_BOT_TOKEN' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>TELEGRAM_CHAT_ID=-4843141531
+'TELEGRAM_CHAT_ID' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>SESSION_SECRET=5f7a9e3d2b8c1f6a4e9d7b2c5f8a1e6d9c3f7a0e5b9d2f8c1a4e7b0d3f6a9
+'SESSION_SECRET' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>NODE_ENV=production
+'NODE_ENV' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>PORT=5000
+'PORT' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>ENVEOF
+'ENVEOF' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>npm install && npm run build && pm2 delete all || true && sleep 2 && pm2 start npm --name "payment-app" -- start && pm2 save && cat > /etc/nginx/sites-available/payment-app << 'NGINXEOF'
+<< was unexpected at this time.
+
+C:\var\www\payment-app>server {
+'server' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>    listen 80;
+'listen' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>    server_name 185.255.112.198;
+'server_name' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>    location / {
+'location' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>        proxy_pass http://127.0.0.1:5000;
+'proxy_pass' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>        proxy_http_version 1.1;
+'proxy_http_version' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>        proxy_set_header Host $host;
+'proxy_set_header' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>        proxy_set_header X-Real-IP $remote_addr;
+'proxy_set_header' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+'proxy_set_header' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>        proxy_set_header X-Forwarded-Proto $scheme;
+'proxy_set_header' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>        proxy_set_header Upgrade $http_upgrade;
+'proxy_set_header' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>        proxy_set_header Connection 'upgrade';
+'proxy_set_header' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>        proxy_cache_bypass $http_upgrade;
+'proxy_cache_bypass' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>    }
+'}' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>}
+'}' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>NGINXEOF
+'NGINXEOF' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>ln -sf /etc/nginx/sites-available/payment-app /etc/nginx/sites-enabled/ && rm -f /etc/nginx/sites-enabled/default && nginx -t && systemctl restart nginx && sleep 3 && pm2 status && pm2 logs payment-app --lines 20 --nostream
+'ln' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>EOF
+'EOF' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>
