@@ -1,0 +1,57 @@
+operable program or batch file.
+
+C:\var\www\payment-app>rm -f /etc/nginx/sites-enabled/default
+'rm' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>nginx -t
+'nginx' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>systemctl restart nginx
+'systemctl' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>
+C:\var\www\payment-app>sleep 3
+'sleep' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\var\www\payment-app>echo "✅ Deployment complete!"
+"✅ Deployment complete!"
+
+C:\var\www\payment-app>pm2 status
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 8308     │ 0s     │ 10   │ online    │ 0%       │ 0b       │ amine    │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+C:\var\www\payment-app>pm2 logs payment-app --lines 20 --nostream
+[TAILING] Tailing last 20 lines for [payment-app] process (change the value with --lines option)
+C:\Users\amine\.pm2\logs\payment-app-out.log last 20 lines:
+C:\Users\amine\.pm2\logs\payment-app-error.log last 20 lines:
+0|payment- |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+0|payment- |     at node:internal/main/run_main_module:36:49
+0|payment- |
+0|payment- | Node.js v22.19.0
+0|payment- | C:\PROGRAM FILES\NODEJS\NPM.CMD:1
+0|payment- | :: Created by npm, please don't edit manually.
+0|payment- | ^
+0|payment- |
+0|payment- | SyntaxError: Unexpected token ':'
+0|payment- |     at wrapSafe (node:internal/modules/cjs/loader:1638:18)
+0|payment- |     at Module._compile (node:internal/modules/cjs/loader:1680:20)
+0|payment- |     at Object..js (node:internal/modules/cjs/loader:1839:10)
+0|payment- |     at Module.load (node:internal/modules/cjs/loader:1441:32)
+0|payment- |     at Function._load (node:internal/modules/cjs/loader:1263:12)
+0|payment- |     at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+0|payment- |     at wrapModuleLoad (node:internal/modules/cjs/loader:237:24)
+0|payment- |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:171:5)
+0|payment- |     at node:internal/main/run_main_module:36:49
+0|payment- |
+0|payment- | Node.js v22.19.0
+
+
+C:\var\www\payment-app>
+C:\var\www\payment-app>EOF
