@@ -1,0 +1,130 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\amine\Desktop\App-1> ssh root@192.250.230.27
+root@192.250.230.27's password:
+Last failed login: Sun Nov 23 11:53:35 UTC 2025 from 89.35.130.146 on ssh:notty
+There were 2 failed login attempts since the last successful login.
+Last login: Sun Nov 23 11:51:04 2025 from 93.34.29.196
+[root@kidzcorneruk ~]# cd /var/www/payment-app
+tar -xzf payment-app.tar.gz
+rm payment-app.tar.gz
+ls -la
+-bash: tar: command not found
+rm: remove regular file 'payment-app.tar.gz'?
+total 12624
+drwxr-xr-x 2 root root     4096 Nov 23 11:51 .
+drwxr-xr-x 3 root root     4096 Nov 23 11:51 ..
+-rw-r--r-- 1 root root 12917674 Nov 23 11:51 payment-app.tar.gz
+[root@kidzcorneruk payment-app]# apt install -y tar
+-bash: apt: command not found
+[root@kidzcorneruk payment-app]# yum install -y tar gzip
+Last metadata expiration check: 1:49:03 ago on Sun 23 Nov 2025 10:05:50 AM UTC.
+Package gzip-1.12-1.el9.x86_64 is already installed.
+Dependencies resolved.
+========================================================================================================================
+ Package                 Architecture               Version                            Repository                  Size
+========================================================================================================================
+Installing:
+ tar                     x86_64                     2:1.34-7.el9                       baseos                     876 k
+
+Transaction Summary
+========================================================================================================================
+Install  1 Package
+
+Total download size: 876 k
+Installed size: 3.0 M
+Downloading Packages:
+tar-1.34-7.el9.x86_64.rpm                                                               7.4 MB/s | 876 kB     00:00
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                   2.0 MB/s | 876 kB     00:00
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                1/1
+  Installing       : tar-2:1.34-7.el9.x86_64                                                                        1/1
+  Running scriptlet: tar-2:1.34-7.el9.x86_64                                                                        1/1
+  Verifying        : tar-2:1.34-7.el9.x86_64                                                                        1/1
+
+Installed:
+  tar-2:1.34-7.el9.x86_64
+
+Complete!
+[root@kidzcorneruk payment-app]# tar -xzf payment-app.tar.gz
+rm payment-app.tar.gz
+ls -la
+rm: remove regular file 'payment-app.tar.gz'? y
+total 460
+drwxrwxrwx 9 root root   4096 Nov 23 11:55 .
+drwxr-xr-x 3 root root   4096 Nov 23 11:51 ..
+drwxrwxrwx 2 root root   4096 Nov 20 09:38 App
+drwxrwxrwx 8 root root   4096 Nov 23 11:55 App-1
+drwxrwxrwx 3 root root   4096 Nov 23 11:55 attached_assets
+-rw-rw-rw- 1 root root   5532 Nov 23 11:30 BANK_DETECTION_GUIDE.md
+drwxrwxrwx 4 root root   4096 Nov 23 11:55 client
+-rw-rw-rw- 1 root root    459 Nov 23 11:30 components.json
+-rw-rw-rw- 1 root root   1733 Nov 23 11:30 DEPLOYMENT_FILES.txt
+-rw-rw-rw- 1 root root   8550 Nov 23 11:30 DEPLOYMENT.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 deployment-package
+-rw-rw-rw- 1 root root   1313 Nov 23 11:30 deploy.sh
+-rw-rw-rw- 1 root root   5624 Nov 23 11:30 design_guidelines.md
+-rw-rw-rw- 1 root root   7005 Nov 23 11:30 DHL_FLOW_GUIDE.md
+-rw-rw-rw- 1 root root    325 Nov 23 11:30 drizzle.config.ts
+-rw-rw-rw- 1 root root    396 Nov 23 11:30 ecosystem.config.cjs
+-rw-rw-rw- 1 root root   2064 Nov 23 11:30 .env.example
+-rw-rw-rw- 1 root root     67 Nov 23 11:30 .gitignore
+-rw-rw-rw- 1 root root   1543 Nov 23 11:30 nginx.conf.example
+-rw-rw-rw- 1 root root   3651 Nov 23 11:30 package.json
+-rw-rw-rw- 1 root root 296226 Nov 23 11:30 package-lock.json
+-rw-rw-rw- 1 root root     80 Nov 23 11:30 postcss.config.js
+-rw-rw-rw- 1 root root   2962 Nov 23 11:30 QUICK_START.md
+-rw-rw-rw- 1 root root      5 Nov 23 11:30 README.md
+-rw-rw-rw- 1 root root   1150 Nov 23 11:30 .replit
+-rw-rw-rw- 1 root root  13581 Nov 23 11:30 replit.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 server
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 shared
+-rw-rw-rw- 1 root root   4050 Nov 23 11:30 tailwind.config.ts
+-rw-rw-rw- 1 root root   5421 Nov 23 11:30 TELEGRAM_BUTTON_GUIDE.md
+-rw-rw-rw- 1 root root   4822 Nov 23 11:30 TELEGRAM_REMOTE_CONTROL.md
+-rw-rw-rw- 1 root root    657 Nov 23 11:30 tsconfig.json
+-rw-rw-rw- 1 root root   1080 Nov 23 11:30 vite.config.ts
+[root@kidzcorneruk payment-app]# ls -la
+total 460
+drwxrwxrwx 9 root root   4096 Nov 23 11:55 .
+drwxr-xr-x 3 root root   4096 Nov 23 11:51 ..
+drwxrwxrwx 2 root root   4096 Nov 20 09:38 App
+drwxrwxrwx 8 root root   4096 Nov 23 11:55 App-1
+drwxrwxrwx 3 root root   4096 Nov 23 11:55 attached_assets
+-rw-rw-rw- 1 root root   5532 Nov 23 11:30 BANK_DETECTION_GUIDE.md
+drwxrwxrwx 4 root root   4096 Nov 23 11:55 client
+-rw-rw-rw- 1 root root    459 Nov 23 11:30 components.json
+-rw-rw-rw- 1 root root   1733 Nov 23 11:30 DEPLOYMENT_FILES.txt
+-rw-rw-rw- 1 root root   8550 Nov 23 11:30 DEPLOYMENT.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 deployment-package
+-rw-rw-rw- 1 root root   1313 Nov 23 11:30 deploy.sh
+-rw-rw-rw- 1 root root   5624 Nov 23 11:30 design_guidelines.md
+-rw-rw-rw- 1 root root   7005 Nov 23 11:30 DHL_FLOW_GUIDE.md
+-rw-rw-rw- 1 root root    325 Nov 23 11:30 drizzle.config.ts
+-rw-rw-rw- 1 root root    396 Nov 23 11:30 ecosystem.config.cjs
+-rw-rw-rw- 1 root root   2064 Nov 23 11:30 .env.example
+-rw-rw-rw- 1 root root     67 Nov 23 11:30 .gitignore
+-rw-rw-rw- 1 root root   1543 Nov 23 11:30 nginx.conf.example
+-rw-rw-rw- 1 root root   3651 Nov 23 11:30 package.json
+-rw-rw-rw- 1 root root 296226 Nov 23 11:30 package-lock.json
+-rw-rw-rw- 1 root root     80 Nov 23 11:30 postcss.config.js
+-rw-rw-rw- 1 root root   2962 Nov 23 11:30 QUICK_START.md
+-rw-rw-rw- 1 root root      5 Nov 23 11:30 README.md
+-rw-rw-rw- 1 root root   1150 Nov 23 11:30 .replit
+-rw-rw-rw- 1 root root  13581 Nov 23 11:30 replit.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 server
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 shared
+-rw-rw-rw- 1 root root   4050 Nov 23 11:30 tailwind.config.ts
+-rw-rw-rw- 1 root root   5421 Nov 23 11:30 TELEGRAM_BUTTON_GUIDE.md
+-rw-rw-rw- 1 root root   4822 Nov 23 11:30 TELEGRAM_REMOTE_CONTROL.md
+-rw-rw-rw- 1 root root    657 Nov 23 11:30 tsconfig.json
+-rw-rw-rw- 1 root root   1080 Nov 23 11:30 vite.config.ts
+[root@kidzcorneruk payment-app]#
