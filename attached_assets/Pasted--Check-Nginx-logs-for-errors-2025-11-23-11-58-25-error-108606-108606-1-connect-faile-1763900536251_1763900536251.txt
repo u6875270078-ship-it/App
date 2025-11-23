@@ -1,0 +1,17 @@
+
+=== Check Nginx logs for errors ===
+2025/11/23 11:58:25 [error] 108606#108606: *1 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET / HTTP/1.1", upstream: "http://[::1]:5000/", host: "192.250.230.27"
+2025/11/23 12:03:32 [error] 108606#108606: *9 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET / HTTP/1.1", upstream: "http://[::1]:5000/", host: "192.250.230.27"
+2025/11/23 12:04:30 [notice] 108839#108839: signal process started
+2025/11/23 12:05:18 [notice] 108852#108852: signal process started
+2025/11/23 12:07:39 [notice] 108907#108907: signal process started
+2025/11/23 12:12:03 [error] 108908#108908: *24 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "192.250.230.27"
+2025/11/23 12:12:03 [error] 108908#108908: *24 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET /favicon.ico HTTP/1.1", upstream: "http://127.0.0.1:5000/favicon.ico", host: "192.250.230.27", referrer: "http://192.250.230.27/"
+2025/11/23 12:12:06 [error] 108908#108908: *24 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "192.250.230.27"
+2025/11/23 12:12:06 [error] 108908#108908: *24 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET /favicon.ico HTTP/1.1", upstream: "http://127.0.0.1:5000/favicon.ico", host: "192.250.230.27", referrer: "http://192.250.230.27/"
+2025/11/23 12:13:08 [error] 108908#108908: *24 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET / HTTP/1.1", upstream: "http://127.0.0.1:5000/", host: "192.250.230.27"
+2025/11/23 12:13:08 [error] 108908#108908: *24 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET /favicon.ico HTTP/1.1", upstream: "http://127.0.0.1:5000/favicon.ico", host: "192.250.230.27", referrer: "http://192.250.230.27/"
+
+=== Verify app is listening ===
+LISTEN 0      511          0.0.0.0:5000      0.0.0.0:*    users:(("node",pid=109963,fd=17))                                                                 
+[root@kidzcorneruk payment-app]#
