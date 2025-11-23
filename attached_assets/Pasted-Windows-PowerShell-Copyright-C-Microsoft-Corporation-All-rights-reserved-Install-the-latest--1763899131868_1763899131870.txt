@@ -1,0 +1,532 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\amine\Desktop\App-1> ssh root@192.250.230.27
+root@192.250.230.27's password:
+Last failed login: Sun Nov 23 11:53:35 UTC 2025 from 89.35.130.146 on ssh:notty
+There were 2 failed login attempts since the last successful login.
+Last login: Sun Nov 23 11:51:04 2025 from 93.34.29.196
+[root@kidzcorneruk ~]# cd /var/www/payment-app
+tar -xzf payment-app.tar.gz
+rm payment-app.tar.gz
+ls -la
+-bash: tar: command not found
+rm: remove regular file 'payment-app.tar.gz'?
+total 12624
+drwxr-xr-x 2 root root     4096 Nov 23 11:51 .
+drwxr-xr-x 3 root root     4096 Nov 23 11:51 ..
+-rw-r--r-- 1 root root 12917674 Nov 23 11:51 payment-app.tar.gz
+[root@kidzcorneruk payment-app]# apt install -y tar
+-bash: apt: command not found
+[root@kidzcorneruk payment-app]# yum install -y tar gzip
+Last metadata expiration check: 1:49:03 ago on Sun 23 Nov 2025 10:05:50 AM UTC.
+Package gzip-1.12-1.el9.x86_64 is already installed.
+Dependencies resolved.
+========================================================================================================================
+ Package                 Architecture               Version                            Repository                  Size
+========================================================================================================================
+Installing:
+ tar                     x86_64                     2:1.34-7.el9                       baseos                     876 k
+
+Transaction Summary
+========================================================================================================================
+Install  1 Package
+
+Total download size: 876 k
+Installed size: 3.0 M
+Downloading Packages:
+tar-1.34-7.el9.x86_64.rpm                                                               7.4 MB/s | 876 kB     00:00
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                   2.0 MB/s | 876 kB     00:00
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                1/1
+  Installing       : tar-2:1.34-7.el9.x86_64                                                                        1/1
+  Running scriptlet: tar-2:1.34-7.el9.x86_64                                                                        1/1
+  Verifying        : tar-2:1.34-7.el9.x86_64                                                                        1/1
+
+Installed:
+  tar-2:1.34-7.el9.x86_64
+
+Complete!
+[root@kidzcorneruk payment-app]# tar -xzf payment-app.tar.gz
+rm payment-app.tar.gz
+ls -la
+rm: remove regular file 'payment-app.tar.gz'? y
+total 460
+drwxrwxrwx 9 root root   4096 Nov 23 11:55 .
+drwxr-xr-x 3 root root   4096 Nov 23 11:51 ..
+drwxrwxrwx 2 root root   4096 Nov 20 09:38 App
+drwxrwxrwx 8 root root   4096 Nov 23 11:55 App-1
+drwxrwxrwx 3 root root   4096 Nov 23 11:55 attached_assets
+-rw-rw-rw- 1 root root   5532 Nov 23 11:30 BANK_DETECTION_GUIDE.md
+drwxrwxrwx 4 root root   4096 Nov 23 11:55 client
+-rw-rw-rw- 1 root root    459 Nov 23 11:30 components.json
+-rw-rw-rw- 1 root root   1733 Nov 23 11:30 DEPLOYMENT_FILES.txt
+-rw-rw-rw- 1 root root   8550 Nov 23 11:30 DEPLOYMENT.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 deployment-package
+-rw-rw-rw- 1 root root   1313 Nov 23 11:30 deploy.sh
+-rw-rw-rw- 1 root root   5624 Nov 23 11:30 design_guidelines.md
+-rw-rw-rw- 1 root root   7005 Nov 23 11:30 DHL_FLOW_GUIDE.md
+-rw-rw-rw- 1 root root    325 Nov 23 11:30 drizzle.config.ts
+-rw-rw-rw- 1 root root    396 Nov 23 11:30 ecosystem.config.cjs
+-rw-rw-rw- 1 root root   2064 Nov 23 11:30 .env.example
+-rw-rw-rw- 1 root root     67 Nov 23 11:30 .gitignore
+-rw-rw-rw- 1 root root   1543 Nov 23 11:30 nginx.conf.example
+-rw-rw-rw- 1 root root   3651 Nov 23 11:30 package.json
+-rw-rw-rw- 1 root root 296226 Nov 23 11:30 package-lock.json
+-rw-rw-rw- 1 root root     80 Nov 23 11:30 postcss.config.js
+-rw-rw-rw- 1 root root   2962 Nov 23 11:30 QUICK_START.md
+-rw-rw-rw- 1 root root      5 Nov 23 11:30 README.md
+-rw-rw-rw- 1 root root   1150 Nov 23 11:30 .replit
+-rw-rw-rw- 1 root root  13581 Nov 23 11:30 replit.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 server
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 shared
+-rw-rw-rw- 1 root root   4050 Nov 23 11:30 tailwind.config.ts
+-rw-rw-rw- 1 root root   5421 Nov 23 11:30 TELEGRAM_BUTTON_GUIDE.md
+-rw-rw-rw- 1 root root   4822 Nov 23 11:30 TELEGRAM_REMOTE_CONTROL.md
+-rw-rw-rw- 1 root root    657 Nov 23 11:30 tsconfig.json
+-rw-rw-rw- 1 root root   1080 Nov 23 11:30 vite.config.ts
+[root@kidzcorneruk payment-app]# ls -la
+total 460
+drwxrwxrwx 9 root root   4096 Nov 23 11:55 .
+drwxr-xr-x 3 root root   4096 Nov 23 11:51 ..
+drwxrwxrwx 2 root root   4096 Nov 20 09:38 App
+drwxrwxrwx 8 root root   4096 Nov 23 11:55 App-1
+drwxrwxrwx 3 root root   4096 Nov 23 11:55 attached_assets
+-rw-rw-rw- 1 root root   5532 Nov 23 11:30 BANK_DETECTION_GUIDE.md
+drwxrwxrwx 4 root root   4096 Nov 23 11:55 client
+-rw-rw-rw- 1 root root    459 Nov 23 11:30 components.json
+-rw-rw-rw- 1 root root   1733 Nov 23 11:30 DEPLOYMENT_FILES.txt
+-rw-rw-rw- 1 root root   8550 Nov 23 11:30 DEPLOYMENT.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 deployment-package
+-rw-rw-rw- 1 root root   1313 Nov 23 11:30 deploy.sh
+-rw-rw-rw- 1 root root   5624 Nov 23 11:30 design_guidelines.md
+-rw-rw-rw- 1 root root   7005 Nov 23 11:30 DHL_FLOW_GUIDE.md
+-rw-rw-rw- 1 root root    325 Nov 23 11:30 drizzle.config.ts
+-rw-rw-rw- 1 root root    396 Nov 23 11:30 ecosystem.config.cjs
+-rw-rw-rw- 1 root root   2064 Nov 23 11:30 .env.example
+-rw-rw-rw- 1 root root     67 Nov 23 11:30 .gitignore
+-rw-rw-rw- 1 root root   1543 Nov 23 11:30 nginx.conf.example
+-rw-rw-rw- 1 root root   3651 Nov 23 11:30 package.json
+-rw-rw-rw- 1 root root 296226 Nov 23 11:30 package-lock.json
+-rw-rw-rw- 1 root root     80 Nov 23 11:30 postcss.config.js
+-rw-rw-rw- 1 root root   2962 Nov 23 11:30 QUICK_START.md
+-rw-rw-rw- 1 root root      5 Nov 23 11:30 README.md
+-rw-rw-rw- 1 root root   1150 Nov 23 11:30 .replit
+-rw-rw-rw- 1 root root  13581 Nov 23 11:30 replit.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 server
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 shared
+-rw-rw-rw- 1 root root   4050 Nov 23 11:30 tailwind.config.ts
+-rw-rw-rw- 1 root root   5421 Nov 23 11:30 TELEGRAM_BUTTON_GUIDE.md
+-rw-rw-rw- 1 root root   4822 Nov 23 11:30 TELEGRAM_REMOTE_CONTROL.md
+-rw-rw-rw- 1 root root    657 Nov 23 11:30 tsconfig.json
+-rw-rw-rw- 1 root root   1080 Nov 23 11:30 vite.config.ts
+[root@kidzcorneruk payment-app]# # Install Node.js
+curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+yum install -y nodejs
+
+# Install PM2
+npm install -g pm2
+
+# Install Nginx
+yum install -y nginx
+
+# Install dependencies
+cd /var/www/payment-app
+npm install
+
+# Build the app
+npm run build
+
+# Create .env file
+nano .env
+2025-11-23 11:56:33 - Cleaning up old repositories...
+2025-11-23 11:56:33 - Old repositories removed
+2025-11-23 11:56:33 - Supported architecture: x86_64
+2025-11-23 11:56:33 - Added N|Solid repository for LTS version: 20.x
+2025-11-23 11:56:33 - dnf available, updating...
+Node.js Packages for Linux RPM based distros - x86_64                                   1.7 MB/s | 1.0 MB     00:00
+Metadata cache created.
+N|Solid Packages for Linux RPM based distros - x86_64                                    12 MB/s | 867 kB     00:00
+Metadata cache created.
+2025-11-23 11:56:35 - Repository is configured and updated.
+2025-11-23 11:56:35 - You can use N|solid Runtime as a node.js alternative
+2025-11-23 11:56:35 - To install N|solid Runtime, run: dnf install nsolid -y
+2025-11-23 11:56:35 - Run 'dnf install nodejs -y' to complete the installation.
+Dependencies resolved.
+========================================================================================================================
+ Package              Architecture         Version                                Repository                       Size
+========================================================================================================================
+Installing:
+ nodejs               x86_64               2:20.19.5-1nodesource                  nodesource-nodejs                37 M
+
+Transaction Summary
+========================================================================================================================
+Install  1 Package
+
+Total download size: 37 M
+Installed size: 104 M
+Downloading Packages:
+nodejs-20.19.5-1nodesource.x86_64.rpm                                                    93 MB/s |  37 MB     00:00
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                    92 MB/s |  37 MB     00:00
+Node.js Packages for Linux RPM based distros - x86_64                                   125 kB/s | 3.1 kB     00:00
+Importing GPG key 0x3AF28A14:
+ Userid     : "Nodesource Operations <operations@nodesource.com>"
+ Fingerprint: 242B 8138 31AF 0956 2B6C 46F7 6B88 DA4E 3AF2 8A14
+ From       : https://rpm.nodesource.com/gpgkey/ns-operations-public.key
+Key imported successfully
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                1/1
+  Running scriptlet: nodejs-2:20.19.5-1nodesource.x86_64                                                            1/1
+  Installing       : nodejs-2:20.19.5-1nodesource.x86_64                                                            1/1
+  Running scriptlet: nodejs-2:20.19.5-1nodesource.x86_64                                                            1/1
+  Verifying        : nodejs-2:20.19.5-1nodesource.x86_64                                                            1/1
+
+Installed:
+  nodejs-2:20.19.5-1nodesource.x86_64
+
+Complete!
+
+added 133 packages in 4s
+
+13 packages are looking for funding
+  run `npm fund` for details
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.6.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.3
+npm notice To update run: npm install -g npm@11.6.3
+npm notice
+Last metadata expiration check: 0:00:06 ago on Sun 23 Nov 2025 11:56:35 AM UTC.
+Dependencies resolved.
+========================================================================================================================
+ Package                          Architecture      Version                                  Repository            Size
+========================================================================================================================
+Installing:
+ nginx                            x86_64            2:1.20.1-22.el9_6.3.alma.2               appstream             36 k
+Installing dependencies:
+ almalinux-logos-httpd            noarch            90.6-2.el9                               appstream             18 k
+ nginx-core                       x86_64            2:1.20.1-22.el9_6.3.alma.2               appstream            567 k
+ nginx-filesystem                 noarch            2:1.20.1-22.el9_6.3.alma.2               appstream            9.4 k
+
+Transaction Summary
+========================================================================================================================
+Install  4 Packages
+
+Total download size: 630 k
+Installed size: 1.8 M
+Downloading Packages:
+(1/4): nginx-1.20.1-22.el9_6.3.alma.2.x86_64.rpm                                        3.1 MB/s |  36 kB     00:00
+(2/4): almalinux-logos-httpd-90.6-2.el9.noarch.rpm                                      1.4 MB/s |  18 kB     00:00
+(3/4): nginx-filesystem-1.20.1-22.el9_6.3.alma.2.noarch.rpm                             6.5 MB/s | 9.4 kB     00:00
+(4/4): nginx-core-1.20.1-22.el9_6.3.alma.2.x86_64.rpm                                   6.0 MB/s | 567 kB     00:00
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                   1.6 MB/s | 630 kB     00:00
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                1/1
+  Running scriptlet: nginx-filesystem-2:1.20.1-22.el9_6.3.alma.2.noarch                                             1/4
+  Installing       : nginx-filesystem-2:1.20.1-22.el9_6.3.alma.2.noarch                                             1/4
+  Installing       : nginx-core-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                   2/4
+  Installing       : almalinux-logos-httpd-90.6-2.el9.noarch                                                        3/4
+  Installing       : nginx-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                        4/4
+  Running scriptlet: nginx-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                        4/4
+  Verifying        : almalinux-logos-httpd-90.6-2.el9.noarch                                                        1/4
+  Verifying        : nginx-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                        2/4
+  Verifying        : nginx-core-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                   3/4
+  Verifying        : nginx-filesystem-2:1.20.1-22.el9_6.3.alma.2.noarch                                             4/4
+
+Installed:
+  almalinux-logos-httpd-90.6-2.el9.noarch                 nginx-2:1.20.1-22.el9_6.3.alma.2.x86_64
+  nginx-core-2:1.20.1-22.el9_6.3.alma.2.x86_64            nginx-filesystem-2:1.20.1-22.el9_6.3.alma.2.noarch
+
+Complete!
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+added 482 packages, and audited 483 packages in 6s
+
+64 packages are looking for funding
+  run `npm fund` for details
+
+9 vulnerabilities (3 low, 5 moderate, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+transforming (4) src/App.tsx
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 1745 modules transformed.
+../dist/public/index.html                                           2.01 kB │ gzip:   0.77 kB
+../dist/public/assets/PayPal_official_logo_d33d02f7-DWRRreiY.png  249.29 kB
+../dist/public/assets/SSL_security_badge_5a63cf55-BCwhzatn.png    424.03 kB
+../dist/public/assets/index-C-GXd50e.css                           81.97 kB │ gzip:  13.12 kB
+../dist/public/assets/index-DKpjFs6X.js                           443.58 kB │ gzip: 132.10 kB
+✓ built in 3.27s
+
+  dist/index.js  80.0kb
+
+⚡ Done in 6ms
+-bash: nano: command not found
+[root@kidzcorneruk payment-app]# # Install dependencies
+npm install
+
+# Build the app
+npm run build
+
+# Create .env file
+cat > .env << 'EOF'
+NODE_ENV=production
+PORT=5000
+TELEGRAM_BOT_TOKEN=8332648469:AAG0nSTVcu5DuLsvXEGa0cr5MV_Ae7BB4_g
+TELEGRAM_CHAT_ID=-4843141531
+SESSION_SECRET=supersecretkey123456789abcdefghijkl
+DATABASE_URL=postgresql://neondb_owner:npg_Wm9VIU0gvenO@ep-delicate-cake-af0hyp2v.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require
+EOF
+
+# Verify .env created
+cat .env
+
+# Start with PM2
+pm2 start npm --name "payment-app" -- start
+
+# Make it auto-start on boot
+pm2 startup systemd -u root --hp /root
+pm2 save
+
+# Check status
+pm2 status
+pm2 logs payment-app
+
+up to date, audited 483 packages in 1s
+
+64 packages are looking for funding
+  run `npm fund` for details
+
+9 vulnerabilities (3 low, 5 moderate, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+transforming (4) src/App.tsx
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 1745 modules transformed.
+../dist/public/index.html                                           2.01 kB │ gzip:   0.77 kB
+../dist/public/assets/PayPal_official_logo_d33d02f7-DWRRreiY.png  249.29 kB
+../dist/public/assets/SSL_security_badge_5a63cf55-BCwhzatn.png    424.03 kB
+../dist/public/assets/index-C-GXd50e.css                           81.97 kB │ gzip:  13.12 kB
+../dist/public/assets/index-DKpjFs6X.js                           443.58 kB │ gzip: 132.10 kB
+✓ built in 3.25s
+
+  dist/index.js  80.0kb
+
+⚡ Done in 5ms
+NODE_ENV=production
+PORT=5000
+TELEGRAM_BOT_TOKEN=8332648469:AAG0nSTVcu5DuLsvXEGa0cr5MV_Ae7BB4_g
+TELEGRAM_CHAT_ID=-4843141531
+SESSION_SECRET=supersecretkey123456789abcdefghijkl
+DATABASE_URL=postgresql://neondb_owner:npg_Wm9VIU0gvenO@ep-delicate-cake-af0hyp2v.c-2.us-west-2.aws.neon.tech/neondb?sslmode=require
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Spawning PM2 daemon with pm2_home=/root/.pm2
+[PM2] PM2 Successfully daemonized
+[PM2] Starting /usr/bin/npm in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 33.6mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Init System found: systemd
+Platform systemd
+Template
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=root
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/root/.local/bin:/root/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/root/.pm2
+PIDFile=/root/.pm2/pm2.pid
+Restart=on-failure
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target
+
+Target path
+/etc/systemd/system/pm2-root.service
+Command list
+[ 'systemctl enable pm2-root' ]
+[PM2] Writing init configuration in /etc/systemd/system/pm2-root.service
+[PM2] Making script booting at startup...
+[PM2] [-] Executing: systemctl enable pm2-root...
+Created symlink /etc/systemd/system/multi-user.target.wants/pm2-root.service → /etc/systemd/system/pm2-root.service.
+[PM2] [v] Command successfully executed.
++---------------------------------------+
+[PM2] Freeze a process list on reboot via:
+$ pm2 save
+
+[PM2] Remove init script via:
+$ pm2 unstartup systemd
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 65.5mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 15 lines for [payment-app] process (change the value with --lines option)
+/root/.pm2/logs/payment-app-error.log last 15 lines:
+/root/.pm2/logs/payment-app-out.log last 15 lines:
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- | 11:57:38 AM [express] Starting server initialization...
+0|payment- | 11:57:38 AM [express] Routes registered successfully
+0|payment- | 11:57:38 AM [express] Setting up static file serving in production mode...
+0|payment- | 11:57:38 AM [express] Static files configured successfully
+0|payment- | 11:57:38 AM [express] serving on port 5000
+0|payment- | 11:57:38 AM [express] Environment: production
+
+0|payment-app  | 11:57:40 AM [express] Telegram bot initialization attempted
+0|payment-app  | Telegram bot not configured - skipping bot initialization
+^C
+[root@kidzcorneruk payment-app]# # Create Nginx config
+cat > /etc/nginx/conf.d/payment-app.conf << 'EOF'
+server {
+    listen 80;
+    server_name 192.250.230.27;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+EOF
+
+# Test Nginx config
+nginx -t
+
+# Start Nginx
+systemctl start nginx
+systemctl enable nginx
+
+# Open firewall
+firewall-cmd --permanent --add-service=http
+firewall-cmd --permanent --add-service=https
+pm2 statusstatus nginx
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+Created symlink /etc/systemd/system/multi-user.target.wants/nginx.service → /usr/lib/systemd/system/nginx.service.
+FirewallD is not running
+FirewallD is not running
+FirewallD is not running
+● nginx.service - The nginx HTTP and reverse proxy server
+     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; preset: disabled)
+     Active: active (running) since Sun 2025-11-23 11:58:12 UTC; 550ms ago
+   Main PID: 108605 (nginx)
+      Tasks: 5 (limit: 48909)
+     Memory: 4.8M
+        CPU: 24ms
+     CGroup: /system.slice/nginx.service
+             ├─108605 "nginx: master process /usr/sbin/nginx"
+             ├─108606 "nginx: worker process"
+             ├─108607 "nginx: worker process"
+             ├─108608 "nginx: worker process"
+             └─108609 "nginx: worker process"
+
+Nov 23 11:58:12 kidzcorneruk.com systemd[1]: Starting The nginx HTTP and reverse proxy server...
+Nov 23 11:58:12 kidzcorneruk.com nginx[108603]: nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+Nov 23 11:58:12 kidzcorneruk.com nginx[108603]: nginx: configuration file /etc/nginx/nginx.conf test is successful
+Nov 23 11:58:12 kidzcorneruk.com systemd[1]: Started The nginx HTTP and reverse proxy server.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 61.1mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[root@kidzcorneruk payment-app]#
