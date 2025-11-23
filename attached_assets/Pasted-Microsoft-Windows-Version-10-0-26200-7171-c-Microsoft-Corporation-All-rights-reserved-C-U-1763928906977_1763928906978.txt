@@ -1,0 +1,135 @@
+Microsoft Windows [Version 10.0.26200.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\amine>ssh root@185.255.112.198
+root@185.255.112.198's password:
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-107-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sun Nov 23 21:13:53 CET 2025
+
+  System load:  0.0                Processes:             163
+  Usage of /:   11.1% of 28.90GB   Users logged in:       1
+  Memory usage: 18%                IPv4 address for eth0: 185.255.112.198
+  Swap usage:   0%                 IPv6 address for eth1: 2a14:1d00:0:1::f4f
+
+ * Ubuntu 20.04 LTS Focal Fossa has reached its end of standard support on 31 Ma
+
+   For more details see:
+   https://ubuntu.com/20-04
+
+Expanded Security Maintenance for Infrastructure is not enabled.
+
+0 updates can be applied immediately.
+
+55 additional security updates can be applied with ESM Infra.
+Learn more about enabling ESM Infra service for Ubuntu 20.04 at
+https://ubuntu.com/20-04
+
+New release '22.04.5 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+*** System restart required ***
+Last login: Sun Nov 23 20:49:05 2025 from 93.34.29.196
+root@Amine:~# cd /var/www/payment-app
+root@Amine:/var/www/payment-app# npm run build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+transforming (5) ../node_modules/wouter/esm/index.js
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 1745 modules transformed.
+../dist/public/index.html                                           2.01 kB │ gzip:   0.77 kB
+../dist/public/assets/PayPal_official_logo_d33d02f7-DWRRreiY.png  249.29 kB
+../dist/public/assets/SSL_security_badge_5a63cf55-BCwhzatn.png    424.03 kB
+../dist/public/assets/index-C-GXd50e.css                           81.97 kB │ gzip:  13.12 kB
+../dist/public/assets/index-DKpjFs6X.js                           443.58 kB │ gzip: 132.10 kB
+✓ built in 8.82s
+
+  dist/index.js  80.0kb
+
+⚡ Done in 12ms
+root@Amine:/var/www/payment-app# pm2 restart payment-app
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [payment-app](ids: [ 0, 1 ])
+[PM2] [payment-app](0) ✓
+[PM2] [payment-app](1) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 1    │ online    │ 0%       │ 50.8mb   │
+│ 1  │ payment-app        │ fork     │ 1    │ online    │ 0%       │ 720.0kb  │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# pm2 logs payment-app --lines 30 --nostream
+[TAILING] Tailing last 30 lines for [payment-app] process (change the value with --lines option)
+/root/.pm2/logs/payment-app-error.log last 30 lines:
+0|payment- |     at doListen (node:net:2139:7)
+0|payment- |     at process.processTicksAndRejections (node:internal/process/task_queues:83:21) {
+0|payment- |   code: 'EADDRINUSE',
+0|payment- |   errno: -98,
+0|payment- |   syscall: 'listen',
+0|payment- |   address: '0.0.0.0',
+0|payment- |   port: 5000
+0|payment- | }
+0|payment- | Uncaught Exception: Error: listen EADDRINUSE: address already in use 0.0.0.0:5000
+0|payment- |     at Server.setupListenHandle [as _listen2] (node:net:1908:16)
+0|payment- |     at listenInCluster (node:net:1965:12)
+0|payment- |     at doListen (node:net:2139:7)
+0|payment- |     at process.processTicksAndRejections (node:internal/process/task_queues:83:21) {
+0|payment- |   code: 'EADDRINUSE',
+0|payment- |   errno: -98,
+0|payment- |   syscall: 'listen',
+0|payment- |   address: '0.0.0.0',
+0|payment- |   port: 5000
+0|payment- | }
+0|payment- | Uncaught Exception: Error: listen EADDRINUSE: address already in use 0.0.0.0:5000
+0|payment- |     at Server.setupListenHandle [as _listen2] (node:net:1908:16)
+0|payment- |     at listenInCluster (node:net:1965:12)
+0|payment- |     at doListen (node:net:2139:7)
+0|payment- |     at process.processTicksAndRejections (node:internal/process/task_queues:83:21) {
+0|payment- |   code: 'EADDRINUSE',
+0|payment- |   errno: -98,
+0|payment- |   syscall: 'listen',
+0|payment- |   address: '0.0.0.0',
+0|payment- |   port: 5000
+0|payment- | }
+
+/root/.pm2/logs/payment-app-out.log last 30 lines:
+0|payment- | 8:55:33 PM [express] Telegram bot initialization attempted
+0|payment- | Telegram bot not configured - skipping bot initialization
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- | 9:03:57 PM [express] Starting server initialization...
+0|payment- | 9:03:57 PM [express] Routes registered successfully
+0|payment- | 9:03:57 PM [express] Setting up static file serving in production mode...
+0|payment- | 9:03:57 PM [express] Static files configured successfully
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- | 9:14:32 PM [express] Starting server initialization...
+0|payment- | 9:14:32 PM [express] Routes registered successfully
+0|payment- | 9:14:32 PM [express] Setting up static file serving in production mode...
+0|payment- | 9:14:32 PM [express] Static files configured successfully
+0|payment- | 9:14:32 PM [express] Starting server initialization...
+0|payment- | 9:14:32 PM [express] serving on port 5000
+0|payment- | 9:14:32 PM [express] Environment: production
+0|payment- | 9:14:32 PM [express] Routes registered successfully
+0|payment- | 9:14:32 PM [express] Setting up static file serving in production mode...
+0|payment- | 9:14:32 PM [express] Static files configured successfully
+0|payment- | 9:14:34 PM [express] Telegram bot initialization attempted
+0|payment- | Telegram bot not configured - skipping bot initialization
+
+root@Amine:/var/www/payment-app#
