@@ -1,0 +1,36 @@
+
+root@Amine:/var/www/payment-app# ssh root@185.255.112.198 "pm2 delete all && sleep 2 && lsof -i :5000 | grep -v COMMAND | awk '{print $2}' | xargs kill -9 2>/dev/null; true && sleep 2 && cd /var/www/payment-app && pm2 start npm --name payment-app -- start && pm2 save && sleep 3 && pm2 status && curl http://127.0.0.1:5000 | head -5"
+The authenticity of host '185.255.112.198 (185.255.112.198)' can't be established.
+ECDSA key fingerprint is SHA256:nkpmAcQV8U7qKIgh/QVo+xrcg1UKKXEePQnahH6U3jA.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '185.255.112.198' (ECDSA) to the list of known hosts.
+root@185.255.112.198's password:
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0, 1 ])
+[PM2] [payment-app](0) ✓
+[PM2] [payment-app](1) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Starting /usr/bin/npm in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 57920    │ 0s     │ 0    │ online    │ 0%       │ 7.9mb    │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 57920    │ 3s     │ 0    │ online    │ 0%       │ 59.8mb   │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  <!DOCTYPE html>    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+2012  100  2012    0     0  95809      0 --:--:-- --:--:-- --:--:-- 95809
+root@Amine:/var/www/payment-app#
