@@ -1,0 +1,40 @@
+C:\Users\amine>ssh root@185.255.112.198 "cd /var/www/payment-app && npm run build && pm2 restart payment-app && pm2 save && sleep 3 && pm2 status"
+root@185.255.112.198's password:
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+transforming...
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 1745 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                                           2.01 kB │ gzip:   0.77 kB
+../dist/public/assets/PayPal_official_logo_d33d02f7-DWRRreiY.png  249.29 kB
+../dist/public/assets/SSL_security_badge_5a63cf55-BCwhzatn.png    424.03 kB
+../dist/public/assets/index-C-GXd50e.css                           81.97 kB │ gzip:  13.12 kB
+../dist/public/assets/index-DKpjFs6X.js                           443.58 kB │ gzip: 132.10 kB
+✓ built in 8.15s
+
+  dist/index.js  80.0kb
+
+⚡ Done in 15ms
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [payment-app](ids: [ 0 ])
+[PM2] [payment-app](0) ✓
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 45113    │ 0s     │ 1    │ online    │ 0%       │ 10.5mb   │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 45113    │ 3s     │ 1    │ online    │ 0%       │ 59.9mb   │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+C:\Users\amine>
