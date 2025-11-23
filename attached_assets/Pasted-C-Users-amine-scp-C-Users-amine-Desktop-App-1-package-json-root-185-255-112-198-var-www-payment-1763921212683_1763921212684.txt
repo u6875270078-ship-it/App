@@ -1,0 +1,127 @@
+C:\Users\amine>scp "C:\Users\amine\Desktop\App-1\package.json" root@185.255.112.198:/var/www/payment-app/ && scp "C:\Users\amine\Desktop\App-1\package-lock.json" root@185.255.112.198:/var/www/payment-app/ && scp -r "C:\Users\amine\Desktop\App-1\server" root@185.255.112.198:/var/www/payment-app/ && scp -r "C:\Users\amine\Desktop\App-1\client" root@185.255.112.198:/var/www/payment-app/ && scp "C:\Users\amine\Desktop\App-1\tsconfig.json" root@185.255.112.198:/var/www/payment-app/ && scp "C:\Users\amine\Desktop\App-1\vite.config.ts" root@185.255.112.198:/var/www/payment-app/ && scp "C:\Users\amine\Desktop\App-1\index.html" root@185.255.112.198:/var/www/payment-app/ && ssh root@185.255.112.198 "cd /var/www/payment-app && pm2 delete all 2>/dev/null; npm install && npm run build && pm2 start npm --name payment-app -- start && pm2 save && pm2 status"
+root@185.255.112.198's password:
+package.json                                                                          100% 3651    11.0KB/s   00:00
+root@185.255.112.198's password:
+package-lock.json                                                                     100%  289KB 353.7KB/s   00:00
+root@185.255.112.198's password:
+bot-detection.ts                                                                      100% 4884    42.6KB/s   00:00
+index.ts                                                                              100% 5535    51.5KB/s   00:00
+routes.ts                                                                             100%   46KB 175.8KB/s   00:00
+storage.ts                                                                            100% 9668    95.4KB/s   00:00
+telegram-bot.ts                                                                       100%   11KB  26.0KB/s   00:00
+telegram.ts                                                                           100% 6680    85.8KB/s   00:00
+vite.ts                                                                               100% 2263    52.6KB/s   00:00
+root@185.255.112.198's password:
+index.html                                                                            100% 1914    28.3KB/s   00:00
+amex.png                                                                              100% 3763    10.2KB/s   00:00
+jcb.jpg                                                                               100% 4591    49.3KB/s   00:00
+mastercard.png                                                                        100%  177KB 336.3KB/s   00:00
+visa.png                                                                              100% 5112    86.1KB/s   00:00
+dhl-logo.png                                                                          100% 1951    18.3KB/s   00:00
+favicon.png                                                                           100% 1145     8.8KB/s   00:00
+App.tsx                                                                               100% 4083     9.8KB/s   00:00
+AdminPanel.tsx                                                                        100%   26KB 230.4KB/s   00:00
+AdminPanel.tsx.broken                                                                 100%   26KB 377.7KB/s   00:00
+DHLPaymentForm.tsx                                                                    100%   17KB 243.0KB/s   00:00
+AdminPanel.tsx                                                                        100%  351     1.0KB/s   00:00
+DHLPaymentForm.tsx                                                                    100%  217     2.3KB/s   00:00
+OTPVerification.tsx                                                                   100%  282     3.4KB/s   00:00
+PaymentSuccess.tsx                                                                    100%  364     6.8KB/s   00:00
+PayPalLogin.tsx                                                                       100%  221     2.1KB/s   00:00
+OTPVerification.tsx                                                                   100% 4186    40.1KB/s   00:00
+PaymentSuccess.tsx                                                                    100% 3626    35.1KB/s   00:00
+PayPalCardForm.tsx                                                                    100% 8880   166.8KB/s   00:00
+PayPalLogin.tsx                                                                       100% 7333   127.9KB/s   00:00
+accordion.tsx                                                                         100% 1977    48.3KB/s   00:00
+alert-dialog.tsx                                                                      100% 4420    44.0KB/s   00:00
+alert.tsx                                                                             100% 1584    20.1KB/s   00:00
+aspect-ratio.tsx                                                                      100%  140     3.6KB/s   00:00
+avatar.tsx                                                                            100% 1592    15.4KB/s   00:00
+badge.tsx                                                                             100% 1202    19.6KB/s   00:00
+breadcrumb.tsx                                                                        100% 2712    25.7KB/s   00:00
+button.tsx                                                                            100% 2359    22.8KB/s   00:00
+calendar.tsx                                                                          100% 2695    69.3KB/s   00:00
+card.tsx                                                                              100% 1904    47.7KB/s   00:00
+carousel.tsx                                                                          100% 6210    39.6KB/s   00:00
+chart.tsx                                                                             100%   10KB  95.7KB/s   00:00
+checkbox.tsx                                                                          100% 1056    10.4KB/s   00:00
+collapsible.tsx                                                                       100%  329     6.4KB/s   00:00
+command.tsx                                                                           100% 4885    45.0KB/s   00:00
+context-menu.tsx                                                                      100% 7428    69.1KB/s   00:00
+dialog.tsx                                                                            100% 3848    29.4KB/s   00:00
+drawer.tsx                                                                            100% 3021    28.1KB/s   00:00
+dropdown-menu.tsx                                                                     100% 7609    74.3KB/s   00:00
+form.tsx                                                                              100% 4120    30.0KB/s   00:00
+hover-card.tsx                                                                        100% 1251    17.7KB/s   00:00
+input-otp.tsx                                                                         100% 2154    35.7KB/s   00:00
+input.tsx                                                                             100%  844    16.5KB/s   00:00
+label.tsx                                                                             100%  710     6.8KB/s   00:00
+menubar.tsx                                                                           100% 8605    81.6KB/s   00:00
+navigation-menu.tsx                                                                   100% 5128    46.4KB/s   00:00
+pagination.tsx                                                                        100% 2751    76.8KB/s   00:00
+popover.tsx                                                                           100% 1280    29.1KB/s   00:00
+progress.tsx                                                                          100%  791     7.7KB/s   00:00
+radio-group.tsx                                                                       100% 1467    16.9KB/s   00:00
+resizable.tsx                                                                         100% 1723    13.5KB/s   00:00
+scroll-area.tsx                                                                       100% 1642     5.0KB/s   00:00
+select.tsx                                                                            100% 5741     4.6KB/s   00:01
+separator.tsx                                                                         100%  756     7.0KB/s   00:00
+sheet.tsx                                                                             100% 4281    20.8KB/s   00:00
+sidebar.tsx                                                                           100%   21KB  37.6KB/s   00:00
+skeleton.tsx                                                                          100%  261     2.5KB/s   00:00
+slider.tsx                                                                            100% 1077    25.0KB/s   00:00
+switch.tsx                                                                            100% 1139    19.2KB/s   00:00
+table.tsx                                                                             100% 2765    55.1KB/s   00:00
+tabs.tsx                                                                              100% 1883    30.7KB/s   00:00
+textarea.tsx                                                                          100%  689     6.2KB/s   00:00
+toast.tsx                                                                             100% 4845    44.2KB/s   00:00
+toaster.tsx                                                                           100%  772    12.4KB/s   00:00
+toggle-group.tsx                                                                      100% 1753    17.5KB/s   00:00
+toggle.tsx                                                                            100% 1527    13.9KB/s   00:00
+tooltip.tsx                                                                           100% 1209    11.0KB/s   00:00
+VisitorTracking.tsx                                                                   100%   11KB 280.4KB/s   00:00
+use-language.ts                                                                       100%  492     1.3KB/s   00:00
+use-mobile.tsx                                                                        100%  565    11.5KB/s   00:00
+use-redirect-polling.ts                                                               100% 3964    63.5KB/s   00:00
+use-toast.ts                                                                          100% 3895    95.1KB/s   00:00
+use-visitor-tracking.ts                                                               100% 1391    38.8KB/s   00:00
+index.css                                                                             100%   10KB 183.5KB/s   00:00
+bankDetection.ts                                                                      100% 2340    63.5KB/s   00:00
+queryClient.ts                                                                        100% 1383    34.6KB/s   00:00
+translations.ts                                                                       100%   37KB 436.0KB/s   00:00
+utils.ts                                                                              100%  166     3.9KB/s   00:00
+main.tsx                                                                              100%  157     3.9KB/s   00:00
+AdminLoginPage.tsx                                                                    100% 3882    99.8KB/s   00:00
+AdminPage.tsx                                                                         100% 2731    70.2KB/s   00:00
+AdminSetupPage.tsx                                                                    100% 5050   133.3KB/s   00:00
+CardPage.tsx                                                                          100% 1587    43.1KB/s   00:00
+DHLApprovePage.tsx                                                                    100% 7281   182.3KB/s   00:00
+DHLErrorPage.tsx                                                                      100% 4220   108.5KB/s   00:00
+DHLOTPErrorPage.tsx                                                                   100% 3761    76.5KB/s   00:00
+DHLOTPPage.tsx                                                                        100% 7858   201.9KB/s   00:00
+DHLSuccessPage.tsx                                                                    100% 4810   106.8KB/s   00:00
+DHLWaitingPage.tsx                                                                    100% 3002    77.2KB/s   00:00
+HomePage.tsx                                                                          100%  534    12.7KB/s   00:00
+not-found.tsx                                                                         100%  711    18.3KB/s   00:00
+PayPalApprovePage.tsx                                                                 100% 3683    99.9KB/s   00:00
+PayPalCardPage.tsx                                                                    100%  855    22.0KB/s   00:00
+PayPalFailurePage.tsx                                                                 100% 3094    77.5KB/s   00:00
+PayPalOTPEmailPage.tsx                                                                100% 4500   115.6KB/s   00:00
+PayPalOTPPage.tsx                                                                     100% 5088   127.4KB/s   00:00
+PayPalPage.tsx                                                                        100% 2424    64.0KB/s   00:00
+PayPalPasswordExpiredPage.tsx                                                         100% 6401   164.5KB/s   00:00
+PayPalSuccessPage.tsx                                                                 100% 2833    69.2KB/s   00:00
+PayPalWaitingPage.tsx                                                                 100% 2977    78.6KB/s   00:00
+VisitorDashboard.tsx                                                                  100%  970    25.6KB/s   00:00
+root@185.255.112.198's password:
+tsconfig.json                                                                         100%  657    18.3KB/s   00:00
+root@185.255.112.198's password:
+vite.config.ts                                                                        100% 1080    11.9KB/s   00:00
+scp: stat local "C:/Users/amine/Desktop/App-1/index.html": No such file or directory
+
+C:\Users\amine>
+
+
+
+
+
