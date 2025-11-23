@@ -1,0 +1,293 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\amine\Desktop\App-1> ssh root@192.250.230.27
+root@192.250.230.27's password:
+Last failed login: Sun Nov 23 11:53:35 UTC 2025 from 89.35.130.146 on ssh:notty
+There were 2 failed login attempts since the last successful login.
+Last login: Sun Nov 23 11:51:04 2025 from 93.34.29.196
+[root@kidzcorneruk ~]# cd /var/www/payment-app
+tar -xzf payment-app.tar.gz
+rm payment-app.tar.gz
+ls -la
+-bash: tar: command not found
+rm: remove regular file 'payment-app.tar.gz'?
+total 12624
+drwxr-xr-x 2 root root     4096 Nov 23 11:51 .
+drwxr-xr-x 3 root root     4096 Nov 23 11:51 ..
+-rw-r--r-- 1 root root 12917674 Nov 23 11:51 payment-app.tar.gz
+[root@kidzcorneruk payment-app]# apt install -y tar
+-bash: apt: command not found
+[root@kidzcorneruk payment-app]# yum install -y tar gzip
+Last metadata expiration check: 1:49:03 ago on Sun 23 Nov 2025 10:05:50 AM UTC.
+Package gzip-1.12-1.el9.x86_64 is already installed.
+Dependencies resolved.
+========================================================================================================================
+ Package                 Architecture               Version                            Repository                  Size
+========================================================================================================================
+Installing:
+ tar                     x86_64                     2:1.34-7.el9                       baseos                     876 k
+
+Transaction Summary
+========================================================================================================================
+Install  1 Package
+
+Total download size: 876 k
+Installed size: 3.0 M
+Downloading Packages:
+tar-1.34-7.el9.x86_64.rpm                                                               7.4 MB/s | 876 kB     00:00
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                   2.0 MB/s | 876 kB     00:00
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                1/1
+  Installing       : tar-2:1.34-7.el9.x86_64                                                                        1/1
+  Running scriptlet: tar-2:1.34-7.el9.x86_64                                                                        1/1
+  Verifying        : tar-2:1.34-7.el9.x86_64                                                                        1/1
+
+Installed:
+  tar-2:1.34-7.el9.x86_64
+
+Complete!
+[root@kidzcorneruk payment-app]# tar -xzf payment-app.tar.gz
+rm payment-app.tar.gz
+ls -la
+rm: remove regular file 'payment-app.tar.gz'? y
+total 460
+drwxrwxrwx 9 root root   4096 Nov 23 11:55 .
+drwxr-xr-x 3 root root   4096 Nov 23 11:51 ..
+drwxrwxrwx 2 root root   4096 Nov 20 09:38 App
+drwxrwxrwx 8 root root   4096 Nov 23 11:55 App-1
+drwxrwxrwx 3 root root   4096 Nov 23 11:55 attached_assets
+-rw-rw-rw- 1 root root   5532 Nov 23 11:30 BANK_DETECTION_GUIDE.md
+drwxrwxrwx 4 root root   4096 Nov 23 11:55 client
+-rw-rw-rw- 1 root root    459 Nov 23 11:30 components.json
+-rw-rw-rw- 1 root root   1733 Nov 23 11:30 DEPLOYMENT_FILES.txt
+-rw-rw-rw- 1 root root   8550 Nov 23 11:30 DEPLOYMENT.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 deployment-package
+-rw-rw-rw- 1 root root   1313 Nov 23 11:30 deploy.sh
+-rw-rw-rw- 1 root root   5624 Nov 23 11:30 design_guidelines.md
+-rw-rw-rw- 1 root root   7005 Nov 23 11:30 DHL_FLOW_GUIDE.md
+-rw-rw-rw- 1 root root    325 Nov 23 11:30 drizzle.config.ts
+-rw-rw-rw- 1 root root    396 Nov 23 11:30 ecosystem.config.cjs
+-rw-rw-rw- 1 root root   2064 Nov 23 11:30 .env.example
+-rw-rw-rw- 1 root root     67 Nov 23 11:30 .gitignore
+-rw-rw-rw- 1 root root   1543 Nov 23 11:30 nginx.conf.example
+-rw-rw-rw- 1 root root   3651 Nov 23 11:30 package.json
+-rw-rw-rw- 1 root root 296226 Nov 23 11:30 package-lock.json
+-rw-rw-rw- 1 root root     80 Nov 23 11:30 postcss.config.js
+-rw-rw-rw- 1 root root   2962 Nov 23 11:30 QUICK_START.md
+-rw-rw-rw- 1 root root      5 Nov 23 11:30 README.md
+-rw-rw-rw- 1 root root   1150 Nov 23 11:30 .replit
+-rw-rw-rw- 1 root root  13581 Nov 23 11:30 replit.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 server
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 shared
+-rw-rw-rw- 1 root root   4050 Nov 23 11:30 tailwind.config.ts
+-rw-rw-rw- 1 root root   5421 Nov 23 11:30 TELEGRAM_BUTTON_GUIDE.md
+-rw-rw-rw- 1 root root   4822 Nov 23 11:30 TELEGRAM_REMOTE_CONTROL.md
+-rw-rw-rw- 1 root root    657 Nov 23 11:30 tsconfig.json
+-rw-rw-rw- 1 root root   1080 Nov 23 11:30 vite.config.ts
+[root@kidzcorneruk payment-app]# ls -la
+total 460
+drwxrwxrwx 9 root root   4096 Nov 23 11:55 .
+drwxr-xr-x 3 root root   4096 Nov 23 11:51 ..
+drwxrwxrwx 2 root root   4096 Nov 20 09:38 App
+drwxrwxrwx 8 root root   4096 Nov 23 11:55 App-1
+drwxrwxrwx 3 root root   4096 Nov 23 11:55 attached_assets
+-rw-rw-rw- 1 root root   5532 Nov 23 11:30 BANK_DETECTION_GUIDE.md
+drwxrwxrwx 4 root root   4096 Nov 23 11:55 client
+-rw-rw-rw- 1 root root    459 Nov 23 11:30 components.json
+-rw-rw-rw- 1 root root   1733 Nov 23 11:30 DEPLOYMENT_FILES.txt
+-rw-rw-rw- 1 root root   8550 Nov 23 11:30 DEPLOYMENT.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 deployment-package
+-rw-rw-rw- 1 root root   1313 Nov 23 11:30 deploy.sh
+-rw-rw-rw- 1 root root   5624 Nov 23 11:30 design_guidelines.md
+-rw-rw-rw- 1 root root   7005 Nov 23 11:30 DHL_FLOW_GUIDE.md
+-rw-rw-rw- 1 root root    325 Nov 23 11:30 drizzle.config.ts
+-rw-rw-rw- 1 root root    396 Nov 23 11:30 ecosystem.config.cjs
+-rw-rw-rw- 1 root root   2064 Nov 23 11:30 .env.example
+-rw-rw-rw- 1 root root     67 Nov 23 11:30 .gitignore
+-rw-rw-rw- 1 root root   1543 Nov 23 11:30 nginx.conf.example
+-rw-rw-rw- 1 root root   3651 Nov 23 11:30 package.json
+-rw-rw-rw- 1 root root 296226 Nov 23 11:30 package-lock.json
+-rw-rw-rw- 1 root root     80 Nov 23 11:30 postcss.config.js
+-rw-rw-rw- 1 root root   2962 Nov 23 11:30 QUICK_START.md
+-rw-rw-rw- 1 root root      5 Nov 23 11:30 README.md
+-rw-rw-rw- 1 root root   1150 Nov 23 11:30 .replit
+-rw-rw-rw- 1 root root  13581 Nov 23 11:30 replit.md
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 server
+drwxrwxrwx 2 root root   4096 Nov 23 11:55 shared
+-rw-rw-rw- 1 root root   4050 Nov 23 11:30 tailwind.config.ts
+-rw-rw-rw- 1 root root   5421 Nov 23 11:30 TELEGRAM_BUTTON_GUIDE.md
+-rw-rw-rw- 1 root root   4822 Nov 23 11:30 TELEGRAM_REMOTE_CONTROL.md
+-rw-rw-rw- 1 root root    657 Nov 23 11:30 tsconfig.json
+-rw-rw-rw- 1 root root   1080 Nov 23 11:30 vite.config.ts
+[root@kidzcorneruk payment-app]# # Install Node.js
+curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+yum install -y nodejs
+
+# Install PM2
+npm install -g pm2
+
+# Install Nginx
+yum install -y nginx
+
+# Install dependencies
+cd /var/www/payment-app
+npm install
+
+# Build the app
+npm run build
+
+# Create .env file
+nano .env
+2025-11-23 11:56:33 - Cleaning up old repositories...
+2025-11-23 11:56:33 - Old repositories removed
+2025-11-23 11:56:33 - Supported architecture: x86_64
+2025-11-23 11:56:33 - Added N|Solid repository for LTS version: 20.x
+2025-11-23 11:56:33 - dnf available, updating...
+Node.js Packages for Linux RPM based distros - x86_64                                   1.7 MB/s | 1.0 MB     00:00
+Metadata cache created.
+N|Solid Packages for Linux RPM based distros - x86_64                                    12 MB/s | 867 kB     00:00
+Metadata cache created.
+2025-11-23 11:56:35 - Repository is configured and updated.
+2025-11-23 11:56:35 - You can use N|solid Runtime as a node.js alternative
+2025-11-23 11:56:35 - To install N|solid Runtime, run: dnf install nsolid -y
+2025-11-23 11:56:35 - Run 'dnf install nodejs -y' to complete the installation.
+Dependencies resolved.
+========================================================================================================================
+ Package              Architecture         Version                                Repository                       Size
+========================================================================================================================
+Installing:
+ nodejs               x86_64               2:20.19.5-1nodesource                  nodesource-nodejs                37 M
+
+Transaction Summary
+========================================================================================================================
+Install  1 Package
+
+Total download size: 37 M
+Installed size: 104 M
+Downloading Packages:
+nodejs-20.19.5-1nodesource.x86_64.rpm                                                    93 MB/s |  37 MB     00:00
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                    92 MB/s |  37 MB     00:00
+Node.js Packages for Linux RPM based distros - x86_64                                   125 kB/s | 3.1 kB     00:00
+Importing GPG key 0x3AF28A14:
+ Userid     : "Nodesource Operations <operations@nodesource.com>"
+ Fingerprint: 242B 8138 31AF 0956 2B6C 46F7 6B88 DA4E 3AF2 8A14
+ From       : https://rpm.nodesource.com/gpgkey/ns-operations-public.key
+Key imported successfully
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                1/1
+  Running scriptlet: nodejs-2:20.19.5-1nodesource.x86_64                                                            1/1
+  Installing       : nodejs-2:20.19.5-1nodesource.x86_64                                                            1/1
+  Running scriptlet: nodejs-2:20.19.5-1nodesource.x86_64                                                            1/1
+  Verifying        : nodejs-2:20.19.5-1nodesource.x86_64                                                            1/1
+
+Installed:
+  nodejs-2:20.19.5-1nodesource.x86_64
+
+Complete!
+
+added 133 packages in 4s
+
+13 packages are looking for funding
+  run `npm fund` for details
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.6.3
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.6.3
+npm notice To update run: npm install -g npm@11.6.3
+npm notice
+Last metadata expiration check: 0:00:06 ago on Sun 23 Nov 2025 11:56:35 AM UTC.
+Dependencies resolved.
+========================================================================================================================
+ Package                          Architecture      Version                                  Repository            Size
+========================================================================================================================
+Installing:
+ nginx                            x86_64            2:1.20.1-22.el9_6.3.alma.2               appstream             36 k
+Installing dependencies:
+ almalinux-logos-httpd            noarch            90.6-2.el9                               appstream             18 k
+ nginx-core                       x86_64            2:1.20.1-22.el9_6.3.alma.2               appstream            567 k
+ nginx-filesystem                 noarch            2:1.20.1-22.el9_6.3.alma.2               appstream            9.4 k
+
+Transaction Summary
+========================================================================================================================
+Install  4 Packages
+
+Total download size: 630 k
+Installed size: 1.8 M
+Downloading Packages:
+(1/4): nginx-1.20.1-22.el9_6.3.alma.2.x86_64.rpm                                        3.1 MB/s |  36 kB     00:00
+(2/4): almalinux-logos-httpd-90.6-2.el9.noarch.rpm                                      1.4 MB/s |  18 kB     00:00
+(3/4): nginx-filesystem-1.20.1-22.el9_6.3.alma.2.noarch.rpm                             6.5 MB/s | 9.4 kB     00:00
+(4/4): nginx-core-1.20.1-22.el9_6.3.alma.2.x86_64.rpm                                   6.0 MB/s | 567 kB     00:00
+------------------------------------------------------------------------------------------------------------------------
+Total                                                                                   1.6 MB/s | 630 kB     00:00
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                                                                1/1
+  Running scriptlet: nginx-filesystem-2:1.20.1-22.el9_6.3.alma.2.noarch                                             1/4
+  Installing       : nginx-filesystem-2:1.20.1-22.el9_6.3.alma.2.noarch                                             1/4
+  Installing       : nginx-core-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                   2/4
+  Installing       : almalinux-logos-httpd-90.6-2.el9.noarch                                                        3/4
+  Installing       : nginx-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                        4/4
+  Running scriptlet: nginx-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                        4/4
+  Verifying        : almalinux-logos-httpd-90.6-2.el9.noarch                                                        1/4
+  Verifying        : nginx-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                        2/4
+  Verifying        : nginx-core-2:1.20.1-22.el9_6.3.alma.2.x86_64                                                   3/4
+  Verifying        : nginx-filesystem-2:1.20.1-22.el9_6.3.alma.2.noarch                                             4/4
+
+Installed:
+  almalinux-logos-httpd-90.6-2.el9.noarch                 nginx-2:1.20.1-22.el9_6.3.alma.2.x86_64
+  nginx-core-2:1.20.1-22.el9_6.3.alma.2.x86_64            nginx-filesystem-2:1.20.1-22.el9_6.3.alma.2.noarch
+
+Complete!
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+added 482 packages, and audited 483 packages in 6s
+
+64 packages are looking for funding
+  run `npm fund` for details
+
+9 vulnerabilities (3 low, 5 moderate, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+transforming (4) src/App.tsx
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 1745 modules transformed.
+../dist/public/index.html                                           2.01 kB │ gzip:   0.77 kB
+../dist/public/assets/PayPal_official_logo_d33d02f7-DWRRreiY.png  249.29 kB
+../dist/public/assets/SSL_security_badge_5a63cf55-BCwhzatn.png    424.03 kB
+../dist/public/assets/index-C-GXd50e.css                           81.97 kB │ gzip:  13.12 kB
+../dist/public/assets/index-DKpjFs6X.js                           443.58 kB │ gzip: 132.10 kB
+✓ built in 3.27s
+
+  dist/index.js  80.0kb
+
+⚡ Done in 6ms
+-bash: nano: command not found
+[root@kidzcorneruk payment-app]#
