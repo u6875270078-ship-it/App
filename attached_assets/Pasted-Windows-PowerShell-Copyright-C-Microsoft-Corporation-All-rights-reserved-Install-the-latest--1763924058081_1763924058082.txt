@@ -1,0 +1,64 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Users\amine\Desktop\App-1> ssh root@185.255.112.198 "cd /var/www/payment-app && npm install && npm run build && pm2 restart payment-app && pm2 status"
+root@185.255.112.198's password:
+
+up to date, audited 483 packages in 3s
+
+64 packages are looking for funding
+  run `npm fund` for details
+
+9 vulnerabilities (3 low, 5 moderate, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+transforming...
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 1745 modules transformed.
+rendering chunks...
+computing gzip size...
+../dist/public/index.html                                           2.01 kB │ gzip:   0.77 kB
+../dist/public/assets/PayPal_official_logo_d33d02f7-DWRRreiY.png  249.29 kB
+../dist/public/assets/SSL_security_badge_5a63cf55-BCwhzatn.png    424.03 kB
+../dist/public/assets/index-C-GXd50e.css                           81.97 kB │ gzip:  13.12 kB
+../dist/public/assets/index-DKpjFs6X.js                           443.58 kB │ gzip: 132.10 kB
+✓ built in 9.12s
+
+  dist/index.js  80.0kb
+
+⚡ Done in 13ms
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [payment-app](ids: [ 0 ])
+[PM2] [payment-app](0) ✓
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 51943    │ 0s     │ 2    │ online    │ 0%       │ 3.4mb    │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 51943    │ 0s     │ 2    │ online    │ 0%       │ 57.6mb   │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+PS C:\Users\amine\Desktop\App-1> ssh root@185.255.112.198 "pm2 status"
+root@185.255.112.198's password:
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 51943    │ 61s    │ 2    │ online    │ 0%       │ 56.1mb   │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+PS C:\Users\amine\Desktop\App-1>
