@@ -1,0 +1,482 @@
+Microsoft Windows [Version 10.0.26200.7171]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\amine>ssh root@185.255.112.198 "find / -name 'App-1' -type d 2>/dev/null"
+root@185.255.112.198's password:
+
+C:\Users\amine>ssh root@185.255.112.198
+root@185.255.112.198's password:
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.4.0-107-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sun Nov 23 20:48:38 CET 2025
+
+  System load:  0.0                Processes:             162
+  Usage of /:   11.1% of 28.90GB   Users logged in:       0
+  Memory usage: 16%                IPv4 address for eth0: 185.255.112.198
+  Swap usage:   0%                 IPv6 address for eth1: 2a14:1d00:0:1::f4f
+
+ * Ubuntu 20.04 LTS Focal Fossa has reached its end of standard support on 31 Ma
+
+   For more details see:
+   https://ubuntu.com/20-04
+
+Expanded Security Maintenance for Infrastructure is not enabled.
+
+0 updates can be applied immediately.
+
+55 additional security updates can be applied with ESM Infra.
+Learn more about enabling ESM Infra service for Ubuntu 20.04 at
+https://ubuntu.com/20-04
+
+New release '22.04.5 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+*** System restart required ***
+Last login: Sun Nov 23 19:39:40 2025 from 93.34.29.196
+root@Amine:~# ls -la /var/www/payment-app
+total 516
+drwx------  10 root root   4096 Nov 23 19:52 .
+drwxr-xr-x   6 root root   4096 Nov 23 19:48 ..
+-rw-r--r--   1 root root    335 Nov 23 19:23 .env
+drwx------   2 root root   4096 Nov 23 19:21 App
+-rw-r--r--   1 root root   5532 Nov 23 19:21 BANK_DETECTION_GUIDE.md
+-rw-r--r--   1 root root   2438 Nov 23 19:21 DEPLOY.md
+-rw-r--r--   1 root root   8550 Nov 23 19:21 DEPLOYMENT.md
+-rw-r--r--   1 root root   5787 Nov 23 19:21 DEPLOYMENT_CELIO.md
+-rw-r--r--   1 root root   1733 Nov 23 19:21 DEPLOYMENT_FILES.txt
+-rw-r--r--   1 root root   7005 Nov 23 19:21 DHL_FLOW_GUIDE.md
+-rw-r--r--   1 root root   2962 Nov 23 19:21 QUICK_START.md
+-rw-r--r--   1 root root      5 Nov 23 19:21 README.md
+-rw-r--r--   1 root root   4104 Nov 23 19:21 SETUP_GUIDE.md
+-rw-r--r--   1 root root   5421 Nov 23 19:21 TELEGRAM_BUTTON_GUIDE.md
+-rw-r--r--   1 root root   4822 Nov 23 19:21 TELEGRAM_REMOTE_CONTROL.md
+-rw-r--r--   1 root root   1254 Nov 23 19:21 UPLOAD_INSTRUCTIONS.txt
+-rw-r--r--   1 root root    847 Nov 23 19:21 UPLOAD_TO_VPS.sh
+-rw-r--r--   1 root root   2215 Nov 23 19:21 app-deploy.sh
+drwx------   3 root root  12288 Nov 23 19:21 attached_assets
+drwx------   4 root root   4096 Nov 23 19:21 client
+-rw-r--r--   1 root root    459 Nov 23 19:22 components.json
+-rw-r--r--   1 root root   1313 Nov 23 19:22 deploy.sh
+drwx------   2 root root   4096 Nov 23 19:22 deployment-package
+-rw-r--r--   1 root root   5624 Nov 23 19:22 design_guidelines.md
+drwx------   3 root root   4096 Nov 23 19:22 dist
+-rw-r--r--   1 root root    325 Nov 23 19:22 drizzle.config.ts
+-rw-r--r--   1 root root    396 Nov 23 19:22 ecosystem.config.cjs
+-rw-r--r--   1 root root   3130 Nov 23 19:22 nginx-config.conf
+-rw-r--r--   1 root root   1543 Nov 23 19:22 nginx.conf.example
+drwxr-xr-x 319 root root  12288 Nov 23 19:52 node_modules
+-rw-r--r--   1 root root 296226 Nov 23 19:56 package-lock.json
+-rw-r--r--   1 root root   3651 Nov 23 19:56 package.json
+-rw-r--r--   1 root root     80 Nov 23 19:22 postcss.config.js
+-rw-r--r--   1 root root  13581 Nov 23 19:22 replit.md
+drwx------   2 root root   4096 Nov 23 19:22 server
+drwx------   2 root root   4096 Nov 23 19:22 shared
+-rw-r--r--   1 root root   4050 Nov 23 19:22 tailwind.config.ts
+-rw-r--r--   1 root root    657 Nov 23 19:56 tsconfig.json
+-rw-r--r--   1 root root   1485 Nov 23 19:22 upload-now.sh
+-rw-r--r--   1 root root   1080 Nov 23 19:56 vite.config.ts
+-rw-r--r--   1 root root   2135 Nov 23 19:22 vps-install.sh
+root@Amine:~# cd /var/www/payment-app
+root@Amine:/var/www/payment-app#
+root@Amine:/var/www/payment-app# pm2 delete payment-app || true
+rt
+
+pm2 save
+
+pm2 status
+[PM2] Applying action deleteProcessId on app [payment-app](ids: [ 0 ])
+[PM2] [payment-app](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app#
+root@Amine:/var/www/payment-app# pm2 start npm --name payment-app -- start
+[PM2] Starting /usr/bin/npm in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 7.1mb    │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app#
+root@Amine:/var/www/payment-app# pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+root@Amine:/var/www/payment-app#
+root@Amine:/var/www/payment-app# pm2 status
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 60.0mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# cat /var/www/payment-app/package.json | grep start -n
+9:    "start": "NODE_ENV=production node dist/index.js",
+root@Amine:/var/www/payment-app# pm2 start npm --name payment-app -- start
+[PM2] Starting /usr/bin/npm in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 55.9mb   │
+│ 1  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 16.4mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# pm2 start npm --name payment-app -- start
+[PM2] Starting /usr/bin/npm in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 56.6mb   │
+│ 1  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 55.5mb   │
+│ 2  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 7.8mb    │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# pm2 delete payment-app
+[PM2] Applying action deleteProcessId on app [payment-app](ids: [ 0, 1, 2 ])
+[PM2] [payment-app](1) ✓
+[PM2] [payment-app](0) ✓
+[PM2] [payment-app](2) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# pm2 delete all
+[PM2][WARN] No process found
+root@Amine:/var/www/payment-app# pm2 ls
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# cd /var/www/payment-app
+root@Amine:/var/www/payment-app# pm2 start npm --name payment-app -- start
+[PM2] Starting /usr/bin/npm in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 16.4mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+root@Amine:/var/www/payment-app# pm2 status
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 59.9mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# pm2 status
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 55.3mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# pm2 startup
+[PM2] Init System found: systemd
+Platform systemd
+Template
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=root
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/root/.pm2
+PIDFile=/root/.pm2/pm2.pid
+Restart=on-failure
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target
+
+Target path
+/etc/systemd/system/pm2-root.service
+Command list
+[ 'systemctl enable pm2-root' ]
+[PM2] Writing init configuration in /etc/systemd/system/pm2-root.service
+[PM2] Making script booting at startup...
+[PM2] [-] Executing: systemctl enable pm2-root...
+Created symlink /etc/systemd/system/multi-user.target.wants/pm2-root.service → /etc/systemd/system/pm2-root.service.
+[PM2] [v] Command successfully executed.
++---------------------------------------+
+[PM2] Freeze a process list on reboot via:
+$ pm2 save
+
+[PM2] Remove init script via:
+$ pm2 unstartup systemd
+root@Amine:/var/www/payment-app# pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+root@Amine:/var/www/payment-app# curl -s http://127.0.0.1:5000 | head
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="/assets/index-DKpjFs6X.js"></script>
+root@Amine:/var/www/payment-app# # Installation Node.js 20
+root@Amine:/var/www/payment-app# curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+nodejs
+# Installation PostgreSQL + Nginx + Git + outils
+sudo apt install -y postgresql postgresql-contrib nginx git ufw
+# Installation PM2
+sudo npm install -g pm2
+# Démarrage des services
+sudo systemctl start postgresql nginx
+sudo systemctl enable postgresql nginx2025-11-23 20:59:08 - Installing pre-requisites
+Hit:1 http://security.ubuntu.com/ubuntu focal-security InRelease
+Hit:2 http://archive.ubuntu.com/ubuntu focal InRelease
+Get:3 http://archive.ubuntu.com/ubuntu focal-updates InRelease [128 kB]
+Hit:4 https://deb.nodesource.com/node_20.x nodistro InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu focal-backports InRelease
+Hit:6 https://packagecloud.io/ookla/speedtest-cli/ubuntu focal InRelease
+Fetched 128 kB in 1s (120 kB/s)
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+All packages are up to date.
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+ca-certificates is already the newest version (20240203~20.04.1).
+curl is already the newest version (7.68.0-1ubuntu2.25).
+gnupg is already the newest version (2.2.19-3ubuntu2.5).
+apt-transport-https is already the newest version (2.0.11).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Hit:1 https://deb.nodesource.com/node_20.x nodistro InRelease
+Hit:2 http://security.ubuntu.com/ubuntu focal-security InRelease
+Hit:3 http://archive.ubuntu.com/ubuntu focal InRelease
+Hit:4 http://archive.ubuntu.com/ubuntu focal-updates InRelease
+Hit:5 http://archive.ubuntu.com/ubuntu focal-backports InRelease
+Hit:6 https://packagecloud.io/ookla/speedtest-cli/ubuntu focal InRelease
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+All packages are up to date.
+2025-11-23 20:59:20 - Repository configured successfully.
+2025-11-23 20:59:20 - To install Node.js, run: apt install nodejs -y
+2025-11-23 20:59:20 - You can use N|solid Runtime as a node.js alternative
+2025-11-23 20:59:20 - To install N|solid Runtime, run: apt install nsolid -y
+
+root@Amine:/var/www/payment-app# sudo apt install -y nodejs
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+nodejs is already the newest version (20.19.5-1nodesource1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+root@Amine:/var/www/payment-app# # Installation PostgreSQL + Nginx + Git + outils
+root@Amine:/var/www/payment-app# sudo apt install -y postgresql postgresql-contrib nginx git ufw
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+git is already the newest version (1:2.25.1-1ubuntu3.14).
+nginx is already the newest version (1.18.0-0ubuntu1.7).
+postgresql is already the newest version (12+214ubuntu0.1).
+postgresql-contrib is already the newest version (12+214ubuntu0.1).
+ufw is already the newest version (0.36-6ubuntu1.1).
+ufw set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+root@Amine:/var/www/payment-app# # Installation PM2
+root@Amine:/var/www/payment-app# sudo npm install -g pm2
+
+changed 133 packages in 8s
+
+13 packages are looking for funding
+  run `npm fund` for details
+root@Amine:/var/www/payment-app# # Démarrage des services
+root@Amine:/var/www/payment-app# sudo systemctl start postgresql nginx
+root@Amine:/var/www/payment-app# sudo systemctl enable postgresql nginx
+Synchronizing state of postgresql.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable postgresql
+Synchronizing state of nginx.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable nginx
+root@Amine:/var/www/payment-app# # Lien symbolique
+root@Amine:/var/www/payment-app# sudo ln -s /etc/nginx/sites-available/celio.store /etc/nginx/sites-enabled/
+root@Amine:/var/www/payment-app# # Supprimer config par défaut
+root@Amine:/var/www/payment-app# sudo rm -f /etc/nginx/sites-enabled/default
+root@Amine:/var/www/payment-app# # Tester config
+root@Amine:/var/www/payment-app# sudo nginx -t
+ ufw allow 'Nginx Full'
+sudo ufw --force enable
+sudo ufw status
+nginx: [emerg] open() "/etc/nginx/sites-enabled/celio.store" failed (2: No such file or directory) in /etc/nginx/nginx.conf:62
+nginx: configuration file /etc/nginx/nginx.conf test failed
+root@Amine:/var/www/payment-app# # Redémarrer Nginx
+root@Amine:/var/www/payment-app# sudo systemctl restart nginx
+Job for nginx.service failed because the control process exited with error code.
+See "systemctl status nginx.service" and "journalctl -xe" for details.
+root@Amine:/var/www/payment-app#
+root@Amine:/var/www/payment-app# 1️⃣1️⃣ Configuration Firewall
+1️⃣1️⃣: command not found
+root@Amine:/var/www/payment-app# sudo ufw allow OpenSSH
+Rule added
+Rule added (v6)
+root@Amine:/var/www/payment-app# sudo ufw allow 'Nginx Full'
+Rule added
+Rule added (v6)
+root@Amine:/var/www/payment-app# sudo ufw --force enable
+Firewall is active and enabled on system startup
+root@Amine:/var/www/payment-app# sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere
+80/tcp                     ALLOW       Anywhere
+443/tcp                    ALLOW       Anywhere
+OpenSSH                    ALLOW       Anywhere
+Nginx Full                 ALLOW       Anywhere
+22/tcp (v6)                ALLOW       Anywhere (v6)
+80/tcp (v6)                ALLOW       Anywhere (v6)
+443/tcp (v6)               ALLOW       Anywhere (v6)
+OpenSSH (v6)               ALLOW       Anywhere (v6)
+Nginx Full (v6)            ALLOW       Anywhere (v6)
+
+root@Amine:/var/www/payment-app#
+root@Amine:/var/www/payment-app# 8️⃣ Installation et Build
+e affichée
+# Vérifier le statut
+pm2 status
+pm2 logs payment-app8️⃣: command not found
+root@Amine:/var/www/payment-app# # Installation dépendances
+root@Amine:/var/www/payment-app# npm install
+
+up to date, audited 483 packages in 3s
+
+64 packages are looking for funding
+  run `npm fund` for details
+
+9 vulnerabilities (3 low, 5 moderate, 1 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+root@Amine:/var/www/payment-app# # Build frontend
+root@Amine:/var/www/payment-app# npm run build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.20 building for production...
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 1745 modules transformed.
+../dist/public/index.html                                           2.01 kB │ gzip:   0.77 kB
+../dist/public/assets/PayPal_official_logo_d33d02f7-DWRRreiY.png  249.29 kB
+../dist/public/assets/SSL_security_badge_5a63cf55-BCwhzatn.png    424.03 kB
+../dist/public/assets/index-C-GXd50e.css                           81.97 kB │ gzip:  13.12 kB
+../dist/public/assets/index-DKpjFs6X.js                           443.58 kB │ gzip: 132.10 kB
+✓ built in 8.71s
+
+  dist/index.js  80.0kb
+
+⚡ Done in 20ms
+root@Amine:/var/www/payment-app# # Migration base de données
+root@Amine:/var/www/payment-app# npm run db:push
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/var/www/payment-app/drizzle.config.ts'
+Using 'pg' driver for database querying
+[✓] Pulling schema from database...
+[✓] Changes applied
+root@Amine:/var/www/payment-app# # Créer dossier logs
+root@Amine:/var/www/payment-app# mkdir -p logs
+root@Amine:/var/www/payment-app#
+root@Amine:/var/www/payment-app# 9️⃣ Démarrage avec PM2
+9️⃣: command not found
+root@Amine:/var/www/payment-app# # Démarrer l'application
+root@Amine:/var/www/payment-app# pm2 start npm --name "payment-app" -- start
+[PM2] Starting /usr/bin/npm in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 56.1mb   │
+│ 1  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 3.4mb    │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# # Sauvegarder config PM2
+root@Amine:/var/www/payment-app# pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /root/.pm2/dump.pm2
+root@Amine:/var/www/payment-app# # Démarrage automatique au boot
+root@Amine:/var/www/payment-app# pm2 startup systemd
+[PM2] Init System found: systemd
+Platform systemd
+Template
+[Unit]
+Description=PM2 process manager
+Documentation=https://pm2.keymetrics.io/
+After=network.target
+
+[Service]
+Type=forking
+User=root
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/root/.pm2
+PIDFile=/root/.pm2/pm2.pid
+Restart=on-failure
+
+ExecStart=/usr/lib/node_modules/pm2/bin/pm2 resurrect
+ExecReload=/usr/lib/node_modules/pm2/bin/pm2 reload all
+ExecStop=/usr/lib/node_modules/pm2/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target
+
+Target path
+/etc/systemd/system/pm2-root.service
+Command list
+[ 'systemctl enable pm2-root' ]
+[PM2] Writing init configuration in /etc/systemd/system/pm2-root.service
+[PM2] Making script booting at startup...
+[PM2] [-] Executing: systemctl enable pm2-root...
+[PM2] [v] Command successfully executed.
++---------------------------------------+
+[PM2] Freeze a process list on reboot via:
+$ pm2 save
+
+[PM2] Remove init script via:
+$ pm2 unstartup systemd
+root@Amine:/var/www/payment-app# # ⚠️ IMPORTANT: Copiez et exécutez la commande affichée
+root@Amine:/var/www/payment-app# # Vérifier le statut
+root@Amine:/var/www/payment-app# pm2 status
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 55.3mb   │
+│ 1  │ payment-app        │ fork     │ 0    │ online    │ 0%       │ 59.6mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+root@Amine:/var/www/payment-app# pm2 logs payment-app✅ /var/www/payment-app/ exists with ALL files:
+/ (backend)
+
+✅ No "App-1" folder on VPS (only on your local machine)
+
+✅ Single PM2 process running cleanly
+   - pm2 save = Startup script configured
+   - Ready to restart automatically on server reboot[TAILING] Tailing last 15 lines for [payment-app✅] process (change the value with --lines option)
+
