@@ -1,0 +1,409 @@
+                        </div>
+                </div>
+        <div class="footer">
+                <a href="https://apache.org">Apache&trade;</a> is a registered trademark of <a href="https://apache.org">the Apache Software Foundation</a> in the United States and/or other countries.
+        <br />
+                <a href="https://nginx.com">NGINX&trade;</a> is a registered trademark of <a href="https://www.f5.com">F5 Networks, Inc.</a>.
+        </div>
+        </body>
+</html>
+[root@kidzcorneruk payment-app]# ssh root@192.250.230.27 << 'EOF'
+echo "=== App Status ==="
+pm2 status
+
+echo -e "\n=== Testing Port 5000 ==="
+curl -s http://127.0.0.1:5000 | head -5
+
+echo -e "\n=== Nginx Error Logs ==="
+tail -20 /var/log/nginx/error.log
+
+echo -e "\n=== Check if Port 80 Open ==="
+netstat -tlnp | grep 80
+
+echo -e "\n=== Reload Nginx Again ==="
+systemctl reload nginx
+
+echo -e "\n=== Try curl ==="
+curl -v http://127.0.0.1
+EOF
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+The authenticity of host '192.250.230.27 (192.250.230.27)' can't be established.
+ED25519 key fingerprint is SHA256:MBO3P6d+liqm3/5XbwGP/1BqMFx8iynO8kU3U1xIhig.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '192.250.230.27' (ED25519) to the list of known hosts.
+root@192.250.230.27's password:
+Last failed login: Sun Nov 23 12:06:30 UTC 2025 from 89.35.130.146 on ssh:notty
+There were 15 failed login attempts since the last successful login.
+=== App Status ===
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 108806   │ 4m     │ 1    │ online    │ 0%       │ 60.4mb   │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+=== Testing Port 5000 ===
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+
+=== Nginx Error Logs ===
+2025/11/23 11:58:25 [error] 108606#108606: *1 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET / HTTP/1.1", upstream: "http://[::1]:5000/", host: "192.250.230.27"
+2025/11/23 12:03:32 [error] 108606#108606: *9 connect() failed (111: Connection refused) while connecting to upstream, client: 93.34.29.196, server: 192.250.230.27, request: "GET / HTTP/1.1", upstream: "http://[::1]:5000/", host: "192.250.230.27"
+2025/11/23 12:04:30 [notice] 108839#108839: signal process started
+2025/11/23 12:05:18 [notice] 108852#108852: signal process started
+
+=== Check if Port 80 Open ===
+-bash: line 11: netstat: command not found
+
+=== Reload Nginx Again ===
+
+=== Try curl ===
+*   Trying 127.0.0.1:80...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0* Connected to 127.0.0.1 (127.0.0.1) port 80 (#0)
+> GET / HTTP/1.1
+> Host: 127.0.0.1
+> User-Agent: curl/7.76.1
+> Accept: */*
+>
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< Server: nginx/1.20.1
+< Date: Sun, 23 Nov 2025 12:07:39 GMT
+< Content-Type: text/html; charset=UTF-8
+< Content-Length: 2012
+< Connection: keep-alive
+< Content-Security-Policy: default-src 'self';script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google.com https://www.gstatic.com;style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;font-src 'self' https://fonts.gstatic.com;img-src 'self' data: https:;connect-src 'self' https://www.google.com wss:// ws://;frame-src https://www.google.com;object-src 'none';upgrade-insecure-requests;base-uri 'self';form-action 'self';frame-ancestors 'self';script-src-attr 'none'
+< Cross-Origin-Opener-Policy: same-origin
+< Cross-Origin-Resource-Policy: same-origin
+< Origin-Agent-Cluster: ?1
+< Referrer-Policy: strict-origin-when-cross-origin
+< Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+< X-Content-Type-Options: nosniff
+< X-DNS-Prefetch-Control: off
+< X-Download-Options: noopen
+< X-Frame-Options: DENY
+< X-Permitted-Cross-Domain-Policies: none
+< X-XSS-Protection: 0
+< Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=()
+< Accept-Ranges: bytes
+< Cache-Control: public, max-age=0
+< Last-Modified: Sun, 23 Nov 2025 12:03:09 GMT
+< ETag: W/"7dc-19ab098b580"
+<
+{ [2012 bytes data]
+100  2012  100  2012    0     0   982k      0 --:--:-- --:--:-- --:--:--  982k
+* Connection #0 to host 127.0.0.1 left intact
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="/assets/index-DKpjFs6X.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C-GXd50e.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>[root@kidzcorneruk paymentssh root@192.250.230.27 << 'EOF'< 'EOF'
+echo "=== Check app folder ==="
+ls -la /var/www/payment-app/ | head -20
+
+echo -e "\n=== Check dist folder ==="
+ls -la /var/www/payment-app/dist/
+
+echo -e "\n=== Check dist/public (static files) ==="
+ls -la /var/www/payment-app/dist/public/
+
+echo -e "\n=== Check dist/index.js (server) ==="
+ls -lh /var/www/payment-app/dist/index.js
+
+echo -e "\n=== Verify app folder path ==="
+pwd
+ls -la /var/www/payment-app/package.json
+EOF
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+root@192.250.230.27's password:
+Last failed login: Sun Nov 23 12:07:43 UTC 2025 from 89.35.130.146 on ssh:notty
+There were 16 failed login attempts since the last successful login.
+=== Check app folder ===
+total 480
+drwxrwxrwx  11 root root   4096 Nov 23 12:03 .
+drwxr-xr-x   3 root root   4096 Nov 23 11:51 ..
+drwxrwxrwx   2 root root   4096 Nov 20 09:38 App
+drwxrwxrwx   8 root root   4096 Nov 23 11:55 App-1
+drwxrwxrwx   3 root root   4096 Nov 23 11:55 attached_assets
+-rw-rw-rw-   1 root root   5532 Nov 23 11:30 BANK_DETECTION_GUIDE.md
+drwxrwxrwx   4 root root   4096 Nov 23 11:55 client
+-rw-rw-rw-   1 root root    459 Nov 23 11:30 components.json
+-rw-rw-rw-   1 root root   1733 Nov 23 11:30 DEPLOYMENT_FILES.txt
+-rw-rw-rw-   1 root root   8550 Nov 23 11:30 DEPLOYMENT.md
+drwxrwxrwx   2 root root   4096 Nov 23 11:55 deployment-package
+-rw-rw-rw-   1 root root   1313 Nov 23 11:30 deploy.sh
+-rw-rw-rw-   1 root root   5624 Nov 23 11:30 design_guidelines.md
+-rw-rw-rw-   1 root root   7005 Nov 23 11:30 DHL_FLOW_GUIDE.md
+drwxr-xr-x   3 root root   4096 Nov 23 11:56 dist
+-rw-rw-rw-   1 root root    325 Nov 23 11:30 drizzle.config.ts
+-rw-rw-rw-   1 root root    396 Nov 23 11:30 ecosystem.config.cjs
+-rw-r--r--   1 root root    309 Nov 23 11:57 .env
+-rw-rw-rw-   1 root root   2064 Nov 23 11:30 .env.example
+
+=== Check dist folder ===
+total 96
+drwxr-xr-x  3 root root  4096 Nov 23 11:56 .
+drwxrwxrwx 11 root root  4096 Nov 23 12:03 ..
+-rw-r--r--  1 root root 81957 Nov 23 12:03 index.js
+drwxr-xr-x  4 root root  4096 Nov 23 12:03 public
+
+=== Check dist/public (static files) ===
+total 28
+drwxr-xr-x 4 root root 4096 Nov 23 12:03 .
+drwxr-xr-x 3 root root 4096 Nov 23 11:56 ..
+drwxr-xr-x 2 root root 4096 Nov 23 12:03 assets
+drwxr-xr-x 2 root root 4096 Nov 23 12:03 cards
+-rw-rw-rw- 1 root root 1951 Nov 23 12:03 dhl-logo.png
+-rw-rw-rw- 1 root root 1145 Nov 23 12:03 favicon.png
+-rw-r--r-- 1 root root 2012 Nov 23 12:03 index.html
+
+=== Check dist/index.js (server) ===
+-rw-r--r-- 1 root root 81K Nov 23 12:03 /var/www/payment-app/dist/index.js
+
+=== Verify app folder path ===
+/root
+-rw-rw-rw- 1 root root 3651 Nov 23 11:30 /var/www/payment-app/package.json
+[root@kidzcorneruk payment-app]# ssh root@192.250.230.27 << 'EOF'
+cd /var/www/payment-app
+
+echo "=== Cleaning old build ==="
+rm -rf dist node_modules
+
+echo "=== Installing dependencies ==="
+npm install --production
+
+echo "=== Building app ==="
+npm run build
+
+echo "=== Verifying dist files ==="
+ls -la dist/public/
+
+echo "=== Stopping old app ==="
+pm2 stop payment-app
+
+echo "=== Starting app fresh ==="
+pm2 start npm --name "payment-app" -- start
+sleep 3
+
+echo "=== Checking status ==="
+pm2 status
+
+echo "=== Testing app ==="
+curl -s http://127.0.0.1:5000 | head -20
+
+echo "=== Done! App should be live at http://192.250.230.27 ==="
+EOF
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+root@192.250.230.27's password:
+Last failed login: Sun Nov 23 12:11:32 UTC 2025 from 89.35.130.146 on ssh:notty
+There were 19 failed login attempts since the last successful login.
+=== Cleaning old build ===
+=== Installing dependencies ===
+npm warn config production Use `--omit=dev` instead.
+
+added 375 packages, and audited 376 packages in 4s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+4 vulnerabilities (3 low, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+=== Building app ===
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+sh: line 1: vite: command not found
+=== Verifying dist files ===
+ls: cannot access 'dist/public/': No such file or directory
+=== Stopping old app ===
+[PM2] Applying action stopProcessId on app [payment-app](ids: [ 0 ])
+[PM2] [payment-app](0) ✓
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 0        │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+=== Starting app fresh ===
+[PM2] Starting /usr/bin/npm in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 0        │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+│ 1  │ payment-app    │ default     │ N/A     │ fork    │ 109050   │ 0s     │ 0    │ online    │ 0%       │ 18.3mb   │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+=== Checking status ===
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 0        │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+│ 1  │ payment-app    │ default     │ N/A     │ fork    │ 0        │ 0      │ 15   │ errored   │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+=== Testing app ===
+=== Done! App should be live at http://192.250.230.27 ===
+[root@kidzcorneruk payment-app]# ssh root@192.250.230.27 << 'EOF'
+cd /var/www/payment-app
+
+echo "=== Check PM2 Status ==="
+pm2 status
+
+echo -e "\n=== Check App Logs ==="
+pm2 logs payment-app --lines 50
+
+echo -e "\n=== Kill and restart ==="
+pm2 kill
+sleep 1
+
+echo -e "\n=== Rebuild from scratch ==="
+rm -rf dist
+npm run build
+
+echo -e "\n=== Start app ==="
+pm2 start npm --name "payment-app" -- start
+sleep 3
+
+pm2 status
+
+echo -e "\n=== Test connection ==="
+curl -v http://127.0.0.1:5000 | head -30
+
+EOF
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+root@192.250.230.27's password:
+Last failed login: Sun Nov 23 12:11:32 UTC 2025 from 89.35.130.146 on ssh:notty
+There were 19 failed login attempts since the last successful login.
+=== Check PM2 Status ===
+┌────┬────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name           │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ payment-app    │ default     │ N/A     │ fork    │ 0        │ 0      │ 1    │ stopped   │ 0%       │ 0b       │ root     │ disabled │
+│ 1  │ payment-app    │ default     │ N/A     │ fork    │ 0        │ 0      │ 15   │ errored   │ 0%       │ 0b       │ root     │ disabled │
+└────┴────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+=== Check App Logs ===
+[TAILING] Tailing last 50 lines for [payment-app] process (change the value with --lines option)
+/root/.pm2/logs/payment-app-out.log last 50 lines:
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+0|payment- |
+0|payment- | > rest-express@1.0.0 start
+0|payment- | > NODE_ENV=production node dist/index.js
+0|payment- |
+
+/root/.pm2/logs/payment-app-error.log last 50 lines:
+0|payment- |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+0|payment- |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+0|payment- |     at node:internal/main/run_main_module:28:49 {
+0|payment- |   code: 'MODULE_NOT_FOUND',
+0|payment- |   requireStack: []
+0|payment- | }
+0|payment- |
+0|payment- | Node.js v20.19.5
+0|payment- | node:internal/modules/cjs/loader:1210
+0|payment- |   throw err;
+0|payment- |   ^
+0|payment- |
+0|payment- | Error: Cannot find module '/var/www/payment-app/dist/index.js'
+0|payment- |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+0|payment- |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+0|payment- |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+0|payment- |     at node:internal/main/run_main_module:28:49 {
+0|payment- |   code: 'MODULE_NOT_FOUND',
+0|payment- |   requireStack: []
+0|payment- | }
+0|payment- |
+0|payment- | Node.js v20.19.5
+0|payment- | node:internal/modules/cjs/loader:1210
+0|payment- |   throw err;
+0|payment- |   ^
+0|payment- |
+0|payment- | Error: Cannot find module '/var/www/payment-app/dist/index.js'
+0|payment- |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+0|payment- |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+0|payment- |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+0|payment- |     at node:internal/main/run_main_module:28:49 {
+0|payment- |   code: 'MODULE_NOT_FOUND',
+0|payment- |   requireStack: []
+0|payment- | }
+0|payment- |
+0|payment- | Node.js v20.19.5
+0|payment- | node:internal/modules/cjs/loader:1210
+0|payment- |   throw err;
+0|payment- |   ^
+0|payment- |
+0|payment- | Error: Cannot find module '/var/www/payment-app/dist/index.js'
+0|payment- |     at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+0|payment- |     at Module._load (node:internal/modules/cjs/loader:1038:27)
+0|payment- |     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:164:12)
+0|payment- |     at node:internal/main/run_main_module:28:49 {
+0|payment- |   code: 'MODULE_NOT_FOUND',
+0|payment- |   requireStack: []
+0|payment- | }
+0|payment- |
+0|payment- | Node.js v20.19.5
+
