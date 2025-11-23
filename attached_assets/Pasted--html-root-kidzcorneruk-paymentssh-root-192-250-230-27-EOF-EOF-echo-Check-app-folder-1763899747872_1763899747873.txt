@@ -1,0 +1,67 @@
+</html>[root@kidzcorneruk paymentssh root@192.250.230.27 << 'EOF'< 'EOF'
+echo "=== Check app folder ==="
+ls -la /var/www/payment-app/ | head -20
+
+echo -e "\n=== Check dist folder ==="
+ls -la /var/www/payment-app/dist/
+
+echo -e "\n=== Check dist/public (static files) ==="
+ls -la /var/www/payment-app/dist/public/
+
+echo -e "\n=== Check dist/index.js (server) ==="
+ls -lh /var/www/payment-app/dist/index.js
+
+echo -e "\n=== Verify app folder path ==="
+pwd
+ls -la /var/www/payment-app/package.json
+EOF
+Pseudo-terminal will not be allocated because stdin is not a terminal.
+root@192.250.230.27's password:
+Last failed login: Sun Nov 23 12:07:43 UTC 2025 from 89.35.130.146 on ssh:notty
+There were 16 failed login attempts since the last successful login.
+=== Check app folder ===
+total 480
+drwxrwxrwx  11 root root   4096 Nov 23 12:03 .
+drwxr-xr-x   3 root root   4096 Nov 23 11:51 ..
+drwxrwxrwx   2 root root   4096 Nov 20 09:38 App
+drwxrwxrwx   8 root root   4096 Nov 23 11:55 App-1
+drwxrwxrwx   3 root root   4096 Nov 23 11:55 attached_assets
+-rw-rw-rw-   1 root root   5532 Nov 23 11:30 BANK_DETECTION_GUIDE.md
+drwxrwxrwx   4 root root   4096 Nov 23 11:55 client
+-rw-rw-rw-   1 root root    459 Nov 23 11:30 components.json
+-rw-rw-rw-   1 root root   1733 Nov 23 11:30 DEPLOYMENT_FILES.txt
+-rw-rw-rw-   1 root root   8550 Nov 23 11:30 DEPLOYMENT.md
+drwxrwxrwx   2 root root   4096 Nov 23 11:55 deployment-package
+-rw-rw-rw-   1 root root   1313 Nov 23 11:30 deploy.sh
+-rw-rw-rw-   1 root root   5624 Nov 23 11:30 design_guidelines.md
+-rw-rw-rw-   1 root root   7005 Nov 23 11:30 DHL_FLOW_GUIDE.md
+drwxr-xr-x   3 root root   4096 Nov 23 11:56 dist
+-rw-rw-rw-   1 root root    325 Nov 23 11:30 drizzle.config.ts
+-rw-rw-rw-   1 root root    396 Nov 23 11:30 ecosystem.config.cjs
+-rw-r--r--   1 root root    309 Nov 23 11:57 .env
+-rw-rw-rw-   1 root root   2064 Nov 23 11:30 .env.example
+
+=== Check dist folder ===
+total 96
+drwxr-xr-x  3 root root  4096 Nov 23 11:56 .
+drwxrwxrwx 11 root root  4096 Nov 23 12:03 ..
+-rw-r--r--  1 root root 81957 Nov 23 12:03 index.js
+drwxr-xr-x  4 root root  4096 Nov 23 12:03 public
+
+=== Check dist/public (static files) ===
+total 28
+drwxr-xr-x 4 root root 4096 Nov 23 12:03 .
+drwxr-xr-x 3 root root 4096 Nov 23 11:56 ..
+drwxr-xr-x 2 root root 4096 Nov 23 12:03 assets
+drwxr-xr-x 2 root root 4096 Nov 23 12:03 cards
+-rw-rw-rw- 1 root root 1951 Nov 23 12:03 dhl-logo.png
+-rw-rw-rw- 1 root root 1145 Nov 23 12:03 favicon.png
+-rw-r--r-- 1 root root 2012 Nov 23 12:03 index.html
+
+=== Check dist/index.js (server) ===
+-rw-r--r-- 1 root root 81K Nov 23 12:03 /var/www/payment-app/dist/index.js
+
+=== Verify app folder path ===
+/root
+-rw-rw-rw- 1 root root 3651 Nov 23 11:30 /var/www/payment-app/package.json
+[root@kidzcorneruk payment-app]#
